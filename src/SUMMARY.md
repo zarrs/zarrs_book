@@ -44,6 +44,4 @@
 
 ---
 
-# Zarr Implementation Benchmarks
-
-- [Benchmarks](./zarr_benchmarks/README.md)
+[Zarr Implementation Benchmarks](./zarr_benchmarks/README.md)

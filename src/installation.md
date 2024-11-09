@@ -10,7 +10,6 @@ rustc --version
 ```
 If you don’t have Rust installed, follow the [official Rust installation guide](https://www.rust-lang.org/tools/install).
 
-## Optional Prerequisites
 Some optional `zarrs` codecs require:
 - The [CMake](https://cmake.org/) build system.
 - The [Clang](https://clang.llvm.org/get_started.html) compiler.
