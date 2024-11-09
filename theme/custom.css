@@ -1,0 +1,16 @@
+/* Adjust the content width */
+.md-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Modify the sidebar width */
+:root {
+    --content-max-width: 830px;
+    --sidebar-width: 320px;
+}
+
+/* Hide the TOC if there is only one element */
+a[class^='pagetoc-H']:only-child {
+    display: none;
+}
