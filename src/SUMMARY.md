@@ -4,11 +4,11 @@
 
 # Rust (zarrs)
 - [Installation](installation.md)
-- [Crates](crates.md)
+  - [Crates](crates.md)
 - [Quick Start]()
 - [Basic usage]()
   - [Initialising a store](./basic_usage/store_init.md)
-  - [Initialising a group]()
+  - [Initialising a group](./basic_usage/group_init.md)
   - [Initialising an array]()
   - [Reading array data]()
   - [Writing array data]()
@@ -19,7 +19,7 @@
   - [Performance tips]()
   - [Converting Zarr V2 to V3]()
 - [Extending `zarrs`]()
-  - [Creating a new store]()
+  - [Developing a new store]()
 
 # Bindings
 

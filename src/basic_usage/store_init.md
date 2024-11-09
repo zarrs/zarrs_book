@@ -1,5 +1,4 @@
-# Creating a Store
-
+# Initialising a Store
 
 A Zarr store is a system that can be used to store and retrieve data from a Zarr hierarchy.
 For example: a filesystem, HTTP server, FTP server, Amazon S3 bucket, etc.

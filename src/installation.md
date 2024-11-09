@@ -54,4 +54,4 @@ See [zarrs (docs.rs) - Crate Features](https://docs.rs/zarrs/latest/zarrs/index.
 
 ## Supplementary Crates
 Some `zarrs` functionality (e.g. additional stores, bindings, etc.) are in separate crates.
-The next chapter details the `zarrs` crate ecosystem.
+The next section details the `zarrs` crate ecosystem.
