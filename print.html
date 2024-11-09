@@ -179,8 +179,13 @@ zarrs = "18.0" # Replace with the latest version
 </code></pre>
 <p>The latest version is <a href="https://crates.io/crates/zarrs"><img src="https://img.shields.io/crates/v/zarrs.svg" alt="Latest Version" /></a>.
 See <a href="https://crates.io/crates/zarrs/versions">crates.io</a> for a full list of versions.</p>
-<h3 id="features"><a class="header" href="#features">Features</a></h3>
-<p><code>zarrs</code> has a number of features for enabling additional stores, codecs, or APIs, many of which are enabled by default.</p>
+<p>To use the latest development release:</p>
+<pre><code class="language-toml">[dependencies]
+zarrs = { git = "https://github.com/LDeakin/zarrs.git" }
+</code></pre>
+<p>The <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories">Cargo reference</a> has more information on <code>git</code> repository dependencies.</p>
+<h2 id="crate-features"><a class="header" href="#crate-features">Crate Features</a></h2>
+<p><code>zarrs</code> has a number of features for stores, codecs, or APIs, many of which are enabled by default.</p>
 <p>The below example demonstrates how to disable default features and explicitly enable required features:</p>
 <pre><code class="language-toml">[dependencies.zarrs]
 version = "18.0"
@@ -188,11 +193,60 @@ default-features = false
 features = ["filesystem", "blosc"]
 </code></pre>
 <p>See <a href="https://docs.rs/zarrs/latest/zarrs/index.html#crate-features">zarrs (docs.rs) - Crate Features</a> for an up-to-date list of all available features.</p>
-<h3 id="using-the-latest-development-release"><a class="header" href="#using-the-latest-development-release">Using the Latest Development Release</a></h3>
-<pre><code class="language-toml">[dependencies]
-zarrs = { git = "https://github.com/LDeakin/zarrs.git" }
-</code></pre>
-<p>The <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories">Cargo reference</a> has more information on <code>git</code> repository dependencies.</p>
+<h2 id="supplementary-crates"><a class="header" href="#supplementary-crates">Supplementary Crates</a></h2>
+<p>Some <code>zarrs</code> functionality (e.g. additional stores, bindings, etc.) are in separate crates.
+The next chapter details the <code>zarrs</code> crate ecosystem.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="crates"><a class="header" href="#crates">Crates</a></h1>
+<pre class="mermaid">graph LR
+    subgraph Core
+        zarrs_metadata --&gt; zarrs
+        zarrs_storage --&gt; zarrs
+    end
+    subgraph Stores
+        direction LR
+        zarrs_filesystem
+        zarrs_object_store
+        zarrs_opendal
+        zarrs_http
+        zarrs_icechunk
+        zarrs_zip
+    end
+    Stores --&gt; zarrs_storage
+    subgraph Bindings
+        direction LR
+        zarrs_ffi
+        zarrs_python
+    end
+    zarrs --&gt; Bindings
+    subgraph CLI Tools
+    zarrs --&gt; zarrs_tools
+    end
+</pre>
+<h2 id="core-crates"><a class="header" href="#core-crates">Core Crates</a></h2>
+<h3 id="zarrs"><a class="header" href="#zarrs"><code>zarrs</code> <a href="https://crates.io/crates/zarrs"><img src="https://img.shields.io/crates/v/zarrs?label=" alt="zarrs_ver" /></a> <a href="https://docs.rs/zarrs"><img src="https://img.shields.io/badge/docs-brightgreen" alt="docs" /></a></a></h3>
+<p>The core library for manipulating Zarr hierarchies.</p>
+<h3 id="zarrs_metadata"><a class="header" href="#zarrs_metadata"><code>zarrs_metadata</code> <a href="https://crates.io/crates/zarrs_metadata"><img src="https://img.shields.io/crates/v/zarrs_metadata?label=" alt="zarrs_metadata_ver" /></a> <a href="https://docs.rs/zarrs_metadata"><img src="https://img.shields.io/badge/docs-brightgreen" alt="docs" /></a></a></h3>
+<p>Provides Zarr V2 and V3 metadata serialisation and deserialisation.
+If you are just interested in manipulating <code>Zarr</code> metadata, this crate may be useful to you.</p>
+<p>Typically you would not use this crate directly, it is re-exported as <code>zarrs::metadata</code>.</p>
+<h3 id="zarrs_storage"><a class="header" href="#zarrs_storage"><code>zarrs_storage</code> <a href="https://crates.io/crates/zarrs_storage"><img src="https://img.shields.io/crates/v/zarrs_storage?label=" alt="zarrs_storage_ver" /></a> <a href="https://docs.rs/zarrs_storage"><img src="https://img.shields.io/badge/docs-brightgreen" alt="docs" /></a></a></h3>
+<p>The storage API for <code>zarrs</code>. Custom store implementations only need to depend on <code>zarrs_storage</code>.</p>
+<p>Typically you would not use this crate directly, it is re-exported as <code>zarrs::storage</code>.</p>
+<h2 id="store-crates"><a class="header" href="#store-crates">Store Crates</a></h2>
+<h3 id="zarrs_filesystem"><a class="header" href="#zarrs_filesystem"><code>zarrs_filesystem</code> <a href="https://crates.io/crates/zarrs_filesystem"><img src="https://img.shields.io/crates/v/zarrs_filesystem?label=" alt="zarrs_filesystem_ver" /></a> <a href="https://docs.rs/zarrs_filesystem"><img src="https://docs.rs/zarrs_filesystem/badge.svg" alt="zarrs_filesystem_doc" /></a></a></h3>
+<h3 id="zarrs_object_store"><a class="header" href="#zarrs_object_store"><code>zarrs_object_store</code> <a href="https://crates.io/crates/zarrs_object_store"><img src="https://img.shields.io/crates/v/zarrs_object_store?label=" alt="zarrs_object_store_ver" /></a> <a href="https://docs.rs/zarrs_object_store"><img src="https://docs.rs/zarrs_object_store/badge.svg" alt="zarrs_object_store_doc" /></a></a></h3>
+<p><a href="https://docs.rs/object_store/latest/object_store/"><code>object_store</code></a> store support.</p>
+<h3 id="zarrs_opendal"><a class="header" href="#zarrs_opendal"><code>zarrs_opendal</code> <a href="https://crates.io/crates/zarrs_opendal"><img src="https://img.shields.io/crates/v/zarrs_opendal?label=" alt="zarrs_opendal_ver" /></a> <a href="https://docs.rs/zarrs_opendal"><img src="https://docs.rs/zarrs_opendal/badge.svg" alt="zarrs_opendal_doc" /></a></a></h3>
+<p><a href="https://docs.rs/opendal/latest/opendal/"><code>opendal</code></a> store support</p>
+<h3 id="zarrs_http"><a class="header" href="#zarrs_http"><code>zarrs_http</code> <a href="https://crates.io/crates/zarrs_http"><img src="https://img.shields.io/crates/v/zarrs_http?label=" alt="zarrs_http_ver" /></a> <a href="https://docs.rs/zarrs_http"><img src="https://docs.rs/zarrs_http/badge.svg" alt="zarrs_http_doc" /></a></a></h3>
+<p>A synchronous http store.</p>
+<h3 id="zarrs_zip"><a class="header" href="#zarrs_zip"><code>zarrs_zip</code> <a href="https://crates.io/crates/zarrs_zip"><img src="https://img.shields.io/crates/v/zarrs_zip?label=" alt="zarrs_zip_ver" /></a> <a href="https://docs.rs/zarrs_zip"><img src="https://docs.rs/zarrs_zip/badge.svg" alt="zarrs_zip_doc" /></a></a></h3>
+<p>A storage adapter for zip files.</p>
+<h3 id="zarrs_icechunk"><a class="header" href="#zarrs_icechunk"><code>zarrs_icechunk</code> <a href="https://crates.io/crates/zarrs_icechunk"><img src="https://img.shields.io/crates/v/zarrs_icechunk?label=" alt="zarrs_icechunk_ver" /></a> <a href="https://docs.rs/zarrs_icechunk"><img src="https://docs.rs/zarrs_icechunk/badge.svg" alt="zarrs_icechunk_doc" /></a></a></h3>
+<p><a href="https://docs.rs/icechunk/latest/icechunk/"><code>icechunk</code></a> store support.</p>
+<div style="break-before: page; page-break-before: always;"></div><h3 id="zarr_ffi"><a class="header" href="#zarr_ffi"><code>zarr_ffi</code> <a href="https://crates.io/crates/zarrs_ffi"><img src="https://img.shields.io/crates/v/zarrs_ffi?label=" alt="zarrs_ffi_ver" /></a> <a href="https://docs.rs/zarrs_ffi"><img src="https://docs.rs/zarrs_ffi/badge.svg" alt="zarrs_ffi_doc" /></a> <a href="https://github.com/LDeakin/zarrs_ffi"><img src="https://img.shields.io/badge/LDeakin%2Fzarrs_ffi?logo=%23181717" alt="zarrs_ffi_repo" /></a></a></h3>
+<p>A subset of <code>zarrs</code> exposed as a C/C++ API.</p>
+<div style="break-before: page; page-break-before: always;"></div><h3 id="zarrs_tools"><a class="header" href="#zarrs_tools"><code>zarrs_tools</code> <a href="https://crates.io/crates/zarrs_tools"><img src="https://img.shields.io/crates/v/zarrs_tools.svg" alt="zarrs_tools_ver" /></a> <a href="https://docs.rs/zarrs_tools"><img src="https://docs.rs/zarrs_tools/badge.svg" alt="zarrs_tools_doc" /></a></a></h3>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="zarr-benchmarks"><a class="header" href="#zarr-benchmarks">Zarr Benchmarks</a></h1>
 <p>This repository contains benchmarks of Zarr V3 implementations.</p>
 <blockquote>
@@ -314,6 +368,8 @@ Python benchmarks (<code>tensorstore</code> and <code>zarr-python</code>) are su
         <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
+        <script src="mermaid.min.js"></script>
+        <script src="mermaid-init.js"></script>
 
         <script>
         window.addEventListener('load', function() {
