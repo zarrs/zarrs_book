@@ -3,7 +3,7 @@ authors = ["Lachlan Deakin"]
 language = "en"
 multilingual = false
 src = "src"
-title = "zarrs"
+title = "The Rust zarrs Book"
 description = "This book covers the zarrs Rust crate (and associated tools) for the Zarr storage format for multidimensional arrays and metadata"
 
 [output.html]
