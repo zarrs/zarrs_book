@@ -157,7 +157,92 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="benchmarks"><a class="header" href="#benchmarks">Benchmarks</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="zarr-benchmarks"><a class="header" href="#zarr-benchmarks">Zarr Benchmarks</a></h1>
+<p>This repository contains benchmarks of Zarr V3 implementations.</p>
+<blockquote>
+<p>[!NOTE]
+Contributions are welcomed for additional benchmarks, more implementations, or otherwise cleaning up this repository.</p>
+<p>Also consider restarting development of the official zarr benchmark repository: https://github.com/zarr-developers/zarr-benchmark</p>
+</blockquote>
+<h2 id="implementations-benchmarked"><a class="header" href="#implementations-benchmarked">Implementations Benchmarked</a></h2>
+<ul>
+<li><a href="https://github.com/LDeakin/zarrs"><code>LDeakin/zarrs</code></a> v0.17.0 (Rust 1.81.0) via <a href="https://github.com/LDeakin/zarrs_tools"><code>LDeakin/zarrs_tools</code></a> 0.6.0 (4beba5f)
+<ul>
+<li>Benchmark executable (read): <a href="https://github.com/LDeakin/zarrs_tools/blob/main/src/bin/zarrs_benchmark_read_sync.rs">zarrs_benchmark_read_sync</a></li>
+<li>Benchmark executable (round trip): <a href="https://github.com/LDeakin/zarrs_tools/blob/main/src/bin/zarrs_reencode.rs">zarrs_benchmark_read_sync</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/google/tensorstore"><code>google/tensorstore</code></a> v0.1.67 (Python 3.12.5)
+<ul>
+<li>Benchmark script (read): <a href="zarr_benchmarks/./scripts/tensorstore_python_benchmark_read.py">scripts/tensorstore_python_benchmark_read.py</a></li>
+<li>Benchmark script (round trip): <a href="zarr_benchmarks/./scripts/tensorstore_python_benchmark_roundtrip.py">scripts/tensorstore_python_benchmark_roundtrip.py</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/zarr-developers/zarr-python"><code>zarr-developers/zarr-python</code></a> 3.0.0b1 (Python 3.12.5)
+<ul>
+<li>Benchmark script (read): <a href="zarr_benchmarks/./scripts/zarr_python_benchmark_read.py">scripts/zarr_python_benchmark_read.py</a></li>
+<li>Benchmark script (roundtrip): <a href="zarr_benchmarks/./scripts/zarr_python_benchmark_roundtrip.py">scripts/zarr_python_benchmark_roundtrip.py</a></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>[!WARNING]
+Python benchmarks (<code>tensorstore</code> and <code>zarr-python</code>) are subject to the overheads of Python and may not be using an optimal API/parameters.</p>
+<p>Please open a PR if you can improve these benchmarks.</p>
+</blockquote>
+<h2 id="make-targets"><a class="header" href="#make-targets"><code>make</code> Targets</a></h2>
+<ul>
+<li><code>pydeps</code>: install python dependencies (recommended to activate a venv first)</li>
+<li><code>zarrs_tools</code>: install <code>zarrs_tools</code> (set <code>CARGO_HOME</code> to override the installation dir)</li>
+<li><code>generate_data</code>: generate benchmark data</li>
+<li><code>benchmark_read_all</code>: run <a href="zarr_benchmarks/index.html#read-all-benchmark">read all</a> benchmark</li>
+<li><code>benchmark_read_chunks</code>: run <a href="zarr_benchmarks/index.html#read-chunk-by-chunk-benchmark">chunk-by-chunk</a> benchmark</li>
+<li><code>benchmark_roundtrip</code>: run <a href="zarr_benchmarks/index.html#round-trip-benchmark">roundtrip</a> benchmark</li>
+<li><code>benchmark_all</code>: run all benchmarks</li>
+</ul>
+<h2 id="benchmark-data"><a class="header" href="#benchmark-data">Benchmark Data</a></h2>
+<p>All datasets are $1024x1024x2048$ <code>uint16</code> arrays.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Chunk Shape</th><th>Shard Shape</th><th>Compression</th><th>Size</th></tr></thead><tbody>
+<tr><td>data/benchmark.zarr</td><td>$256^3$</td><td></td><td>None</td><td>8.0 GB</td></tr>
+<tr><td>data/benchmark_compress.zarr</td><td>$256^3$</td><td></td><td><code>blosclz</code> 9 + bitshuffling</td><td>377 MB</td></tr>
+<tr><td>data/benchmark_compress_shard.zarr</td><td>$32^3$</td><td>$256^3$</td><td><code>blosclz</code> 9 + bitshuffling</td><td>1.1 GB</td></tr>
+</tbody></table>
+</div>
+<h2 id="benchmark-system"><a class="header" href="#benchmark-system">Benchmark System</a></h2>
+<ul>
+<li>AMD Ryzen 5900X</li>
+<li>64GB DDR4 3600MHz (16-19-19-39)</li>
+<li>2TB Samsung 990 Pro</li>
+<li>Ubuntu 22.04 (in Windows 11 WSL2, swap disabled, 32GB available memory)</li>
+</ul>
+<h2 id="read-all-benchmark"><a class="header" href="#read-all-benchmark">Read All Benchmark</a></h2>
+<p>This benchmark measures the minimum time and and peak memory usage to read an entire dataset into memory.</p>
+<ul>
+<li>The disk cache is cleared between each measurement</li>
+<li>These are best of 3 measurements</li>
+</ul>
+<p><img src="zarr_benchmarks/./plots/benchmark_read_all.svg" alt="read all benchmark image" /></p>
+<p><a href="zarr_benchmarks/./measurements/benchmark_read_all.html">Table of raw measurements (benchmarks_read_all.md)</a></p>
+<h2 id="read-chunk-by-chunk-benchmark"><a class="header" href="#read-chunk-by-chunk-benchmark">Read Chunk-By-Chunk Benchmark</a></h2>
+<p>This benchmark measures the the minimum time and peak memory usage to read a dataset chunk-by-chunk into memory.</p>
+<ul>
+<li>The disk cache is cleared between each measurement</li>
+<li>These are best of 1 measurements</li>
+</ul>
+<p><img src="zarr_benchmarks/./plots/benchmark_read_chunks.svg" alt="read chunks benchmark image" /></p>
+<blockquote>
+<p>[!NOTE]
+<code>zarr-python</code> benchmarks with sharding are not visible in this plot</p>
+</blockquote>
+<p><a href="zarr_benchmarks/./measurements/benchmark_read_chunks.html">Table of raw measurements (benchmarks_read_chunks.md)</a></p>
+<h2 id="round-trip-benchmark"><a class="header" href="#round-trip-benchmark">Round Trip Benchmark</a></h2>
+<p>This benchmark measures time and peak memory usage to "round trip" a dataset (potentially chunk-by-chunk).</p>
+<ul>
+<li>The disk cache is cleared between each measurement</li>
+<li>These are best of 3 measurements</li>
+</ul>
+<p><img src="zarr_benchmarks/./plots/benchmark_roundtrip.svg" alt="roundtrip benchmark image" /></p>
+<p><a href="zarr_benchmarks/./measurements/benchmark_roundtrip.html">Table of raw measurements (benchmarks_roundtrip.md)</a></p>
 
                     </main>
 
