@@ -27,8 +27,8 @@ jobs:
 
       - uses: cargo-bins/cargo-binstall@main
 
-      - name: Install mdbook-mermaid
-        run: cargo binstall mdbook-mermaid
+      - name: Install mermaid extensions
+        run: cargo binstall mdbook-mermaid mdbook-alerts mdbook-pagetoc # mdbook-linkcheck
 
       - run: mdbook build
 
