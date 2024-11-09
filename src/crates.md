@@ -3,12 +3,12 @@
 ```mermaid
 graph LR
     subgraph Core
-        zarrs_metadata --> zarrs
-        zarrs_storage --> zarrs
+        zarrs_metadata[zarrs_metadata <br> zarrs::metadata] --> zarrs
+        zarrs_storage[zarrs_storage <br> zarrs::storage] --> zarrs
     end
     subgraph Stores
         direction LR
-        zarrs_filesystem
+        zarrs_filesystem[zarrs_filesystem <br> zarrs::filesystem]
         zarrs_object_store
         zarrs_opendal
         zarrs_http
