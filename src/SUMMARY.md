@@ -4,9 +4,7 @@
 
 # Rust Library (zarrs)
 
-- [Installation]()
-  - [Features]()
-  - [Extra crates]()
+- [Installation](installation.md)
 - [Basic usage]()
   - [Create or open a group]()
   - [Create or open an array]()
