@@ -157,6 +157,42 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>The most recent <code>zarrs</code> requires <a href="https://www.rust-lang.org/">Rust</a> version <img src="https://img.shields.io/crates/msrv/zarrs?label=" alt="msrv" /> or newer.</p>
+<p>You can check your current Rust version by running:</p>
+<pre><code class="language-sh">rustc --version
+</code></pre>
+<p>If you don’t have Rust installed, follow the <a href="https://www.rust-lang.org/tools/install">official Rust installation guide</a>.</p>
+<h2 id="optional-prerequisites"><a class="header" href="#optional-prerequisites">Optional Prerequisites</a></h2>
+<p>Some optional <code>zarrs</code> codecs require:</p>
+<ul>
+<li>The <a href="https://cmake.org/">CMake</a> build system.</li>
+<li>The <a href="https://clang.llvm.org/get_started.html">Clang</a> compiler.</li>
+</ul>
+<p>These are typically available through package managers on Linux, Homebrew on Mac, etc.</p>
+<h2 id="adding-zarrs-to-your-rust-libraryapplication"><a class="header" href="#adding-zarrs-to-your-rust-libraryapplication">Adding <code>zarrs</code> to Your Rust Library/Application</a></h2>
+<p><code>zarrs</code> is a Rust library.
+To use it as a dependency in your Rust project, add it to your <code>Cargo.toml</code> file:</p>
+<pre><code class="language-toml">[dependencies]
+zarrs = "18.0" # Replace with the latest version
+</code></pre>
+<p>The latest version is <a href="https://crates.io/crates/zarrs"><img src="https://img.shields.io/crates/v/zarrs.svg" alt="Latest Version" /></a>.
+See <a href="https://crates.io/crates/zarrs/versions">crates.io</a> for a full list of versions.</p>
+<h3 id="features"><a class="header" href="#features">Features</a></h3>
+<p><code>zarrs</code> has a number of features for enabling additional stores, codecs, or APIs, many of which are enabled by default.</p>
+<p>The below example demonstrates how to disable default features and explicitly enable required features:</p>
+<pre><code class="language-toml">[dependencies.zarrs]
+version = "18.0"
+default-features = false
+features = ["filesystem", "blosc"]
+</code></pre>
+<p>See <a href="https://docs.rs/zarrs/latest/zarrs/index.html#crate-features">zarrs (docs.rs) - Crate Features</a> for an up-to-date list of all available features.</p>
+<h3 id="using-the-latest-development-release"><a class="header" href="#using-the-latest-development-release">Using the Latest Development Release</a></h3>
+<pre><code class="language-toml">[dependencies]
+zarrs = { git = "https://github.com/LDeakin/zarrs.git" }
+</code></pre>
+<p>See the <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories">Cargo reference</a> for more information about using dependencies from <code>git</code> repositories.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="zarr-benchmarks"><a class="header" href="#zarr-benchmarks">Zarr Benchmarks</a></h1>
 <p>This repository contains benchmarks of Zarr V3 implementations.</p>
 <blockquote>
