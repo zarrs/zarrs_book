@@ -291,7 +291,7 @@ Supported object stores include:</p>
 <p><a href="https://docs.rs/zarrs_object_store/latest/zarrs_object_store/struct.AsyncObjectStore.html"><code>zarrs_object_store::AsyncObjectStore</code></a> wraps <a href="https://docs.rs/object_store/0.11.0/object_store/trait.ObjectStore.html"><code>object_store::ObjectStore</code></a> stores.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>use zarrs::storage::::AsyncReadableWritableListableStorage;
+</span>use zarrs::storage::::AsyncReadableStorage;
 use zarrs_object_store::AsyncObjectStore;
 
 let options = object_store::ClientOptions::new().with_allow_http(true);
@@ -299,8 +299,7 @@ let store = object_store::http::HttpBuilder::new()
     .with_url("http://...")
     .with_client_options(options)
     .build()?;
-let store: AsyncReadableWritableListableStorage =
-    Arc::new(AsyncObjectStore::new(store));
+let store: AsyncReadableStorage = Arc::new(AsyncObjectStore::new(store));
 <span class="boring">}</span></code></pre></pre>
 <h3 id="opendal"><a class="header" href="#opendal">OpenDAL</a></h3>
 <p><a href="https://github.com/LDeakin/zarrs/tree/main/zarrs_opendal"><img src="https://img.shields.io/badge/LDeakin/zarrs/zarrs__opendal-GitHub-blue?logo=github" alt="zarrs_opendal_repo" /></a> <a href="https://crates.io/crates/zarrs_opendal"><img src="https://img.shields.io/crates/v/zarrs_opendal" alt="zarrs_opendal_ver" /></a> <a href="https://docs.rs/zarrs_opendal"><img src="https://docs.rs/zarrs_opendal/badge.svg" alt="zarrs_opendal_doc" /></a></p>
@@ -314,7 +313,8 @@ use zarrs_opendal::AsyncOpendalStore;
 
 let builder = opendal::services::Http::default().endpoint("http://...");
 let operator = opendal::Operator::new(builder)?.finish();
-let store: AsyncReadableStorage = Arc::new(AsyncOpendalStore::new(operator));
+let store: AsyncReadableStorage =
+    Arc::new(AsyncOpendalStore::new(operator));
 <span class="boring">}</span></code></pre></pre>
 <div class="mdbook-alerts mdbook-alerts-note">
 <p class="mdbook-alerts-title">
@@ -323,6 +323,25 @@ let store: AsyncReadableStorage = Arc::new(AsyncOpendalStore::new(operator));
 </p>
 <p>Some <code>opendal</code> stores can also be used in a synchronous context with <a href="https://docs.rs/zarrs_opendal/latest/zarrs_opendal/struct.OpendalStore.html"><code>zarrs_object_store::OpendalStore</code></a>, which wraps <a href="https://docs.rs/opendal/0.50.2/opendal/struct.BlockingOperator.html"><code>opendal::BlockingOperator</code></a>.</p>
 </div>
+<h3 id="icechunk"><a class="header" href="#icechunk">Icechunk</a></h3>
+<p><a href="https://crates.io/crates/icechunk"><code>icechunk</code></a> is a transactional storage engine for Zarr designed for use on cloud object storage.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Create an icechunk store
+let storage = Arc::new(icechunk::ObjectStorage::new_in_memory_store(None));
+let icechunk_store = icechunk::Store::new_from_storage(storage).await?;
+let store =
+    Arc::new(zarrs_icechunk::AsyncIcechunkStore::new(icechunk_store));
+
+// Do some array/metadata manipulation with zarrs, then commit a snapshot
+let snapshot0 = store.commit("Initial commit").await?;
+
+// Do some more array/metadata manipulation, then commit another snapshot
+let snapshot1 = store.commit("Update data").await?;
+
+// Checkout the first snapshot
+store.checkout(icechunk::zarr::VersionInfo::SnapshotId(snapshot0)).await?;
+<span class="boring">}</span></code></pre></pre>
 <h2 id="storage-adapters"><a class="header" href="#storage-adapters">Storage Adapters</a></h2>
 <p>Storage adapters can be layered on top of stores to change their functionality.</p>
 <p>The below storage adapters are all available in the <code>zarrs::storage</code> submodule (via <code>zarrs_storage</code> <a href="https://docs.rs/zarrs_storage"><img src="https://docs.rs/zarrs_storage/badge.svg" alt="zarrs_storage_doc" /></a>).</p>
