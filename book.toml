@@ -9,3 +9,9 @@ description = "This book covers the zarrs Rust crate (and associated tools) for 
 [output.html]
 # mathjax-support = false
 git-repository-url = "https://github.com/LDeakin/zarrs_book"
+additional-js = ["mermaid.min.js", "mermaid-init.js"]
+
+[preprocessor]
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
