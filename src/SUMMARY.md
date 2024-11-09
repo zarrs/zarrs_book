@@ -2,10 +2,6 @@
 
 [Introduction](introduction.md)
 
-# Python (zarrs_python)
-- [Installation]()
-- [Quick Start]()
-
 # Rust (zarrs)
 - [Installation](installation.md)
 - [Crates](crates.md)
@@ -25,9 +21,10 @@
 - [Extending `zarrs`]()
   - [Creating a new store]()
 
-# C/C++ (zarrs_ffi)
-- [CMake Setup](zarrs_ffi.md)
-- [Quick Start]()
+# Bindings
+
+- [C/C++ (zarrs_ffi)](zarrs_ffi.md)
+- [Python (zarrs_python)](zarrs_python.md)
 
 ---
 
