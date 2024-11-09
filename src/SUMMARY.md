@@ -7,17 +7,17 @@
 - [Crates](crates.md)
 - [Quick Start]()
 - [Basic usage]()
-  - [Create or open a group]()
-  - [Create or open an array]()
-  - [Writing metadata]()
+  - [Initialising a store](./basic_usage/store_init.md)
+  - [Initialising a group]()
+  - [Initialising an array]()
   - [Reading array data]()
   - [Writing array data]()
 - [Advanced usage]()
   - [Configuration]()
   - [Partial decoding]()
   - [Partial encoding]()
+  - [Performance tips]()
   - [Converting Zarr V2 to V3]()
-- [Performance tips]()
 - [Extending `zarrs`]()
   - [Creating a new store]()
 
@@ -28,10 +28,9 @@
 
 ---
 
-# CLI Tools (zarrs_tools)
+# CLI Tools
 
-- [Installation](zarrs_tools.md)
-- [zarrs_reencode]()
+- [zarrs_tools](zarrs_tools.md)
 
 ---
 

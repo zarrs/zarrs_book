@@ -41,8 +41,8 @@ The [Cargo reference](https://doc.rust-lang.org/cargo/reference/specifying-depen
 ## Crate Features
 
 `zarrs` has a number of features for stores, codecs, or APIs, many of which are enabled by default.
-
 The below example demonstrates how to disable default features and explicitly enable required features:
+
 ```toml
 [dependencies.zarrs]
 version = "18.0"
