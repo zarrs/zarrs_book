@@ -2,13 +2,14 @@
 
 [Introduction](introduction.md)
 
-[Quick Start (Rust)]()
-[Quick Start (Python)]()
+# Python (zarrs_python)
+- [Installation]()
+- [Quick Start]()
 
-# Rust Library (zarrs)
-
+# Rust (zarrs)
 - [Installation](installation.md)
 - [Crates](crates.md)
+- [Quick Start]()
 - [Basic usage]()
   - [Create or open a group]()
   - [Create or open an array]()
@@ -24,16 +25,9 @@
 - [Extending `zarrs`]()
   - [Creating a new store]()
 
-# Python Bindings (zarrs_python)
-
-- [Installation]()
-- [Usage]()
-- [Limitations]()
-
-# C/C++ Bindings (zarrs_ffi)
-
+# C/C++ (zarrs_ffi)
 - [CMake Setup](zarrs_ffi.md)
-- [Usage]()
+- [Quick Start]()
 
 ---
 

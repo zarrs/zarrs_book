@@ -11,6 +11,8 @@ description = "This book covers the zarrs Rust crate (and associated tools) for 
 git-repository-url = "https://github.com/LDeakin/zarrs_book"
 additional-js = ["mermaid.min.js", "mermaid-init.js", "theme/pagetoc.js"]
 additional-css = ["theme/custom.css", "theme/pagetoc.css"]
+# TODO: cname
+# TODO: site-url
 
 [preprocessor]
 
