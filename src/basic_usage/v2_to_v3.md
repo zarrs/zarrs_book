@@ -3,8 +3,11 @@
 ## Changing the Internal Representation
 When an array or group is initialised, it internally holds metadata in the Zarr version it was created with.
 
-To change the internal representation, call `to_v3()` on an `Array` or `Group`, then call `store_metadata()` to update the stored metadata.
+To change the internal representation to Zarr V3, call `to_v3()` on an `Array` or `Group`, then call `store_metadata()` to update the stored metadata.
 V2 metadata must be explicitly erased if needed (see below).
+
+> [!NOTE]
+> While `zarrs` fully supports manipulation of Zarr V2 and V3 hierarchies (with supported codecs, data types, etc.), it only supports **forward conversion** of metadata from Zarr V2 to V3.
 
 ### Convert a Group to V3
 ```rs
@@ -40,7 +43,7 @@ group.store_metadata_opt(&
     GroupMetadataOptions::default()
     .with_metadata_convert_version(MetadataConvertVersion::V3)
 )?;
-// group.store_metadata_opt(...).await?;
+// group.async_store_metadata_opt(...).await?;
 ```
 
 > [!WARNING]
