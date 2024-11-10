@@ -12,12 +12,12 @@
   - [Initialising an array]()
   - [Reading array data]()
   - [Writing array data]()
+  - [Converting Zarr V2 to V3](./basic_usage/v2_to_v3.md)
 - [Advanced usage]()
   - [Configuration]()
   - [Partial decoding]()
   - [Partial encoding]()
   - [Performance tips]()
-  - [Converting Zarr V2 to V3]()
 - [Extending `zarrs`]()
   - [Developing a new store]()
 
