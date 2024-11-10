@@ -127,35 +127,6 @@ group.store_metadata()?;
 // group.async_store_metadata().await?;
 ```
 
-## Metadata Options
-
-The `store_metadata` method internally calls [`store_metadata_opt`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.store_metadata_opt).
-This method accepts a [`GroupMetadataOptions`](https://docs.rs/zarrs/latest/zarrs/group/struct.GroupMetadataOptions.html) argument.
-`GroupMetadataOptions` currently has only one option that impacts the Zarr version of the metadata.
-
-### Zarr V2 to Zarr V3
-By default, `GroupMetadataOptions` keeps the current Zarr version.
-
-To convert a Zarr V2 group to Zarr V3:
-```rs
-group.store_metadata_opt(&
-    GroupMetadataOptions::default()
-    .with_metadata_convert_version(MetadataConvertVersion::V3)
-)?;
-// group.store_metadata_opt(...).await?;
-```
-
-> [!WARNING]
-> `zarrs` does not support converting Zarr V3 metadata to Zarr V2.
-
-Note that the original metadata is not automatically deleted.
-If you want to delete it:
-
-```rs
-group.erase_metadata()?;
-// group.async_erase_metadata().await?;
-```
-
 ## Mutating a Group
 
 Group attributes can be changed after initialisation with [`Group::attributes_mut`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.attributes_mut):

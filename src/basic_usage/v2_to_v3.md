@@ -34,7 +34,7 @@ For groups, the `store_metadata_opt` accepts a [`GroupMetadataOptions`](https://
 `GroupMetadataOptions` currently has only one option that impacts the Zarr version of the metadata.
 By default, `GroupMetadataOptions` keeps the current Zarr version.
 
-To convert a Zarr V2 group to Zarr V3:
+To write Zarr V3 metadata:
 ```rs
 group.store_metadata_opt(&
     GroupMetadataOptions::default()
