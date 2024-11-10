@@ -227,8 +227,15 @@
 <h1 id="converting-zarr-v2-to-v3"><a class="header" href="#converting-zarr-v2-to-v3">Converting Zarr V2 to V3</a></h1>
 <h2 id="changing-the-internal-representation"><a class="header" href="#changing-the-internal-representation">Changing the Internal Representation</a></h2>
 <p>When an array or group is initialised, it internally holds metadata in the Zarr version it was created with.</p>
-<p>To change the internal representation, call <code>to_v3()</code> on an <code>Array</code> or <code>Group</code>, then call <code>store_metadata()</code> to update the stored metadata.
+<p>To change the internal representation to Zarr V3, call <code>to_v3()</code> on an <code>Array</code> or <code>Group</code>, then call <code>store_metadata()</code> to update the stored metadata.
 V2 metadata must be explicitly erased if needed (see below).</p>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>While <code>zarrs</code> fully supports manipulation of Zarr V2 and V3 hierarchies (with supported codecs, data types, etc.), it only supports <strong>forward conversion</strong> of metadata from Zarr V2 to V3.</p>
+</div>
 <h3 id="convert-a-group-to-v3"><a class="header" href="#convert-a-group-to-v3">Convert a Group to V3</a></h3>
 <pre><code class="language-rs">let group: Group = group.to_v3();
 group.store_metadata()?;
