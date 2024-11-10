@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>C/C++ (zarrs_ffi) - The Rust zarrs Book</title>
+        <title>Initialising a group - The Rust zarrs Book</title>
 
 
         <!-- Custom HTML head -->
@@ -12,34 +12,34 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="theme/custom.css">
-        <link rel="stylesheet" href="theme/pagetoc.css">
+        <link rel="stylesheet" href="../theme/custom.css">
+        <link rel="stylesheet" href="../theme/pagetoc.css">
 
 
         <!-- Provide site root to javascript -->
         <script>
-            var path_to_root = "";
+            var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
     <div id="body-container">
@@ -91,7 +91,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -125,7 +125,7 @@
                     <h1 class="menu-title">The Rust zarrs Book</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/LDeakin/zarrs_book" title="Git repository" aria-label="Git repository">
@@ -224,66 +224,98 @@
 }
 
 </style>
-<h1 id="cc-bindings-zarrs_ffi"><a class="header" href="#cc-bindings-zarrs_ffi">C/C++ Bindings (zarrs_ffi)</a></h1>
-<p><code>zarrs_ffi</code> is a single header library: <code>zarrs.h</code> <a href="https://ldeakin.github.io/zarrs_ffi/zarrs_8h.html">(API docs)</a>.</p>
-<p>Currently <code>zarrs_ffi</code> only supports a subset of the <code>zarrs</code> API.
-However, it is sufficient for typical reading and writing of Zarr hierarchies.</p>
-<p>These bindings are used in production at the <a href="https://physics.anu.edu.au/research/mp/">Department of Materials Physics</a>, Australian National University, Canberra, Australia.</p>
-<h2 id="cmake-quickstart"><a class="header" href="#cmake-quickstart">CMake Quickstart</a></h2>
-<ol>
-<li>Install the Rust compiler (and cargo).</li>
-<li>Put <a href="https://github.com/LDeakin/zarrs_ffi/blob/main/examples/cmake_project/Findzarrs.cmake">Findzarrs.cmake</a> in your <code>CMAKE_MODULE_PATH</code></li>
-<li><code>find_package(zarrs &lt;version&gt; REQUIRED COMPONENTS zarrs/bz2)</code>
-<ul>
-<li>Replace <code>&lt;version&gt;</code> with the latest release: <a href="https://crates.io/crates/zarrs_ffi"><img src="https://img.shields.io/crates/v/zarrs_ffi.svg" alt="Latest Version" /></a>.
-<ul>
-<li>Example: <code>0.8</code> or <code>0.8.4</code></li>
-</ul>
-</li>
-<li><code>zarrs</code> is retrieved from <code>GitHub</code> using <a href="https://cmake.org/cmake/help/latest/module/FetchContent.html">FetchContent</a> and built using <a href="https://github.com/corrosion-rs/corrosion">corrosion</a></li>
-<li>Components are optional <code>zarrs</code> codecs</li>
-</ul>
-</li>
-<li>the <code>zarrs_ffi</code> library is available as the <code>zarrs::zarrs</code> or  <code>zarrs::zarrs-static</code> target</li>
-</ol>
-<p>A complete <code>CMake</code> example can be found in <a href="https://github.com/LDeakin/zarrs_ffi/tree/main/examples/cmake_project">zarrs_ffi/examples/cmake_project</a>.</p>
-<p>For more comprehensive build instructions, see the <a href="https://github.com/LDeakin/zarrs_ffi">zarrs_ffi/README.md</a>.</p>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
-<pre><code class="language-C++">#include "zarrs.h"
-
-void main() {
-  // Open a filesystem store pointing to a zarr hierarchy
-  ZarrsStorage storage = nullptr;
-  zarrs_assert(zarrsCreateStorageFilesystem("/path/to/hierarchy.zarr", &amp;storage));
-
-  // Open an array in the hierarchy
-  ZarrsArray array = nullptr;
-  zarrsOpenArrayRW(storage, "/array", metadata, &amp;array);
-
-  // Get the array dimensionality
-  size_t dimensionality;
-  zarrs_assert(zarrsArrayGetDimensionality(array, &amp;dimensionality));
-  assert(dimensionality == 2);
-
-  // Retrieve the decoded bytes of the chunk at [0, 0]
-  size_t indices[] = {0, 0};
-  size_t chunk_size;
-  zarrs_assert(zarrsArrayGetChunkSize(array, 2, indices, &amp;chunk_size));
-  std::unique_ptr&lt;uint8_t[]&gt; chunk_bytes(new uint8_t[chunk_size]);
-  zarrs_assert(zarrsArrayRetrieveChunk(array, 2, indices, chunk_size, chunk_bytes.get()));
-}
+<h1 id="initialising-a-group"><a class="header" href="#initialising-a-group">Initialising a Group</a></h1>
+<h2 id="creating-attributes"><a class="header" href="#creating-attributes">Creating Attributes</a></h2>
+<p>Attributes are encoded in a JSON object (<code>serde_json::Object</code>).</p>
+<p>Here are a few different approaches for constructing a JSON object:</p>
+<pre><code class="language-rs">let value = serde_json::json!({
+    "spam": "ham",
+    "eggs": 42
+});
 </code></pre>
-<p>Complete examples can be found in <a href="https://github.com/LDeakin/zarrs_ffi/tree/main/examples">zarrs_ffi/examples</a>.</p>
+<pre><code class="language-rs">let attributes: serde_json::Object =
+    serde_json::json!(value).as_object().unwrap().clone()
+</code></pre>
+<pre><code class="language-rs">let serde_json::Value::Object(attributes) = value else { unreachable!() };
+</code></pre>
+<pre><code class="language-rs">let mut attributes =  serde_json::Object::default();
+attributes.insert("spam".to_string(), Value::String("ham".to_string()));
+attributes.insert("eggs".to_string(), Value::Number(42.into()));
+</code></pre>
+<p>Alternatively, you can encode your attributes in a struct deriving <code>Serialize</code>, and serialize to a <code>serde_json::Object</code>.</p>
+<h2 id="creating-a-group-with-the-groupbuilder"><a class="header" href="#creating-a-group-with-the-groupbuilder">Creating a Group with the <code>GroupBuilder</code></a></h2>
+<pre><code class="language-rs">let group = zarrs::group::GroupBuilder::new()
+    .attributes(attributes)
+    .build(store.clone(), "/group")?;
+group.store_metadata()?;
+</code></pre>
+<p>Note that the <code>/group</code> path is relative to the root of the store.</p>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>The <code>GroupBuilder</code> only supports Zarr V3 groups.</p>
+</div>
+<h2 id="creating-a-group-from-groupmetadata"><a class="header" href="#creating-a-group-from-groupmetadata">Creating a Group from <code>GroupMetadata</code></a></h2>
+<h3 id="zarr-v3"><a class="header" href="#zarr-v3">Zarr V3</a></h3>
+<pre><code class="language-rs">let metadata: GroupMetadata =
+    GroupMetadataV3::new().with_attributes(attributes).into();
+let group =
+    Group::new_with_metadata(store.clone(), "/group", metadata)?;
+group.store_metadata()?;
+</code></pre>
+<pre><code class="language-rs">let metadata: GroupMetadataV3 = serde_json::from_str(
+    r#"{
+    "zarr_format": 3,
+    "node_type": "group",
+    "attributes": {
+        "spam": "ham",
+        "eggs": 42
+    },
+    "unknown": {
+        "must_understand": false
+    }
+}"#,
+)?;
+let group =
+    Group::new_with_metadata(store.clone(), "/group", metadata.into())?;
+group.store_metadata()?;
+</code></pre>
+<h3 id="zarr-v2"><a class="header" href="#zarr-v2">Zarr V2</a></h3>
+<pre><code class="language-rs">let metadata: GroupMetadata =
+    GroupMetadataV2::new().with_attributes(attributes).into();
+let group = Group::new_with_metadata(store.clone(), "/group", metadata)?;
+group.store_metadata()?;
+</code></pre>
+<h2 id="remember-to-store-metadata"><a class="header" href="#remember-to-store-metadata">Remember to Store Metadata!</a></h2>
+<p><code>store_metadata</code> is explicitly called immediately after creating the group in all of the examples above.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>Group metadata must <strong>always</strong> be stored explicitly, even if the attributes are empty.</p>
+</div>
+<p>Group metadata must be stored because support for implicit groups (without metadata) <a href="https://github.com/zarr-developers/zarr-specs/pull/292/">was removed long after provisional acceptance of the Zarr V3 specification</a>.</p>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>Consider deferring storage of group metadata until child group/array operations are complete.
+Ths presence of valid metadata can act as a signal that the data is ready.</p>
+</div>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="basic_usage/group_init.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../basic_usage/store_init.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="zarrs_python.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../zarrs_ffi.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -293,11 +325,11 @@ void main() {
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="basic_usage/group_init.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../basic_usage/store_init.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="zarrs_python.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../zarrs_ffi.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
@@ -312,18 +344,18 @@ void main() {
         </script>
 
 
-        <script src="elasticlunr.min.js"></script>
-        <script src="mark.min.js"></script>
-        <script src="searcher.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="clipboard.min.js"></script>
-        <script src="highlight.js"></script>
-        <script src="book.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="mermaid.min.js"></script>
-        <script src="mermaid-init.js"></script>
-        <script src="theme/pagetoc.js"></script>
+        <script src="../mermaid.min.js"></script>
+        <script src="../mermaid-init.js"></script>
+        <script src="../theme/pagetoc.js"></script>
 
 
     </div>

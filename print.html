@@ -330,7 +330,7 @@ features = ["filesystem", "blosc"]
 <p>See <a href="https://docs.rs/zarrs/latest/zarrs/index.html#crate-features">zarrs (docs.rs) - Crate Features</a> for an up-to-date list of all available features.</p>
 <h2 id="supplementary-crates"><a class="header" href="#supplementary-crates">Supplementary Crates</a></h2>
 <p>Some <code>zarrs</code> functionality (e.g. additional stores, bindings, etc.) are in separate crates.
-The next chapter details the <code>zarrs</code> crate ecosystem.</p>
+The next section details the <code>zarrs</code> crate ecosystem.</p>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
@@ -545,7 +545,7 @@ The next chapter details the <code>zarrs</code> crate ecosystem.</p>
 }
 
 </style>
-<h1 id="creating-a-store"><a class="header" href="#creating-a-store">Creating a Store</a></h1>
+<h1 id="initialising-a-store"><a class="header" href="#initialising-a-store">Initialising a Store</a></h1>
 <p>A Zarr store is a system that can be used to store and retrieve data from a Zarr hierarchy.
 For example: a filesystem, HTTP server, FTP server, Amazon S3 bucket, etc.
 A store implements a key/value store interface for storing, retrieving, listing, and erasing keys.</p>
@@ -729,6 +729,155 @@ let store = Arc::new(PerformanceMetricsStorageAdapter::new(store));
 
 assert_eq!(store.bytes_read(), ...);
 <span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="initialising-a-group"><a class="header" href="#initialising-a-group">Initialising a Group</a></h1>
+<h2 id="creating-attributes"><a class="header" href="#creating-attributes">Creating Attributes</a></h2>
+<p>Attributes are encoded in a JSON object (<code>serde_json::Object</code>).</p>
+<p>Here are a few different approaches for constructing a JSON object:</p>
+<pre><code class="language-rs">let value = serde_json::json!({
+    "spam": "ham",
+    "eggs": 42
+});
+</code></pre>
+<pre><code class="language-rs">let attributes: serde_json::Object =
+    serde_json::json!(value).as_object().unwrap().clone()
+</code></pre>
+<pre><code class="language-rs">let serde_json::Value::Object(attributes) = value else { unreachable!() };
+</code></pre>
+<pre><code class="language-rs">let mut attributes =  serde_json::Object::default();
+attributes.insert("spam".to_string(), Value::String("ham".to_string()));
+attributes.insert("eggs".to_string(), Value::Number(42.into()));
+</code></pre>
+<p>Alternatively, you can encode your attributes in a struct deriving <code>Serialize</code>, and serialize to a <code>serde_json::Object</code>.</p>
+<h2 id="creating-a-group-with-the-groupbuilder"><a class="header" href="#creating-a-group-with-the-groupbuilder">Creating a Group with the <code>GroupBuilder</code></a></h2>
+<pre><code class="language-rs">let group = zarrs::group::GroupBuilder::new()
+    .attributes(attributes)
+    .build(store.clone(), "/group")?;
+group.store_metadata()?;
+</code></pre>
+<p>Note that the <code>/group</code> path is relative to the root of the store.</p>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>The <code>GroupBuilder</code> only supports Zarr V3 groups.</p>
+</div>
+<h2 id="creating-a-group-from-groupmetadata"><a class="header" href="#creating-a-group-from-groupmetadata">Creating a Group from <code>GroupMetadata</code></a></h2>
+<h3 id="zarr-v3"><a class="header" href="#zarr-v3">Zarr V3</a></h3>
+<pre><code class="language-rs">let metadata: GroupMetadata =
+    GroupMetadataV3::new().with_attributes(attributes).into();
+let group =
+    Group::new_with_metadata(store.clone(), "/group", metadata)?;
+group.store_metadata()?;
+</code></pre>
+<pre><code class="language-rs">let metadata: GroupMetadataV3 = serde_json::from_str(
+    r#"{
+    "zarr_format": 3,
+    "node_type": "group",
+    "attributes": {
+        "spam": "ham",
+        "eggs": 42
+    },
+    "unknown": {
+        "must_understand": false
+    }
+}"#,
+)?;
+let group =
+    Group::new_with_metadata(store.clone(), "/group", metadata.into())?;
+group.store_metadata()?;
+</code></pre>
+<h3 id="zarr-v2"><a class="header" href="#zarr-v2">Zarr V2</a></h3>
+<pre><code class="language-rs">let metadata: GroupMetadata =
+    GroupMetadataV2::new().with_attributes(attributes).into();
+let group = Group::new_with_metadata(store.clone(), "/group", metadata)?;
+group.store_metadata()?;
+</code></pre>
+<h2 id="remember-to-store-metadata"><a class="header" href="#remember-to-store-metadata">Remember to Store Metadata!</a></h2>
+<p><code>store_metadata</code> is explicitly called immediately after creating the group in all of the examples above.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>Group metadata must <strong>always</strong> be stored explicitly, even if the attributes are empty.</p>
+</div>
+<p>Group metadata must be stored because support for implicit groups (without metadata) <a href="https://github.com/zarr-developers/zarr-specs/pull/292/">was removed long after provisional acceptance of the Zarr V3 specification</a>.</p>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>Consider deferring storage of group metadata until child group/array operations are complete.
+Ths presence of valid metadata can act as a signal that the data is ready.</p>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
