@@ -231,33 +231,35 @@ The core array methods are:</p>
 <ul>
 <li><a href="crate::storage::ReadableStorageTraits"><code>ReadableStorageTraits</code></a>: read array data and metadata
 <ul>
-<li><a href="Array::retrieve_chunk_if_exists"><code>retrieve_chunk_if_exists</code></a></li>
-<li><a href="Array::retrieve_chunk"><code>retrieve_chunk</code></a></li>
-<li><a href="Array::retrieve_chunks"><code>retrieve_chunks</code></a></li>
-<li><a href="Array::retrieve_chunk_subset"><code>retrieve_chunk_subset</code></a></li>
-<li><a href="Array::retrieve_array_subset"><code>retrieve_array_subset</code></a></li>
-<li><a href="Array::retrieve_encoded_chunk"><code>retrieve_encoded_chunk</code></a></li>
-<li><a href="Array::partial_decoder"><code>partial_decoder</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunk_if_exists"><code>retrieve_chunk_if_exists</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunk"><code>retrieve_chunk</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunks"><code>retrieve_chunks</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunk_subset"><code>retrieve_chunk_subset</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_array_subset"><code>retrieve_array_subset</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_encoded_chunk"><code>retrieve_encoded_chunk</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.partial_decoder"><code>partial_decoder</code></a></li>
 </ul>
 </li>
-<li><a href="crate::storage::WritableStorageTraits"><code>WritableStorageTraits</code></a>: store/erase array data and store metadata
+<li><a href="crate::storage::WritableStorageTraits"><code>WritableStorageTraits</code></a>: store/erase array data and metadata
 <ul>
-<li><a href="Array::store_metadata"><code>store_metadata</code></a></li>
-<li><a href="Array::store_chunk"><code>store_chunk</code></a></li>
-<li><a href="Array::store_chunks"><code>store_chunks</code></a></li>
-<li><a href="Array::store_encoded_chunk"><code>store_encoded_chunk</code></a></li>
-<li><a href="Array::erase_chunk"><code>erase_chunk</code></a></li>
-<li><a href="Array::erase_chunks"><code>erase_chunks</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_metadata"><code>store_metadata</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_metadata"><code>erase_metadata</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunk"><code>store_chunk</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunks"><code>store_chunks</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_encoded_chunk"><code>store_encoded_chunk</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunk"><code>erase_chunk</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunks"><code>erase_chunks</code></a></li>
 </ul>
 </li>
 <li><a href="crate::storage::ReadableWritableStorageTraits"><code>ReadableWritableStorageTraits</code></a>: store operations requiring reading <em>and</em> writing
 <ul>
-<li><a href="Array::store_chunk_subset"><code>store_chunk_subset</code></a></li>
-<li><a href="Array::store_array_subset"><code>store_array_subset</code></a></li>
-<li><a href="Array::partial_encoder"><code>partial_encoder</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunk_subset"><code>store_chunk_subset</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_array_subset"><code>store_array_subset</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.partial_encoder"><code>partial_encoder</code></a></li>
 </ul>
 </li>
 </ul>
+<p>This section focuses on the <code>ReadableStorageTraits</code> methods.</p>
 <h2 id="method-variants"><a class="header" href="#method-variants">Method Variants</a></h2>
 <p>Many <code>retrieve</code> and <code>store</code> methods have multiple variants:</p>
 <ul>
@@ -271,7 +273,7 @@ The core array methods are:</p>
 <h2 id="reading-a-chunk"><a class="header" href="#reading-a-chunk">Reading a Chunk</a></h2>
 <h3 id="reading-and-decoding-a-chunk"><a class="header" href="#reading-and-decoding-a-chunk">Reading and Decoding a Chunk</a></h3>
 <pre><code class="language-rs">let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
-let chunk_bytes: Vec&lt;u8&gt; = array.retrieve_chunk(&amp;chunk_indices)?;
+let chunk_bytes: ArrayBytes = array.retrieve_chunk(&amp;chunk_indices)?;
 let chunk_elements: Vec&lt;f32&gt; =
     array.retrieve_chunk_elements(&amp;chunk_indices)?;
 let chunk_array: ndarray::ArrayD&lt;f32&gt; =
@@ -282,67 +284,160 @@ let chunk_array: ndarray::ArrayD&lt;f32&gt; =
   <span class="mdbook-alerts-icon"></span>
   warning
 </p>
-<p><code>_element</code> variants will fail if the element type does not match the array data type.
+<p><code>_element</code> and <code>_ndarray</code> variants will fail if the element type does not match the array data type.
 They do not perform any conversion.</p>
 </div>
-<h3 id="codec-parallelism"><a class="header" href="#codec-parallelism">Codec Parallelism</a></h3>
-<!-- TODO: Discuss codec parallelism -->
 <h3 id="skipping-empty-chunks"><a class="header" href="#skipping-empty-chunks">Skipping Empty Chunks</a></h3>
+<p>Use <code>retrieve_chunk_if_exists</code> to only retrieve a chunk if it exists (i.e. is not composed entirely of the fill value, or has yet to be written to the store):</p>
+<pre><code class="language-rs">let chunk_bytes: Option&lt;ArrayBytes&gt; =
+    array.retrieve_chunk_if_exists(&amp;chunk_indices)?;
+let chunk_elements: Option&lt;Vec&lt;f32&gt;&gt; =
+    array.retrieve_chunk_elements_if_exists(&amp;chunk_indices)?;
+let chunk_array: Option&lt;ndarray::ArrayD&lt;f32&gt;&gt; =
+    array.retrieve_chunk_ndarray_if_exists(&amp;chunk_indices)?;
+</code></pre>
 <h3 id="retrieving-an-encoded-chunk"><a class="header" href="#retrieving-an-encoded-chunk">Retrieving an Encoded Chunk</a></h3>
 <p>An encoded chunk can be retrieved without decoding with <code>retrieve_encoded_chunk</code>:</p>
 <pre><code class="language-rs">let chunk_bytes_encoded: Option&lt;Vec&lt;u8&gt;&gt; =
-    array.retrieve_encoded_chunk(&amp;chunk_indices);
+    array.retrieve_encoded_chunk(&amp;chunk_indices)?;
 </code></pre>
 <p>This returns <code>None</code> if a chunk does not exist.</p>
-<h2 id="reading-chunks"><a class="header" href="#reading-chunks">Reading Chunks</a></h2>
-<!-- TODO -->
-<p><code>retrieve_encoded_chunks</code> executes with chunk parallelism</p>
+<h2 id="parallelism-and-concurrency"><a class="header" href="#parallelism-and-concurrency">Parallelism and Concurrency</a></h2>
+<h3 id="codec-and-chunk-parallelism"><a class="header" href="#codec-and-chunk-parallelism">Codec and Chunk Parallelism</a></h3>
+<p>Codecs run in parallel on a threadpool.
+Array store and retrieve methods will also run in parallel when they involve multiple chunks.
+<code>zarrs</code> will automatically choose where to prioritise parallelism between codecs/chunks based on the codecs and number of chunks.</p>
+<p>By default, all available CPU cores will be used (where possible/efficient).
+Concurrency can be limited globally with <a href="https://docs.rs/zarrs/latest/zarrs/config/struct.Config.html#method.set_codec_concurrent_target"><code>Config::set_codec_concurrent_target</code></a> or as required using <code>_opt</code> methods with <a href="https://docs.rs/zarrs/latest/zarrs/array/codec/options/struct.CodecOptions.html"><code>CodecOptions</code></a> populated with <a href="https://docs.rs/zarrs/latest/zarrs/array/codec/options/struct.CodecOptions.html#method.set_concurrent_target"><code>CodecOptions::set_concurrent_target</code></a>.</p>
+<h3 id="async-api-concurrency"><a class="header" href="#async-api-concurrency">Async API Concurrency</a></h3>
+<p>This crate is async runtime-agnostic.
+Async methods do not spawn tasks internally, so asynchronous storage calls are concurrent but not parallel.
+Codec encoding and decoding operations still execute in parallel (where supported) in an asynchronous context.</p>
+<p>Due the lack of parallelism, methods like <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_retrieve_array_subset"><code>async_retrieve_array_subset</code></a> or <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_retrieve_chunks"><code>async_retrieve_chunks</code></a> do not parallelise over chunks and can be slow compared to the  API.
+Parallelism over chunks can be achieved by spawning tasks outside of <code>zarrs</code>.
+If executing many tasks concurrently, consider reducing the codec <a href="crate::array::codec::CodecOptions::set_concurrent_target"><code>concurrent_target</code></a>.</p>
+<h2 id="reading-chunks-in-parallel"><a class="header" href="#reading-chunks-in-parallel">Reading Chunks in Parallel</a></h2>
+<p>The <code>retrieve_chunks</code> methods perform chunk retrieval with chunk parallelism.</p>
+<p>Rather than taking a <code>&amp;[u64]</code> parameter of the indices of a single chunk, these methods take an <code>ArraySubset</code> representing the chunks.
+Rather than returning a <code>Vec</code> for each chunk, the chunks are assembled into a single output for the entire region they cover:</p>
+<pre><code class="language-rs">let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..4]);
+let chunks_bytes: ArrayBytes = array.retrieve_chunks(&amp;chunks)?;
+let chunks_elements: Vec&lt;f32&gt; = array.retrieve_chunks_elements(&amp;chunks)?;
+let chunks_array: ndarray::ArrayD&lt;f32&gt; =
+    array.retrieve_chunks_ndarray(&amp;chunks)?;
+</code></pre>
+<p><code>retrieve_encoded_chunks</code> differs in that it does not assemble the output.
+Chunks returned are in order of the chunk indices returned by <code>chunks.indices().into_iter()</code>:</p>
 <pre><code class="language-rs">let chunk_bytes_encoded: Vec&lt;Option&lt;Vec&lt;u8&gt;&gt;&gt; =
-    array.retrieve_encoded_chunks(&amp;chunk_indices, &amp;CodecOptions::defualt());
+    array.retrieve_encoded_chunks(&amp;chunk_indices, &amp;CodecOptions::default()?);
 </code></pre>
-<p>The chunks returned are in order of the chunk indices returned by chunks.indices().into_iter().</p>
-<h3 id="chunk-parallelism"><a class="header" href="#chunk-parallelism">Chunk Parallelism</a></h3>
-<h2 id="iterating-over-chunks"><a class="header" href="#iterating-over-chunks">Iterating Over Chunks</a></h2>
-<pre><code class="language-rs">let indices = chunks.indices();
-for chunk_indices in indices {
-    ...
-}
-</code></pre>
-<pre><code class="language-rs">let indices = chunks.indices();
-chunks.into_par_iter().try_for_each(|chunk_indices| {
-    ...
-})?;
-</code></pre>
-<h2 id="reading-a-subset"><a class="header" href="#reading-a-subset">Reading a Subset</a></h2>
+<h2 id="reading-a-chunk-subset"><a class="header" href="#reading-a-chunk-subset">Reading a Chunk Subset</a></h2>
 <p>An <a href="https://docs.rs/zarrs/latest/zarrs/array_subset/struct.ArraySubset.html"><code>ArraySubset</code></a> represents a subset (region) of an array or chunk.
-It encodes a starting coordinate and a shape, and is a foundation for many array operations.</p>
+It encodes a starting coordinate and a shape, and is foundational for many array operations.</p>
 <p>The below array subsets are all identical:</p>
 <pre><code class="language-rs">let subset = ArraySubset::new_with_ranges(&amp;[2..6, 3..5]);
 let subset = ArraySubset::new_with_start_shape(vec![2, 3], vec![4, 2])?;
 let subset = ArraySubset::new_with_start_end_exc(vec![2, 3], vec![6, 5])?;
 let subset = ArraySubset::new_with_start_end_inc(vec![2, 3], vec![5, 4])?;
 </code></pre>
-<p>Like the <code>retrieve_chunk</code> methods, <code>retrieve_array_subset</code> methods with similar variants:</p>
-<pre><code class="language-rs">let subset_bytes: Vec&lt;u8&gt; = array.retrieve_array_subset(&amp;subset)?;
-let subset_elements: Vec&lt;f32&gt; =
-    array.retrieve_array_subset_elements(&amp;subset)?;
-let subset_array: ndarray::ArrayD&lt;f32&gt; =
-    array.retrieve_array_subset_ndarray(&amp;subset)?;
+<p>The <code>retrieve_chunk_subset</code> methods can be used to retrieve a subset of a chunk:</p>
+<pre><code class="language-rs">let chunk_subset: ArraySubset = ...;
+let chunk_subset_bytes: ArrayBytes =
+    array.retrieve_chunk_subset(&amp;chunk_indices, &amp;chunk_subset)?;
+let chunk_subset_elements: Vec&lt;f32&gt; =
+    array.retrieve_chunk_subset_elements(&amp;chunk_indices, &amp;chunk_subset)?;
+let chunk_subset_array: ndarray::ArrayD&lt;f32&gt; =
+    array.retrieve_chunk_subset_ndarray(&amp;chunk_indices, &amp;chunk_subset)?;
 </code></pre>
-<!-- TODO: Discuss parallelism -->
-<!-- TODO: Discuss partial decoding -->
+<p>It is important to understand what is going on behind the scenes in these methods.
+A partial decoder is created that decodes the requested subset.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>Many codecs <strong>do not support partial decoding</strong>, so partial decoding may result in reading and decoding entire chunks!</p>
+</div>
+<h2 id="reading-multiple-chunk-subsets"><a class="header" href="#reading-multiple-chunk-subsets">Reading Multiple Chunk Subsets</a></h2>
+<p>If multiple chunk subsets are needed from a chunk, prefer to create a partial decoder and reuse it for each chunk subset.</p>
+<pre><code class="language-rs">let partial_decoder = array.partial_decoder(&amp;chunk_indices)?;
+let chunk_subsets_bytes_a_b: Vec&lt;ArrayBytes&gt; =
+    partial_decoder.partial_decode(&amp;[chunk_subset_a, chunk_subset_b, ...])?;
+let chunk_subsets_bytes_c: Vec&lt;ArrayBytes&gt; =
+    partial_decoder.partial_decode(&amp;[chunk_subset_c])?;
+</code></pre>
+<p>On initialisation, <strong>partial decoders may insert a cache</strong> (depending on the codecs).
+For example, if a codec does not support partial decoding, its output (or an output of one of its predecessors in the codec chain) will be cached, and subsequent partial decoding operations will not access the store.</p>
+<h2 id="reading-an-array-subset"><a class="header" href="#reading-an-array-subset">Reading an Array Subset</a></h2>
+<p>An arbitrary subset of an array can be read with the <code>retrieve_chunk</code> methods:</p>
+<pre><code class="language-rs">let array_subset: ArraySubset = ...;
+let subset_bytes: Vec&lt;u8&gt; =
+    array.retrieve_array_subset(&amp;array_subset)?;
+let subset_elements: Vec&lt;f32&gt; =
+    array.retrieve_array_subset_elements(&amp;array_subset)?;
+let subset_array: ndarray::ArrayD&lt;f32&gt; =
+    array.retrieve_array_subset_ndarray(&amp;array_subset)?;
+</code></pre>
+<p>Internally, these methods identify the overlapping chunks, call <code>retrieve_chunk</code> / <code>retrieve_chunk_subset</code> with chunk parallelism, and assemble the output.</p>
 <h2 id="reading-inner-chunks-sharded-arrays"><a class="header" href="#reading-inner-chunks-sharded-arrays">Reading Inner Chunks (Sharded Arrays)</a></h2>
-<h2 id="reading-encoded-chunks"><a class="header" href="#reading-encoded-chunks">Reading Encoded Chunks</a></h2>
+<p>The <code>sharding_indexed</code> codec enables multiple sub-chunks ("inner chunks") to be stored in a single chunk ("shard").
+With a sharded array, the <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.chunk_grid"><code>chunk_grid</code></a> and chunk indices in store/retrieve methods reference the chunks ("shards") of an array.</p>
+<p>The <a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedExt.html"><code>ArrayShardedExt</code></a> trait provides additional methods to <code>Array</code> to query if an array is sharded and retrieve the inner chunk shape.
+Additionally, the <em>inner chunk grid</em> can be queried, which is a <a href="https://docs.rs/zarrs/latest/zarrs/array/chunk_grid/struct.ChunkGrid.html"><code>ChunkGrid</code></a> where chunk indices refer to inner chunks rather than shards.</p>
+<p>The <a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedReadableExt.html"><code>ArrayShardedReadableExt</code></a> trait adds <code>Array</code> methods to conveniently and efficiently access the data in a sharded array (with <code>_elements</code> and <code>_ndarray</code> variants):</p>
+<ul>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedReadableExt.html#tymethod.retrieve_inner_chunk_opt"><code>retrieve_inner_chunk_opt</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedReadableExt.html#tymethod.retrieve_inner_chunks_opt"><code>retrieve_inner_chunks_opt</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedReadableExt.html#tymethod.retrieve_array_subset_sharded_opt"><code>retrieve_array_subset_sharded_opt</code></a></li>
+</ul>
+<p>For unsharded arrays, these methods gracefully fallback to referencing standard chunks.
+Each method has a <code>cache</code> parameter (<a href="https://docs.rs/zarrs/latest/zarrs/array/struct.ArrayShardedReadableExtCache.html"><code>ArrayShardedReadableExtCache</code></a>) that stores shard indexes so that they do not have to be repeatedly retrieved and decoded.</p>
+<h2 id="iterating-over-chunks--regions"><a class="header" href="#iterating-over-chunks--regions">Iterating Over Chunks / Regions</a></h2>
+<p>Iterating over chunks or regions is a common pattern.
+There are several approaches.</p>
+<h3 id="serial-chunk-iteration"><a class="header" href="#serial-chunk-iteration">Serial Chunk Iteration</a></h3>
+<pre><code class="language-rs">let indices = chunks.indices();
+for chunk_indices in indices {
+    ...
+}
+</code></pre>
+<h3 id="parallel-chunk-iteration"><a class="header" href="#parallel-chunk-iteration">Parallel Chunk Iteration</a></h3>
+<pre><code class="language-rs">let indices = chunks.indices();
+chunks.into_par_iter().try_for_each(|chunk_indices| {
+    ...
+})?;
+</code></pre>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>Iterating over chunks in parallel like this can use a lot of memory if chunks are large.</p>
+</div>
+<p>The <code>zarrs</code> crate internally uses a macro from the <a href="https://docs.rs/rayon_iter_concurrent_limit/latest/rayon_iter_concurrent_limit/"><code>rayon_iter_concurrent_limit</code></a> crate to limit chunk parallelism where reasonable.
+This macro is a simple wrapper over <code>.into_par_iter().chunks(...).&lt;func&gt;</code>.
+For example:</p>
+<pre><code class="language-rs">let chunk_concurrent_limit: usize = 4;
+rayon_iter_concurrent_limit::iter_concurrent_limit!(
+    chunk_concurrent_limit,
+    indices,
+    try_for_each,
+    |chunk_indices| { 
+        ...
+    }
+)?;
+</code></pre>
+<!-- TODO more types of iteration -->
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../basic_usage/array_init.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../arrays/array_init.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../basic_usage/v2_to_v3.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../v2_to_v3.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -352,11 +447,11 @@ let subset_array: ndarray::ArrayD&lt;f32&gt; =
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../basic_usage/array_init.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../arrays/array_init.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../basic_usage/v2_to_v3.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../v2_to_v3.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

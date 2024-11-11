@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Converting Zarr V2 to V3 - The Rust zarrs Book</title>
+        <title>Initialisation - The Rust zarrs Book</title>
 
 
         <!-- Custom HTML head -->
@@ -224,77 +224,216 @@
 }
 
 </style>
-<h1 id="converting-zarr-v2-to-v3"><a class="header" href="#converting-zarr-v2-to-v3">Converting Zarr V2 to V3</a></h1>
-<h2 id="changing-the-internal-representation"><a class="header" href="#changing-the-internal-representation">Changing the Internal Representation</a></h2>
-<p>When an array or group is initialised, it internally holds metadata in the Zarr version it was created with.</p>
-<p>To change the internal representation to Zarr V3, call <code>to_v3()</code> on an <code>Array</code> or <code>Group</code>, then call <code>store_metadata()</code> to update the stored metadata.
-V2 metadata must be explicitly erased if needed (see below).</p>
+<h1 id="array-initialisation"><a class="header" href="#array-initialisation">Array Initialisation</a></h1>
+<h2 id="opening-an-existing-array"><a class="header" href="#opening-an-existing-array">Opening an Existing Array</a></h2>
+<p>An existing array can be opened with <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open"><code>Array::open</code></a> (or <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_open"><code>async_open</code></a>):</p>
+<pre><code class="language-rs">let array_path = "/group/array";
+let array = Array::open(store.clone(), array_path)?;
+// let array = Array::async_open(store.clone(), array_path).await?;
+</code></pre>
 <div class="mdbook-alerts mdbook-alerts-note">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
   note
 </p>
-<p>While <code>zarrs</code> fully supports manipulation of Zarr V2 and V3 hierarchies (with supported codecs, data types, etc.), it only supports <strong>forward conversion</strong> of metadata from Zarr V2 to V3.</p>
+<p>These methods will open a Zarr V2 or Zarr V3 array.
+If you only want to open a specific Zarr version, see <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open_opt"><code>open_opt</code></a> and <a href="https://docs.rs/zarrs/latest/zarrs/config/enum.MetadataRetrieveVersion.html"><code>MetadataRetrieveVersion</code></a>.</p>
 </div>
-<h3 id="convert-a-group-to-v3"><a class="header" href="#convert-a-group-to-v3">Convert a Group to V3</a></h3>
-<pre><code class="language-rs">let group: Group = group.to_v3();
-group.store_metadata()?;
-// group.async_store_metadata().await?;
-group.erase_metadata_opt(MetadataEraseVersion::V2)?;
-// group.async_erase_metadata_opt(MetadataEraseVersion::V2).await?;
-</code></pre>
-<h3 id="convert-an-array-to-v3"><a class="header" href="#convert-an-array-to-v3">Convert an Array to V3</a></h3>
-<pre><code class="language-rs">let array: Array = array.to_v3()?;
-array.store_metadata()?;
-// array.async_store_metadata().await?;
-array.erase_metadata_opt(MetadataEraseVersion::V2)?;
-// array.async_erase_metadata_opt(MetadataEraseVersion::V2).await?;
-</code></pre>
-<p>Note that <code>Array::to_v3()</code> is fallible because some V2 metadata is not V3 compatible.</p>
-<h2 id="writing-versioned-metadata-explicitly"><a class="header" href="#writing-versioned-metadata-explicitly">Writing Versioned Metadata Explicitly</a></h2>
-<p>Rather than changing the internal representation, an alternative is to just write metadata with a specified version.</p>
-<p>For groups, the <code>store_metadata_opt</code> accepts a <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.GroupMetadataOptions.html"><code>GroupMetadataOptions</code></a> argument.
-<code>GroupMetadataOptions</code> currently has only one option that impacts the Zarr version of the metadata.
-By default, <code>GroupMetadataOptions</code> keeps the current Zarr version.</p>
-<p>To write Zarr V3 metadata:</p>
-<pre><code class="language-rs">group.store_metadata_opt(&amp;
-    GroupMetadataOptions::default()
-    .with_metadata_convert_version(MetadataConvertVersion::V3)
-)?;
-// group.async_store_metadata_opt(...).await?;
-</code></pre>
-<div class="mdbook-alerts mdbook-alerts-warning">
+<h2 id="creating-an-array-with-the-arraybuilder"><a class="header" href="#creating-an-array-with-the-arraybuilder">Creating an Array with the <code>ArrayBuilder</code></a></h2>
+<div class="mdbook-alerts mdbook-alerts-note">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
-  warning
+  note
 </p>
-<p><code>zarrs</code> does not support converting Zarr V3 metadata to Zarr V2.</p>
+<p>The <code>ArrayBuilder</code> only supports Zarr V3 groups.</p>
 </div>
-<p>Note that the original metadata is not automatically deleted.
-If you want to delete it:</p>
-<pre><code class="language-rs">group.erase_metadata()?;
-// group.async_erase_metadata().await?;
+<pre><code class="language-rs">let array_path = "/group/array";
+let array = zarrs::array::ArrayBuilder::new(
+    vec![8, 8], // array shape
+    DataType::Float32,
+    vec![4, 4].try_into()?, // regular chunk shape
+    FillValue::from(ZARR_NAN_F32),
+)
+// .bytes_to_bytes_codecs(vec![]) // uncompressed
+.bytes_to_bytes_codecs(vec![
+    Arc::new(GzipCodec::new(5)?),
+])
+.dimension_names(["y", "x"].into())
+// .attributes(...)
+// .storage_transformers(vec![].into())
+.build(store.clone(), array_path)?;
+array.store_metadata()?;
+// array.async_store_metadata().await?;
 </code></pre>
 <div class="mdbook-alerts mdbook-alerts-tip">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
   tip
 </p>
-<p>The <code>store_metadata</code> methods of <code>Array</code> and <code>Group</code> internally call <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.store_metadata_opt"><code>store_metadata_opt</code></a>.
-Global defaults can be changed, see <a href="https://docs.rs/zarrs/latest/zarrs/config/struct.Config.html">zarrs::global::Config</a>.</p>
+<p>The <a href="./group_init.html">Group Initialisation Chapter</a> has tips for creating attributes.</p>
 </div>
-<p><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.ArrayMetadataOptions.html"><code>ArrayMetadataOptions</code></a> has similar options for changing the Zarr version of the metadata.
-It also has various other configuration options, see its documentation.</p>
+<h3 id="remember-to-store-metadata"><a class="header" href="#remember-to-store-metadata">Remember to Store Metadata!</a></h3>
+<p><code>store_metadata</code> is explicitly called after creating an array in the examples above.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>Array metadata must <strong>always</strong> be stored explicitly, otherwise an array cannot be opened.</p>
+</div>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>Consider deferring storage of array metadata until after chunks operations are complete.
+The presence of valid metadata can act as a signal that the data is ready.</p>
+</div>
+<h2 id="creating-a-sharded-array"><a class="header" href="#creating-a-sharded-array">Creating a Sharded Array</a></h2>
+<p>The <a href="https://docs.rs/zarrs/latest/zarrs/array/codec/array_to_bytes/sharding/struct.ShardingCodecBuilder.html"><code>ShardingCodecBuilder</code></a> is useful for creating an array that uses the <code>sharding_indexed</code> codec.</p>
+<pre><code class="language-rs">let mut sharding_codec_builder = ShardingCodecBuilder::new(
+    vec![4, 4].try_into()? // inner chunk shape
+);
+sharding_codec_builder.bytes_to_bytes_codecs(vec![
+    Arc::new(codec::GzipCodec::new(5)?),
+]);
+
+let array = zarrs::array::ArrayBuilder::new(
+    ...
+)
+.array_to_bytes_codec(sharding_codec_builder.build_arc())
+.build(store.clone(), array_path)?;
+array.store_metadata()?;
+// array.async_store_metadata().await?;
+</code></pre>
+<h2 id="creating-an-array-from-arraymetadata"><a class="header" href="#creating-an-array-from-arraymetadata">Creating an Array from <code>ArrayMetadata</code></a></h2>
+<p>An array can be created from <code>ArrayMetadata</code> instead of an <code>ArrayBuilder</code>.
+However, it is much more verbose.</p>
+<h3 id="zarr-v3"><a class="header" href="#zarr-v3">Zarr V3</a></h3>
+<pre><code class="language-rs">let json = const JSON_ARRAY: &amp;str = r#"{
+    "zarr_format": 3,
+    "node_type": "array",
+    "shape": [
+        10000,
+        1000
+    ],
+    "data_type": "float64",
+    "chunk_grid": {
+        "name": "regular",
+        "configuration": {
+        "chunk_shape": [
+            1000,
+            100
+        ]
+        }
+    },
+    "chunk_key_encoding": {
+        "name": "default",
+        "configuration": {
+        "separator": "/"
+        }
+    },
+    "fill_value": "NaN",
+    "codecs": [
+        {
+        "name": "bytes",
+        "configuration": {
+            "endian": "little"
+        }
+        },
+        {
+        "name": "gzip",
+        "configuration": {
+            "level": 1
+        }
+        }
+    ],
+    "attributes": {
+        "foo": 42,
+        "bar": "apples",
+        "baz": [
+        1,
+        2,
+        3,
+        4
+        ]
+    },
+    "dimension_names": [
+        "rows",
+        "columns"
+    ]
+}"#;
+
+/// Parse the JSON metadata
+let array_metadata: ArrayMetadata = serde_json::from_str(json)?;
+
+/// Create the array
+let array = zarrs::array::Array::new_with_metadata(
+    store.clone(),
+    "/group/array",
+    array_metadata.into(),
+)?;
+array.store_metadata()?;
+// array.async_store_metadata().await?;
+</code></pre>
+<pre><code class="language-rs">/// Specify the array metadata
+let array_metadata = ArrayMetadataV3::new(
+    serde_json::from_str("[10, 10]"),
+    serde_json::from_str(r#"{"name": "regular", "configuration":{"chunk_shape": [5, 5]}}"#)?,
+    serde_json::from_str(r#""float32""#)?,
+    serde_json::from_str("0.0")?,
+    serde_json::from_str(r#"[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]"#)?,
+).with_chunk_key_encoding(
+    serde_json::from_str(r#"{"name": "default", "configuration": {"separator": "/"}}"#)?,
+).with_attributes(
+    serde_json::from_str(r#"{"foo": 42, "bar": "apples", "baz": [1, 2, 3, 4]}"#)?,
+).with_dimension_names(
+    Some(serde_json::from_str(r#"["y", "x"]"#)?),
+);
+
+/// Create the array
+let array = zarrs::array::Array::new_with_metadata(
+    store.clone(),
+    "/group/array",
+    array_metadata.into(),
+)?;
+array.store_metadata()?;
+// array.async_store_metadata().await?;
+</code></pre>
+<h3 id="zarr-v2"><a class="header" href="#zarr-v2">Zarr V2</a></h3>
+<pre><code class="language-rs">/// Specify the array metadata
+let array_metadata = ArrayMetadataV2::new(
+    vec![10, 10], // array shape
+    vec![5, 5].try_into()?, // regular chunk shape
+    "&gt;f4".into(), // big endian float32
+    FillValueMetadataV2::NaN, // fill value
+    None, // compressor
+    None, // filters
+)
+.with_dimension_separator(ChunkKeySeparator::Slash)
+.with_order(ArrayMetadataV2Order::F)
+.with_attributes(attributes.clone());
+
+/// Create the array
+let array = zarrs::array::Array::new_with_metadata(
+    store.clone(),
+    "/group/array",
+    array_metadata.into(),
+)?;
+array.store_metadata()?;
+// array.async_store_metadata().await?;
+</code></pre>
+<p>The next chapters detail the reading and writing of array data.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../basic_usage/array_read.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../arrays.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../zarrs_ffi.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../arrays/array_read.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -304,11 +443,11 @@ It also has various other configuration options, see its documentation.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../basic_usage/array_read.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../arrays.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../zarrs_ffi.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../arrays/array_read.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

@@ -357,7 +357,7 @@ store.checkout(icechunk::zarr::VersionInfo::SnapshotId(snapshot0)).await?;
 <span class="boring">}</span></code></pre></pre>
 <h2 id="storage-adapters"><a class="header" href="#storage-adapters">Storage Adapters</a></h2>
 <p>Storage adapters can be layered on top of stores to change their functionality.</p>
-<p>The below storage adapters are all available in the <code>zarrs::storage</code> submodule (via <code>zarrs_storage</code> <a href="https://docs.rs/zarrs_storage"><img src="https://docs.rs/zarrs_storage/badge.svg" alt="zarrs_storage_doc" /></a>).</p>
+<p>The below storage adapters are all available in the <code>zarrs::storage</code> submodule (via the <a href="https://docs.rs/zarrs_storage"><code>zarrs_storage</code></a> crate).</p>
 <h3 id="async-to-sync"><a class="header" href="#async-to-sync">Async to Sync</a></h3>
 <p>Asynchronous stores can be used in a synchronous context with the <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/async_to_sync/struct.AsyncToSyncStorageAdapter.html"><code>AsyncToSyncStorageAdapter</code></a>.</p>
 <p>The <code>AsyncToSyncBlockOn</code> trait must be implemented for a runtime or runtime handle in order to block on futures.
