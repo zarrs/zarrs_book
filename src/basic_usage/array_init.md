@@ -1,19 +1,17 @@
 # Array Initialisation
 
-## The Sync and Async API
-See the [Group Initialisation Chapter](./group_init.md).
-
 ## Opening an Existing Array
 
-Opening an existing array is as simple as calling [`Array::open`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open) (or [`async_open`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_open)):
+An existing array can be opened with [`Array::open`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open) (or [`async_open`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_open)):
 ```rs
 let array_path = "/group/array";
 let array = Array::open(store.clone(), array_path)?;
 // let array = Array::async_open(store.clone(), array_path).await?;
 ```
 
-These methods will open a Zarr V2 or Zarr V3 array.
-If you only want to open a specific Zarr version, see [`open_opt`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open_opt) and [`MetadataRetrieveVersion`](https://docs.rs/zarrs/latest/zarrs/config/enum.MetadataRetrieveVersion.html).
+> [!NOTE]
+> These methods will open a Zarr V2 or Zarr V3 array.
+> If you only want to open a specific Zarr version, see [`open_opt`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open_opt) and [`MetadataRetrieveVersion`](https://docs.rs/zarrs/latest/zarrs/config/enum.MetadataRetrieveVersion.html).
 
 ## Creating an Array with the `ArrayBuilder`
 

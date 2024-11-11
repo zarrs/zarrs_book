@@ -6,6 +6,18 @@ A store implements a key/value store interface for storing, retrieving, listing,
 
 The Zarr V3 storage API is detailed [here](https://zarr-specs.readthedocs.io/en/latest/v3/core/v3.0.html#storage) in the Zarr V3 specification.
 
+## The Sync and Async API
+
+Zarr [`Group`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html)s and [`Array`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html)s are the core components of a Zarr hierarchy.
+In `zarrs`, both structures have both a synchronous and asynchronous API.
+The applicable API depends on the storage that the group or array is created with.
+
+Async API methods typically have an `async_` prefix.
+In subsequent chapters, async API method calls are shown commented out below their sync equivalent.
+
+> [!WARNING]
+> The async API is still considered experimental, and it requires the `async` feature.
+
 ## Synchronous Stores
 
 ### Memory

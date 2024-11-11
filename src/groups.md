@@ -1,25 +1,23 @@
 # Group Initialisation
 
-## The Sync and Async API
+A group is a node in a Zarr hierarchy that may have child nodes (arrays or groups).
 
-The `zarrs` [`Group`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html) and [`Array`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html) structures have both a sync and async API.
-The applicable API depends on the storage that the group or array is created with.
+Each array or group in a hierarchy is represented by a metadata document, which is a machine-readable document containing essential processing information about the node.
+For a group, the metadata document contains the Zarr Version and optional user attributes.
 
-In the examples in this and subsequent chapters, async API method calls are shown commented out below their sync equivalent.
-
-> [!WARNING]
-> The async API is still considered experimental, and it requires the `async` feature.
+## 
 
 ## Opening an Existing Group
 
-Opening an existing group is as simple as calling [`Group::open`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.open) (or [`async_open`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.async_open)):
+An existing group can be opened with [`Group::open`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.open) (or [`async_open`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.async_open)):
 ```rs
 let group = Group::open(store.clone(), "/group")?;
 // let group = Group::async_open(store.clone(), "/group").await?;
 ```
 
-These methods will open a Zarr V2 or Zarr V3 group.
-If you only want to open a specific Zarr version, see [`open_opt`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.open_opt) and [`MetadataRetrieveVersion`](https://docs.rs/zarrs/latest/zarrs/config/enum.MetadataRetrieveVersion.html).
+> [!NOTE]
+> These methods will open a Zarr V2 or Zarr V3 group.
+> If you only want to open a specific Zarr version, see [`open_opt`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.open_opt) and [`MetadataRetrieveVersion`](https://docs.rs/zarrs/latest/zarrs/config/enum.MetadataRetrieveVersion.html).
 
 ## Creating Attributes
 Attributes are encoded in a JSON object (`serde_json::Object`).
