@@ -4,7 +4,6 @@
 
 # Rust (zarrs)
 - [Installation](installation.md)
-  - [`zarrs` Crates](crates.md)
 - [Stores](./stores.md)
 - [Groups](./groups.md)
 - [Arrays](./arrays.md)
