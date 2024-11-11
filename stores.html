@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Store Initialisation - The Rust zarrs Book</title>
+        <title>Stores - The Rust zarrs Book</title>
 
 
         <!-- Custom HTML head -->
@@ -12,34 +12,34 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon.svg">
-        <link rel="shortcut icon" href="../favicon.png">
-        <link rel="stylesheet" href="../css/variables.css">
-        <link rel="stylesheet" href="../css/general.css">
-        <link rel="stylesheet" href="../css/chrome.css">
-        <link rel="stylesheet" href="../css/print.css" media="print">
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../fonts/fonts.css">
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="../highlight.css">
-        <link rel="stylesheet" href="../tomorrow-night.css">
-        <link rel="stylesheet" href="../ayu-highlight.css">
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../theme/custom.css">
-        <link rel="stylesheet" href="../theme/pagetoc.css">
+        <link rel="stylesheet" href="theme/custom.css">
+        <link rel="stylesheet" href="theme/pagetoc.css">
 
 
         <!-- Provide site root to javascript -->
         <script>
-            var path_to_root = "../";
+            var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc.js"></script>
+        <script src="toc.js"></script>
     </head>
     <body>
     <div id="body-container">
@@ -91,7 +91,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
             </noscript>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -125,7 +125,7 @@
                     <h1 class="menu-title">The Rust zarrs Book</h1>
 
                     <div class="right-buttons">
-                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/LDeakin/zarrs_book" title="Git repository" aria-label="Git repository">
@@ -229,6 +229,19 @@
 For example: a filesystem, HTTP server, FTP server, Amazon S3 bucket, etc.
 A store implements a key/value store interface for storing, retrieving, listing, and erasing keys.</p>
 <p>The Zarr V3 storage API is detailed <a href="https://zarr-specs.readthedocs.io/en/latest/v3/core/v3.0.html#storage">here</a> in the Zarr V3 specification.</p>
+<h2 id="the-sync-and-async-api"><a class="header" href="#the-sync-and-async-api">The Sync and Async API</a></h2>
+<p>Zarr <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html"><code>Group</code></a>s and <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html"><code>Array</code></a>s are the core components of a Zarr hierarchy.
+In <code>zarrs</code>, both structures have both a synchronous and asynchronous API.
+The applicable API depends on the storage that the group or array is created with.</p>
+<p>Async API methods typically have an <code>async_</code> prefix.
+In subsequent chapters, async API method calls are shown commented out below their sync equivalent.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>The async API is still considered experimental, and it requires the <code>async</code> feature.</p>
+</div>
 <h2 id="synchronous-stores"><a class="header" href="#synchronous-stores">Synchronous Stores</a></h2>
 <h3 id="memory"><a class="header" href="#memory">Memory</a></h3>
 <p><a href="https://github.com/LDeakin/zarrs/tree/main/zarrs_storage"><img src="https://img.shields.io/badge/LDeakin/zarrs/zarrs__storage-GitHub-blue?logo=github" alt="zarrs_storage_repo" /></a> <a href="https://crates.io/crates/zarrs_storage"><img src="https://img.shields.io/crates/v/zarrs_storage" alt="zarrs_storage_ver" /></a> <a href="https://docs.rs/zarrs_storage"><img src="https://docs.rs/zarrs_storage/badge.svg" alt="zarrs_storage_doc" /></a></p>
@@ -413,11 +426,11 @@ assert_eq!(store.bytes_read(), ...);
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../crates.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="crates.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../basic_usage/group_init.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="groups.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -427,11 +440,11 @@ assert_eq!(store.bytes_read(), ...);
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../crates.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="crates.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../basic_usage/group_init.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="groups.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
@@ -446,18 +459,18 @@ assert_eq!(store.bytes_read(), ...);
         </script>
 
 
-        <script src="../elasticlunr.min.js"></script>
-        <script src="../mark.min.js"></script>
-        <script src="../searcher.js"></script>
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
 
-        <script src="../clipboard.min.js"></script>
-        <script src="../highlight.js"></script>
-        <script src="../book.js"></script>
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../mermaid.min.js"></script>
-        <script src="../mermaid-init.js"></script>
-        <script src="../theme/pagetoc.js"></script>
+        <script src="mermaid.min.js"></script>
+        <script src="mermaid-init.js"></script>
+        <script src="theme/pagetoc.js"></script>
 
 
     </div>

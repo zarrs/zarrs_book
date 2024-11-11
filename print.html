@@ -226,6 +226,7 @@
 
 </style>
 <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p><img src="https://zarr-specs.readthedocs.io/en/latest/_images/terminology-hierarchy.excalidraw.png" alt="zarr overview" /></p>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
@@ -550,6 +551,19 @@ The next section details the <code>zarrs</code> crate ecosystem.</p>
 For example: a filesystem, HTTP server, FTP server, Amazon S3 bucket, etc.
 A store implements a key/value store interface for storing, retrieving, listing, and erasing keys.</p>
 <p>The Zarr V3 storage API is detailed <a href="https://zarr-specs.readthedocs.io/en/latest/v3/core/v3.0.html#storage">here</a> in the Zarr V3 specification.</p>
+<h2 id="the-sync-and-async-api"><a class="header" href="#the-sync-and-async-api">The Sync and Async API</a></h2>
+<p>Zarr <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html"><code>Group</code></a>s and <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html"><code>Array</code></a>s are the core components of a Zarr hierarchy.
+In <code>zarrs</code>, both structures have both a synchronous and asynchronous API.
+The applicable API depends on the storage that the group or array is created with.</p>
+<p>Async API methods typically have an <code>async_</code> prefix.
+In subsequent chapters, async API method calls are shown commented out below their sync equivalent.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>The async API is still considered experimental, and it requires the <code>async</code> feature.</p>
+</div>
 <h2 id="synchronous-stores"><a class="header" href="#synchronous-stores">Synchronous Stores</a></h2>
 <h3 id="memory"><a class="header" href="#memory">Memory</a></h3>
 <p><a href="https://github.com/LDeakin/zarrs/tree/main/zarrs_storage"><img src="https://img.shields.io/badge/LDeakin/zarrs/zarrs__storage-GitHub-blue?logo=github" alt="zarrs_storage_repo" /></a> <a href="https://crates.io/crates/zarrs_storage"><img src="https://img.shields.io/crates/v/zarrs_storage" alt="zarrs_storage_ver" /></a> <a href="https://docs.rs/zarrs_storage"><img src="https://docs.rs/zarrs_storage/badge.svg" alt="zarrs_storage_doc" /></a></p>
@@ -797,24 +811,23 @@ assert_eq!(store.bytes_read(), ...);
 
 </style>
 <h1 id="group-initialisation"><a class="header" href="#group-initialisation">Group Initialisation</a></h1>
-<h2 id="the-sync-and-async-api"><a class="header" href="#the-sync-and-async-api">The Sync and Async API</a></h2>
-<p>The <code>zarrs</code> <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html"><code>Group</code></a> and <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html"><code>Array</code></a> structures have both a sync and async API.
-The applicable API depends on the storage that the group or array is created with.</p>
-<p>In the examples in this and subsequent chapters, async API method calls are shown commented out below their sync equivalent.</p>
-<div class="mdbook-alerts mdbook-alerts-warning">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  warning
-</p>
-<p>The async API is still considered experimental, and it requires the <code>async</code> feature.</p>
-</div>
+<p>A group is a node in a Zarr hierarchy that may have child nodes (arrays or groups).</p>
+<p>Each array or group in a hierarchy is represented by a metadata document, which is a machine-readable document containing essential processing information about the node.
+For a group, the metadata document contains the Zarr Version and optional user attributes.</p>
+<h2 id=""><a class="header" href="#"></a></h2>
 <h2 id="opening-an-existing-group"><a class="header" href="#opening-an-existing-group">Opening an Existing Group</a></h2>
-<p>Opening an existing group is as simple as calling <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.open"><code>Group::open</code></a> (or <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.async_open"><code>async_open</code></a>):</p>
+<p>An existing group can be opened with <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.open"><code>Group::open</code></a> (or <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.async_open"><code>async_open</code></a>):</p>
 <pre><code class="language-rs">let group = Group::open(store.clone(), "/group")?;
 // let group = Group::async_open(store.clone(), "/group").await?;
 </code></pre>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
 <p>These methods will open a Zarr V2 or Zarr V3 group.
 If you only want to open a specific Zarr version, see <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.open_opt"><code>open_opt</code></a> and <a href="https://docs.rs/zarrs/latest/zarrs/config/enum.MetadataRetrieveVersion.html"><code>MetadataRetrieveVersion</code></a>.</p>
+</div>
 <h2 id="creating-attributes"><a class="header" href="#creating-attributes">Creating Attributes</a></h2>
 <p>Attributes are encoded in a JSON object (<code>serde_json::Object</code>).</p>
 <p>Here are a few different approaches for constructing a JSON object:</p>
@@ -986,17 +999,94 @@ group.store_metadata()?;
 }
 
 </style>
+<h1 id="arrays"><a class="header" href="#arrays">Arrays</a></h1>
+<p>An array is a node in a hierarchy that may not have any child nodes.</p>
+<p>An array is a data structure with zero or more dimensions whose lengths define the shape of the array.
+An array contains zero or more data elements all of the same data type.</p>
+<p><img src="https://zarr-specs.readthedocs.io/en/latest/_images/terminology-read.excalidraw.png" alt="array overview" /></p>
+<!-- TODO: Expand -->
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
 <h1 id="array-initialisation"><a class="header" href="#array-initialisation">Array Initialisation</a></h1>
-<h2 id="the-sync-and-async-api-1"><a class="header" href="#the-sync-and-async-api-1">The Sync and Async API</a></h2>
-<p>See the <a href="basic_usage/./group_init.html">Group Initialisation Chapter</a>.</p>
 <h2 id="opening-an-existing-array"><a class="header" href="#opening-an-existing-array">Opening an Existing Array</a></h2>
-<p>Opening an existing array is as simple as calling <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open"><code>Array::open</code></a> (or <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_open"><code>async_open</code></a>):</p>
+<p>An existing array can be opened with <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open"><code>Array::open</code></a> (or <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_open"><code>async_open</code></a>):</p>
 <pre><code class="language-rs">let array_path = "/group/array";
 let array = Array::open(store.clone(), array_path)?;
 // let array = Array::async_open(store.clone(), array_path).await?;
 </code></pre>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
 <p>These methods will open a Zarr V2 or Zarr V3 array.
 If you only want to open a specific Zarr version, see <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open_opt"><code>open_opt</code></a> and <a href="https://docs.rs/zarrs/latest/zarrs/config/enum.MetadataRetrieveVersion.html"><code>MetadataRetrieveVersion</code></a>.</p>
+</div>
 <h2 id="creating-an-array-with-the-arraybuilder"><a class="header" href="#creating-an-array-with-the-arraybuilder">Creating an Array with the <code>ArrayBuilder</code></a></h2>
 <div class="mdbook-alerts mdbook-alerts-note">
 <p class="mdbook-alerts-title">
@@ -1182,6 +1272,182 @@ array.store_metadata()?;
 // array.async_store_metadata().await?;
 </code></pre>
 <p>The next chapters detail the reading and writing of array data.</p>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="reading-arrays"><a class="header" href="#reading-arrays">Reading Arrays</a></h1>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>Array operations are divided into several categories based on the traits implemented for the backing storage.
+The core array methods are:</p>
+<ul>
+<li><a href="crate::storage::ReadableStorageTraits"><code>ReadableStorageTraits</code></a>: read array data and metadata
+<ul>
+<li><a href="basic_usage/Array::retrieve_chunk_if_exists"><code>retrieve_chunk_if_exists</code></a></li>
+<li><a href="basic_usage/Array::retrieve_chunk"><code>retrieve_chunk</code></a></li>
+<li><a href="basic_usage/Array::retrieve_chunks"><code>retrieve_chunks</code></a></li>
+<li><a href="basic_usage/Array::retrieve_chunk_subset"><code>retrieve_chunk_subset</code></a></li>
+<li><a href="basic_usage/Array::retrieve_array_subset"><code>retrieve_array_subset</code></a></li>
+<li><a href="basic_usage/Array::retrieve_encoded_chunk"><code>retrieve_encoded_chunk</code></a></li>
+<li><a href="basic_usage/Array::partial_decoder"><code>partial_decoder</code></a></li>
+</ul>
+</li>
+<li><a href="crate::storage::WritableStorageTraits"><code>WritableStorageTraits</code></a>: store/erase array data and store metadata
+<ul>
+<li><a href="basic_usage/Array::store_metadata"><code>store_metadata</code></a></li>
+<li><a href="basic_usage/Array::store_chunk"><code>store_chunk</code></a></li>
+<li><a href="basic_usage/Array::store_chunks"><code>store_chunks</code></a></li>
+<li><a href="basic_usage/Array::store_encoded_chunk"><code>store_encoded_chunk</code></a></li>
+<li><a href="basic_usage/Array::erase_chunk"><code>erase_chunk</code></a></li>
+<li><a href="basic_usage/Array::erase_chunks"><code>erase_chunks</code></a></li>
+</ul>
+</li>
+<li><a href="crate::storage::ReadableWritableStorageTraits"><code>ReadableWritableStorageTraits</code></a>: store operations requiring reading <em>and</em> writing
+<ul>
+<li><a href="basic_usage/Array::store_chunk_subset"><code>store_chunk_subset</code></a></li>
+<li><a href="basic_usage/Array::store_array_subset"><code>store_array_subset</code></a></li>
+<li><a href="basic_usage/Array::partial_encoder"><code>partial_encoder</code></a></li>
+</ul>
+</li>
+</ul>
+<h2 id="method-variants"><a class="header" href="#method-variants">Method Variants</a></h2>
+<p>Many <code>retrieve</code> and <code>store</code> methods have multiple variants:</p>
+<ul>
+<li>Standard variants store or retrieve data represented as <a href="https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html"><code>ArrayBytes</code></a> (representing fixed or variable length bytes).</li>
+<li><code>_elements</code> suffix variants can store or retrieve chunks with a known type.</li>
+<li><code>_ndarray</code> suffix variants can store or retrieve an <a href="https://docs.rs/ndarray/latest/ndarray/type.Array.html"><code>ndarray::Array</code></a> (requires <code>ndarray</code> feature).</li>
+<li><code>_opt</code> suffix variants have a <a href="https://docs.rs/zarrs/latest/zarrs/array/codec/options/struct.CodecOptions.html"><code>CodecOptions</code></a> parameter for fine-grained concurrency control and more.</li>
+<li>Variants without the <code>_opt</code> suffix use default <code>CodecOptions</code>.</li>
+<li><code>async_</code> prefix variants can be used with async stores (requires <code>async</code> feature).</li>
+</ul>
+<h2 id="reading-a-chunk"><a class="header" href="#reading-a-chunk">Reading a Chunk</a></h2>
+<h3 id="reading-and-decoding-a-chunk"><a class="header" href="#reading-and-decoding-a-chunk">Reading and Decoding a Chunk</a></h3>
+<pre><code class="language-rs">let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
+let chunk_bytes: Vec&lt;u8&gt; = array.retrieve_chunk(&amp;chunk_indices)?;
+let chunk_elements: Vec&lt;f32&gt; =
+    array.retrieve_chunk_elements(&amp;chunk_indices)?;
+let chunk_array: ndarray::ArrayD&lt;f32&gt; =
+    array.retrieve_chunk_ndarray(&amp;chunk_indices)?;
+</code></pre>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p><code>_element</code> variants will fail if the element type does not match the array data type.
+They do not perform any conversion.</p>
+</div>
+<h3 id="codec-parallelism"><a class="header" href="#codec-parallelism">Codec Parallelism</a></h3>
+<!-- TODO: Discuss codec parallelism -->
+<h3 id="skipping-empty-chunks"><a class="header" href="#skipping-empty-chunks">Skipping Empty Chunks</a></h3>
+<h3 id="retrieving-an-encoded-chunk"><a class="header" href="#retrieving-an-encoded-chunk">Retrieving an Encoded Chunk</a></h3>
+<p>An encoded chunk can be retrieved without decoding with <code>retrieve_encoded_chunk</code>:</p>
+<pre><code class="language-rs">let chunk_bytes_encoded: Option&lt;Vec&lt;u8&gt;&gt; =
+    array.retrieve_encoded_chunk(&amp;chunk_indices);
+</code></pre>
+<p>This returns <code>None</code> if a chunk does not exist.</p>
+<h2 id="reading-chunks"><a class="header" href="#reading-chunks">Reading Chunks</a></h2>
+<!-- TODO -->
+<p><code>retrieve_encoded_chunks</code> executes with chunk parallelism</p>
+<pre><code class="language-rs">let chunk_bytes_encoded: Vec&lt;Option&lt;Vec&lt;u8&gt;&gt;&gt; =
+    array.retrieve_encoded_chunks(&amp;chunk_indices, &amp;CodecOptions::defualt());
+</code></pre>
+<p>The chunks returned are in order of the chunk indices returned by chunks.indices().into_iter().</p>
+<h3 id="chunk-parallelism"><a class="header" href="#chunk-parallelism">Chunk Parallelism</a></h3>
+<h2 id="iterating-over-chunks"><a class="header" href="#iterating-over-chunks">Iterating Over Chunks</a></h2>
+<pre><code class="language-rs">let indices = chunks.indices();
+for chunk_indices in indices {
+    ...
+}
+</code></pre>
+<pre><code class="language-rs">let indices = chunks.indices();
+chunks.into_par_iter().try_for_each(|chunk_indices| {
+    ...
+})?;
+</code></pre>
+<h2 id="reading-a-subset"><a class="header" href="#reading-a-subset">Reading a Subset</a></h2>
+<p>An <a href="https://docs.rs/zarrs/latest/zarrs/array_subset/struct.ArraySubset.html"><code>ArraySubset</code></a> represents a subset (region) of an array or chunk.
+It encodes a starting coordinate and a shape, and is a foundation for many array operations.</p>
+<p>The below array subsets are all identical:</p>
+<pre><code class="language-rs">let subset = ArraySubset::new_with_ranges(&amp;[2..6, 3..5]);
+let subset = ArraySubset::new_with_start_shape(vec![2, 3], vec![4, 2])?;
+let subset = ArraySubset::new_with_start_end_exc(vec![2, 3], vec![6, 5])?;
+let subset = ArraySubset::new_with_start_end_inc(vec![2, 3], vec![5, 4])?;
+</code></pre>
+<p>Like the <code>retrieve_chunk</code> methods, <code>retrieve_array_subset</code> methods with similar variants:</p>
+<pre><code class="language-rs">let subset_bytes: Vec&lt;u8&gt; = array.retrieve_array_subset(&amp;subset)?;
+let subset_elements: Vec&lt;f32&gt; =
+    array.retrieve_array_subset_elements(&amp;subset)?;
+let subset_array: ndarray::ArrayD&lt;f32&gt; =
+    array.retrieve_array_subset_ndarray(&amp;subset)?;
+</code></pre>
+<!-- TODO: Discuss parallelism -->
+<!-- TODO: Discuss partial decoding -->
+<h2 id="reading-inner-chunks-sharded-arrays"><a class="header" href="#reading-inner-chunks-sharded-arrays">Reading Inner Chunks (Sharded Arrays)</a></h2>
+<h2 id="reading-encoded-chunks"><a class="header" href="#reading-encoded-chunks">Reading Encoded Chunks</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
