@@ -11,8 +11,7 @@ These bindings are used in production at the [Department of Materials Physics](h
 1. Install the Rust compiler (and cargo).
 2. Put [Findzarrs.cmake](https://github.com/LDeakin/zarrs_ffi/blob/main/examples/cmake_project/Findzarrs.cmake) in your `CMAKE_MODULE_PATH`
 3. `find_package(zarrs <version> REQUIRED COMPONENTS zarrs/bz2)`
-   - Replace `<version>` with the latest release: [![Latest Version](https://img.shields.io/crates/v/zarrs_ffi.svg)](https://crates.io/crates/zarrs_ffi).
-     - Example: `0.8` or `0.8.4`
+   - Replace `<version>` with the latest release: [![Latest Version](https://img.shields.io/crates/v/zarrs_ffi.svg)](https://crates.io/crates/zarrs_ffi) (e.g., `0.8` or `0.8.4`)
    - `zarrs` is retrieved from `GitHub` using [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) and built using [corrosion](https://github.com/corrosion-rs/corrosion)
    - Components are optional `zarrs` codecs
 4. the `zarrs_ffi` library is available as the `zarrs::zarrs` or  `zarrs::zarrs-static` target

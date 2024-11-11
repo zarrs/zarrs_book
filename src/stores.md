@@ -169,7 +169,7 @@ store.checkout(icechunk::zarr::VersionInfo::SnapshotId(snapshot0)).await?;
 
 Storage adapters can be layered on top of stores to change their functionality.
 
-The below storage adapters are all available in the `zarrs::storage` submodule (via `zarrs_storage` [![zarrs_storage_doc]](https://docs.rs/zarrs_storage)).
+The below storage adapters are all available in the `zarrs::storage` submodule (via the [`zarrs_storage`](https://docs.rs/zarrs_storage) crate).
 
 ### Async to Sync
 

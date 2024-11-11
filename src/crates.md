@@ -60,55 +60,6 @@ Custom store implementations only need to depend on `zarrs_storage`.
 > [!NOTE]
 > This crate is re-exported in `zarrs` as `zarrs::storage`.
 
-## Store Crates
-
-### `zarrs_filesystem` [![zarrs_filesystem_ver]](https://crates.io/crates/zarrs_filesystem) [![zarrs_filesystem_doc]](https://docs.rs/zarrs_filesystem) [![zarrs_filesystem_repo]](https://github.com/LDeakin/zarrs/tree/main/zarrs_filesystem)
-[zarrs_filesystem_ver]: https://img.shields.io/crates/v/zarrs_filesystem
-[zarrs_filesystem_doc]: https://docs.rs/zarrs_filesystem/badge.svg
-[zarrs_filesystem_repo]: https://img.shields.io/badge/LDeakin/zarrs/zarrs__filesystem-GitHub-blue?logo=github
-
-A filesystem store for the zarrs crate.
-
-> [!NOTE]
-> This crate is re-exported in `zarrs` as `zarrs::filesystem` if the `filesystem` feature is enabled.
-
-### `zarrs_object_store` [![zarrs_object_store_ver]](https://crates.io/crates/zarrs_object_store) [![zarrs_object_store_doc]](https://docs.rs/zarrs_object_store) [![zarrs_object_store_repo]](https://github.com/LDeakin/zarrs/tree/main/zarrs_object_store)
-[zarrs_object_store_ver]: https://img.shields.io/crates/v/zarrs_object_store
-[zarrs_object_store_doc]: https://docs.rs/zarrs_object_store/badge.svg
-[zarrs_object_store_repo]: https://img.shields.io/badge/LDeakin/zarrs/zarrs__object__store-GitHub-blue?logo=github
-
-[`object_store`](https://docs.rs/object_store/latest/object_store/) store support.
-
-### `zarrs_opendal` [![zarrs_opendal_ver]](https://crates.io/crates/zarrs_opendal) [![zarrs_opendal_doc]](https://docs.rs/zarrs_opendal) [![zarrs_opendal_repo]](https://github.com/LDeakin/zarrs/tree/main/zarrs_opendal)
-[zarrs_opendal_ver]: https://img.shields.io/crates/v/zarrs_opendal
-[zarrs_opendal_doc]: https://docs.rs/zarrs_opendal/badge.svg
-[zarrs_opendal_repo]: https://img.shields.io/badge/LDeakin/zarrs/zarrs__opendal-GitHub-blue?logo=github
-
-[`opendal`](https://docs.rs/opendal/latest/opendal/) store support.
-
-
-### `zarrs_http` [![zarrs_http_ver]](https://crates.io/crates/zarrs_http) [![zarrs_http_doc]](https://docs.rs/zarrs_http) [![zarrs_http_repo]](https://github.com/LDeakin/zarrs/tree/main/zarrs_http)
-[zarrs_http_ver]: https://img.shields.io/crates/v/zarrs_http
-[zarrs_http_doc]: https://docs.rs/zarrs_http/badge.svg
-[zarrs_http_repo]: https://img.shields.io/badge/LDeakin/zarrs/zarrs__http-GitHub-blue?logo=github
-
-A synchronous http store.
-
-
-### `zarrs_zip` [![zarrs_zip_ver]](https://crates.io/crates/zarrs_zip) [![zarrs_zip_doc]](https://docs.rs/zarrs_zip) [![zarrs_zip_repo]](https://github.com/LDeakin/zarrs/tree/main/zarrs_zip)
-[zarrs_zip_ver]: https://img.shields.io/crates/v/zarrs_zip
-[zarrs_zip_doc]: https://docs.rs/zarrs_zip/badge.svg
-[zarrs_zip_repo]: https://img.shields.io/badge/LDeakin/zarrs/zarrs__zip-GitHub-blue?logo=github
-
-A storage adapter for zip files.
-
-### `zarrs_icechunk` [![zarrs_icechunk_ver]](https://crates.io/crates/zarrs_icechunk) [![zarrs_icechunk_doc]](https://docs.rs/zarrs_icechunk) [![zarrs_icechunk_repo]](https://github.com/LDeakin/zarrs_icechunk)
-[zarrs_icechunk_ver]: https://img.shields.io/crates/v/zarrs_icechunk
-[zarrs_icechunk_doc]: https://docs.rs/zarrs_icechunk/badge.svg
-[zarrs_icechunk_repo]: https://img.shields.io/badge/LDeakin/zarrs__icechunk-GitHub-blue?logo=github
-
-[`icechunk`](https://docs.rs/icechunk/latest/icechunk/) store support.
-
 ## Bindings
 
 ### `zarrs_ffi` [![zarrs_ffi_ver]](https://crates.io/crates/zarrs_ffi) [![zarrs_ffi_doc]](https://docs.rs/zarrs_ffi) [![zarrs_ffi_repo]](https://github.com/LDeakin/zarrs_ffi)
@@ -139,3 +90,7 @@ This crate is detailed in the [Python Bindings](./zarrs_python.md) chapter.
 Various tools for creating and manipulating Zarr v3 data with the `zarrs` rust crate.
 
 This crate is detailed in the [zarrs_tools](./zarrs_tools.md) chapter.
+
+---
+
+The next section details the various types of stores and their associated crates.
