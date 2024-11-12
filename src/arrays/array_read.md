@@ -4,7 +4,7 @@
 
 Array operations are divided into several categories based on the traits implemented for the backing storage.
 The core array methods are:
- - [`ReadableStorageTraits`](https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableStorageTraits.html): read array data and metadata
+ - [`[Async]ReadableStorageTraits`](https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableStorageTraits.html): read array data and metadata
    - [`retrieve_chunk_if_exists`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunk_if_exists)
    - [`retrieve_chunk`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunk)
    - [`retrieve_chunks`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunks)
@@ -12,7 +12,7 @@ The core array methods are:
    - [`retrieve_array_subset`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_array_subset)
    - [`retrieve_encoded_chunk`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_encoded_chunk)
    - [`partial_decoder`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.partial_decoder)
- - [`WritableStorageTraits`](https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.WritableStorageTraits.html): store/erase array data and metadata
+ - [`[Async]WritableStorageTraits`](https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.WritableStorageTraits.html): store/erase array data and metadata
    - [`store_metadata`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_metadata)
    - [`erase_metadata`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_metadata)
    - [`store_chunk`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunk)
@@ -20,12 +20,16 @@ The core array methods are:
    - [`store_encoded_chunk`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_encoded_chunk)
    - [`erase_chunk`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunk)
    - [`erase_chunks`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunks)
- - [`ReadableWritableStorageTraits`](https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableWritableStorageTraits.html): store operations requiring reading *and* writing
+ - [`[Async]ReadableWritableStorageTraits`](https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableWritableStorageTraits.html): store operations requiring reading *and* writing
    - [`store_chunk_subset`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunk_subset)
    - [`store_array_subset`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_array_subset)
    - [`partial_encoder`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.partial_encoder)
 
 This section focuses on the `ReadableStorageTraits` methods.
+
+Additional methods are offered by extension traits:
+ - [`ArrayShardedExt`](https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedExt.html) and [`ArrayShardedReadableExt`](https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedReadableExt.html): see [Reading Sharded Arrays](#reading-inner-chunks-sharded-arrays)
+ - [`ArrayChunkCacheExt`](https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayChunkCacheExt.html): see [Chunk Caching](#chunk-caching)
 
 ## Method Variants
 
@@ -260,3 +264,6 @@ The caches use internal locking to support multithreading, which has a performan
 > [!WARNING]
 > Prefer not to use a chunk cache if chunks are not accessed repeatedly.
 > Cached retrieve methods do not use partial decoders, and any intersected chunk is fully decoded if not present in the cache.
+
+For many access patterns, chunk caching may reduce performance.
+**Benchmark your algorithm/data**.
