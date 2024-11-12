@@ -224,6 +224,23 @@
 }
 
 </style>
+<h1 id="python-bindings-zarrs-python"><a class="header" href="#python-bindings-zarrs-python">Python Bindings (zarrs-python)</a></h1>
+<p><code>zarrs-python</code> implements the <code>ZarrsCodecPipeline</code>.
+This can be used by the reference <a href="https://zarr.readthedocs.io/en/main/"><code>zarr</code></a> Python implementation (v3.0.0+) for improved performance over the default <code>BatchedCodecPipeline</code>.</p>
+<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip.svg" alt="benchmark" /></p>
+<p>The <code>ZarrsCodecPipeline</code> can be enabled as follows:</p>
+<pre><code class="language-python">from zarr import config
+import zarrs_python # noqa: F401
+
+config.set({"codec_pipeline.path": "zarrs_python.ZarrsCodecPipeline"})
+</code></pre>
+<p>Downstream libraries that use <code>zarr</code> internally (<a href="https://docs.dask.org/en/stable/index.html"><code>dask</code></a>, <a href="https://docs.xarray.dev/en/stable/"><code>xarray</code></a>, etc.) will also use the <code>ZarrsCodecPipeline</code>.</p>
+<h2 id="limitations-of-zarrs-python"><a class="header" href="#limitations-of-zarrs-python">Limitations of <code>zarrs-python</code></a></h2>
+<ul>
+<li>It does not support all stores with the same level of configuration as the reference implementation, and</li>
+<li>with some advanced indexing operations, <code>zarrs-python</code> falls back to reading entire chunks and indexing in Python.</li>
+</ul>
+<p>See the <code>zarrs-python</code> documentation for more information about these limitations.</p>
 
                     </main>
 

@@ -774,16 +774,9 @@ group.store_metadata()?;
 // group.async_store_metadata().await?;
 </code></pre>
 <p>Note that the <code>/group</code> path is relative to the root of the store.</p>
-<h3 id="remember-to-store-metadata"><a class="header" href="#remember-to-store-metadata">Remember to Store Metadata!</a></h3>
-<p><code>store_metadata</code> (or <code>async_store_metadata</code>) is explicitly called after creating the group in the above example.</p>
-<div class="mdbook-alerts mdbook-alerts-warning">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  warning
-</p>
-<p>Group metadata must <strong>always</strong> be stored explicitly, even if the attributes are empty.</p>
-</div>
-<p>Group metadata must be stored because support for implicit groups (without metadata) <a href="https://github.com/zarr-developers/zarr-specs/pull/292/">was removed long after provisional acceptance of the Zarr V3 specification</a>.</p>
+<h2 id="remember-to-store-metadata"><a class="header" href="#remember-to-store-metadata">Remember to Store Metadata!</a></h2>
+<p>Group metadata must <strong>always</strong> be stored explicitly, even if the attributes are empty.
+Group metadata must be stored because support for implicit groups (without metadata) <a href="https://github.com/zarr-developers/zarr-specs/pull/292/">was removed long after provisional acceptance of the Zarr V3 specification</a>.</p>
 <div class="mdbook-alerts mdbook-alerts-tip">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
@@ -835,7 +828,7 @@ let group = Group::new_with_metadata(store.clone(), "/group", metadata)?;
 group.store_metadata()?;
 // group.async_store_metadata().await?;
 </code></pre>
-<h2 id="mutating-a-group"><a class="header" href="#mutating-a-group">Mutating a Group</a></h2>
+<h2 id="mutating-group-metadata"><a class="header" href="#mutating-group-metadata">Mutating Group Metadata</a></h2>
 <p>Group attributes can be changed after initialisation with <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.attributes_mut"><code>Group::attributes_mut</code></a>:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -1000,7 +993,7 @@ let array = Array::open(store.clone(), array_path)?;
 <p>These methods will open a Zarr V2 or Zarr V3 array.
 If you only want to open a specific Zarr version, see <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open_opt"><code>open_opt</code></a> and <a href="https://docs.rs/zarrs/latest/zarrs/config/enum.MetadataRetrieveVersion.html"><code>MetadataRetrieveVersion</code></a>.</p>
 </div>
-<h2 id="creating-an-array-with-the-arraybuilder"><a class="header" href="#creating-an-array-with-the-arraybuilder">Creating an Array with the <code>ArrayBuilder</code></a></h2>
+<h2 id="creating-a-zarr-v3-array-with-the-arraybuilder"><a class="header" href="#creating-a-zarr-v3-array-with-the-arraybuilder">Creating a Zarr V3 Array with the <code>ArrayBuilder</code></a></h2>
 <div class="mdbook-alerts mdbook-alerts-note">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
@@ -1009,7 +1002,7 @@ If you only want to open a specific Zarr version, see <a href="https://docs.rs/z
 <p>The <code>ArrayBuilder</code> only supports Zarr V3 groups.</p>
 </div>
 <pre><code class="language-rs">let array_path = "/group/array";
-let array = zarrs::array::ArrayBuilder::new(
+let array = ArrayBuilder::new(
     vec![8, 8], // array shape
     DataType::Float32,
     vec![4, 4].try_into()?, // regular chunk shape
@@ -1033,15 +1026,8 @@ array.store_metadata()?;
 </p>
 <p>The <a href="arrays/./group_init.html">Group Initialisation Chapter</a> has tips for creating attributes.</p>
 </div>
-<h3 id="remember-to-store-metadata-1"><a class="header" href="#remember-to-store-metadata-1">Remember to Store Metadata!</a></h3>
-<p><code>store_metadata</code> is explicitly called after creating an array in the examples above.</p>
-<div class="mdbook-alerts mdbook-alerts-warning">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  warning
-</p>
+<h2 id="remember-to-store-metadata-1"><a class="header" href="#remember-to-store-metadata-1">Remember to Store Metadata!</a></h2>
 <p>Array metadata must <strong>always</strong> be stored explicitly, otherwise an array cannot be opened.</p>
-</div>
 <div class="mdbook-alerts mdbook-alerts-tip">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
@@ -1050,7 +1036,7 @@ array.store_metadata()?;
 <p>Consider deferring storage of array metadata until after chunks operations are complete.
 The presence of valid metadata can act as a signal that the data is ready.</p>
 </div>
-<h2 id="creating-a-sharded-array"><a class="header" href="#creating-a-sharded-array">Creating a Sharded Array</a></h2>
+<h2 id="creating-a-zarr-v3-sharded-array"><a class="header" href="#creating-a-zarr-v3-sharded-array">Creating a Zarr V3 Sharded Array</a></h2>
 <p>The <a href="https://docs.rs/zarrs/latest/zarrs/array/codec/array_to_bytes/sharding/struct.ShardingCodecBuilder.html"><code>ShardingCodecBuilder</code></a> is useful for creating an array that uses the <code>sharding_indexed</code> codec.</p>
 <pre><code class="language-rs">let mut sharding_codec_builder = ShardingCodecBuilder::new(
     vec![4, 4].try_into()? // inner chunk shape
@@ -1059,7 +1045,7 @@ sharding_codec_builder.bytes_to_bytes_codecs(vec![
     Arc::new(codec::GzipCodec::new(5)?),
 ]);
 
-let array = zarrs::array::ArrayBuilder::new(
+let array = ArrayBuilder::new(
     ...
 )
 .array_to_bytes_codec(sharding_codec_builder.build_arc())
@@ -1067,11 +1053,17 @@ let array = zarrs::array::ArrayBuilder::new(
 array.store_metadata()?;
 // array.async_store_metadata().await?;
 </code></pre>
-<h2 id="creating-an-array-from-arraymetadata"><a class="header" href="#creating-an-array-from-arraymetadata">Creating an Array from <code>ArrayMetadata</code></a></h2>
-<p>An array can be created from <code>ArrayMetadata</code> instead of an <code>ArrayBuilder</code>.
-However, it is much more verbose.</p>
-<h3 id="zarr-v3-1"><a class="header" href="#zarr-v3-1">Zarr V3</a></h3>
-<pre><code class="language-rs">let json = const JSON_ARRAY: &amp;str = r#"{
+<h2 id="creating-a-zarr-v3-array-from-metadata"><a class="header" href="#creating-a-zarr-v3-array-from-metadata">Creating a Zarr V3 Array from Metadata</a></h2>
+<p>An array can be created from <code>ArrayMetadata</code> instead of an <code>ArrayBuilder</code> if needed.</p>
+<pre><code class="language-rs">let json: &amp;str = r#"{
+    "zarr_format": 3,
+    "node_type": "array",
+    ...
+}#";
+</code></pre>
+<details>
+  <summary>Full Zarr V3 array JSON example</summary>
+<pre><code class="language-rs">let json: &amp;str = r#"{
     "zarr_format": 3,
     "node_type": "array",
     "shape": [
@@ -1124,12 +1116,13 @@ However, it is much more verbose.</p>
         "columns"
     ]
 }"#;
-
-/// Parse the JSON metadata
+</code></pre>
+</details>
+<pre><code class="language-rs">/// Parse the JSON metadata
 let array_metadata: ArrayMetadata = serde_json::from_str(json)?;
 
 /// Create the array
-let array = zarrs::array::Array::new_with_metadata(
+let array = Array::new_with_metadata(
     store.clone(),
     "/group/array",
     array_metadata.into(),
@@ -1137,8 +1130,9 @@ let array = zarrs::array::Array::new_with_metadata(
 array.store_metadata()?;
 // array.async_store_metadata().await?;
 </code></pre>
+<p>Alternatively, <code>ArrayMetadataV3</code> can be constructed with <code>ArrayMetadataV3::new()</code> and subsequent <code>with_</code> methods:</p>
 <pre><code class="language-rs">/// Specify the array metadata
-let array_metadata = ArrayMetadataV3::new(
+let array_metadata: ArrayMetadata = ArrayMetadataV3::new(
     serde_json::from_str("[10, 10]"),
     serde_json::from_str(r#"{"name": "regular", "configuration":{"chunk_shape": [5, 5]}}"#)?,
     serde_json::from_str(r#""float32""#)?,
@@ -1150,20 +1144,23 @@ let array_metadata = ArrayMetadataV3::new(
     serde_json::from_str(r#"{"foo": 42, "bar": "apples", "baz": [1, 2, 3, 4]}"#)?,
 ).with_dimension_names(
     Some(serde_json::from_str(r#"["y", "x"]"#)?),
-);
+)
+.into();
 
 /// Create the array
-let array = zarrs::array::Array::new_with_metadata(
+let array = Array::new_with_metadata(
     store.clone(),
     "/group/array",
-    array_metadata.into(),
+    array_metadata,
 )?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
 </code></pre>
-<h3 id="zarr-v2-1"><a class="header" href="#zarr-v2-1">Zarr V2</a></h3>
+<h2 id="creating-a-zarr-v2-array"><a class="header" href="#creating-a-zarr-v2-array">Creating a Zarr V2 Array</a></h2>
+<p>The <code>ArrayBuilder</code> does not support Zarr V2 arrays.
+Instead, they must be built from <code>ArrayMetadataV2</code>.</p>
 <pre><code class="language-rs">/// Specify the array metadata
-let array_metadata = ArrayMetadataV2::new(
+let array_metadata: ArrayMetadata = ArrayMetadataV2::new(
     vec![10, 10], // array shape
     vec![5, 5].try_into()?, // regular chunk shape
     "&gt;f4".into(), // big endian float32
@@ -1173,17 +1170,35 @@ let array_metadata = ArrayMetadataV2::new(
 )
 .with_dimension_separator(ChunkKeySeparator::Slash)
 .with_order(ArrayMetadataV2Order::F)
-.with_attributes(attributes.clone());
+.with_attributes(attributes.clone())
+.into();
 
 /// Create the array
-let array = zarrs::array::Array::new_with_metadata(
+let array = Array::new_with_metadata(
     store.clone(),
     "/group/array",
-    array_metadata.into(),
+    array_metadata,
 )?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
 </code></pre>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p><code>Array::new_with_metadata</code> can fail if Zarr V2 metadata is unsupported by <code>zarrs</code>.</p>
+</div>
+<h2 id="mutating-array-metadata"><a class="header" href="#mutating-array-metadata">Mutating Array Metadata</a></h2>
+<p>The shape, dimension names, attributes, and additional fields of an array are mutable.</p>
+<ul>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.set_shape"><code>Array::set_shape</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.set_dimension_names"><code>Array::set_dimension_names</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.attributes_mut"><code>Array::attributes_mut</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.additional_fields_mut"><code>Array::additional_fields_mut</code></a></li>
+</ul>
+<p>Don't forget to write the metadata after mutating array metadata!</p>
+<hr />
 <p>The next chapters detail the reading and writing of array data.</p>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
@@ -1764,6 +1779,23 @@ void main() {
 }
 
 </style>
+<h1 id="python-bindings-zarrs-python"><a class="header" href="#python-bindings-zarrs-python">Python Bindings (zarrs-python)</a></h1>
+<p><code>zarrs-python</code> implements the <code>ZarrsCodecPipeline</code>.
+This can be used by the reference <a href="https://zarr.readthedocs.io/en/main/"><code>zarr</code></a> Python implementation (v3.0.0+) for improved performance over the default <code>BatchedCodecPipeline</code>.</p>
+<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip.svg" alt="benchmark" /></p>
+<p>The <code>ZarrsCodecPipeline</code> can be enabled as follows:</p>
+<pre><code class="language-python">from zarr import config
+import zarrs_python # noqa: F401
+
+config.set({"codec_pipeline.path": "zarrs_python.ZarrsCodecPipeline"})
+</code></pre>
+<p>Downstream libraries that use <code>zarr</code> internally (<a href="https://docs.dask.org/en/stable/index.html"><code>dask</code></a>, <a href="https://docs.xarray.dev/en/stable/"><code>xarray</code></a>, etc.) will also use the <code>ZarrsCodecPipeline</code>.</p>
+<h2 id="limitations-of-zarrs-python"><a class="header" href="#limitations-of-zarrs-python">Limitations of <code>zarrs-python</code></a></h2>
+<ul>
+<li>It does not support all stores with the same level of configuration as the reference implementation, and</li>
+<li>with some advanced indexing operations, <code>zarrs-python</code> falls back to reading entire chunks and indexing in Python.</li>
+</ul>
+<p>See the <code>zarrs-python</code> documentation for more information about these limitations.</p>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
@@ -1914,7 +1946,7 @@ void main() {
 <li><a href="https://github.com/LDeakin/zarrs"><code>LDeakin/zarrs</code></a> v0.17.0 (Rust 1.81.0) via <a href="https://github.com/LDeakin/zarrs_tools"><code>LDeakin/zarrs_tools</code></a> 0.6.0 (4beba5f)
 <ul>
 <li>Benchmark executable (read): <a href="https://github.com/LDeakin/zarrs_tools/blob/main/src/bin/zarrs_benchmark_read_sync.rs">zarrs_benchmark_read_sync</a></li>
-<li>Benchmark executable (round trip): <a href="https://github.com/LDeakin/zarrs_tools/blob/main/src/bin/zarrs_reencode.rs">zarrs_benchmark_read_sync</a></li>
+<li>Benchmark executable (round trip): <a href="https://github.com/LDeakin/zarrs_tools/blob/main/src/bin/zarrs_reencode.rs">zarrs_reencode</a></li>
 </ul>
 </li>
 <li><a href="https://github.com/google/tensorstore"><code>google/tensorstore</code></a> v0.1.67 (Python 3.12.5)
@@ -1927,6 +1959,12 @@ void main() {
 <ul>
 <li>Benchmark script (read): <a href="zarr_benchmarks/./scripts/zarr_python_benchmark_read.py">scripts/zarr_python_benchmark_read.py</a></li>
 <li>Benchmark script (roundtrip): <a href="zarr_benchmarks/./scripts/zarr_python_benchmark_roundtrip.py">scripts/zarr_python_benchmark_roundtrip.py</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/zarr-developers/zarr-python"><code>zarr-developers/zarr-python</code></a> 3.0.0b1 (Python 3.12.5) with <a href="https://github.com/ilan-gold/zarrs-python"><code>ilan-gold/zarrs-python</code></a> <code>CodecPipeline</code>
+<ul>
+<li>Benchmark script (read): <a href="zarr_benchmarks/./scripts/zarrs_python_benchmark_read.py">scripts/zarrs_python_benchmark_read.py</a></li>
+<li>Benchmark script (roundtrip): <a href="zarr_benchmarks/./scripts/zarrs_python_benchmark_roundtrip.py">scripts/zarrs_python_benchmark_roundtrip.py</a></li>
 </ul>
 </li>
 </ul>

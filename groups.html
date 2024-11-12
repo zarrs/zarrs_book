@@ -275,16 +275,9 @@ group.store_metadata()?;
 // group.async_store_metadata().await?;
 </code></pre>
 <p>Note that the <code>/group</code> path is relative to the root of the store.</p>
-<h3 id="remember-to-store-metadata"><a class="header" href="#remember-to-store-metadata">Remember to Store Metadata!</a></h3>
-<p><code>store_metadata</code> (or <code>async_store_metadata</code>) is explicitly called after creating the group in the above example.</p>
-<div class="mdbook-alerts mdbook-alerts-warning">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  warning
-</p>
-<p>Group metadata must <strong>always</strong> be stored explicitly, even if the attributes are empty.</p>
-</div>
-<p>Group metadata must be stored because support for implicit groups (without metadata) <a href="https://github.com/zarr-developers/zarr-specs/pull/292/">was removed long after provisional acceptance of the Zarr V3 specification</a>.</p>
+<h2 id="remember-to-store-metadata"><a class="header" href="#remember-to-store-metadata">Remember to Store Metadata!</a></h2>
+<p>Group metadata must <strong>always</strong> be stored explicitly, even if the attributes are empty.
+Group metadata must be stored because support for implicit groups (without metadata) <a href="https://github.com/zarr-developers/zarr-specs/pull/292/">was removed long after provisional acceptance of the Zarr V3 specification</a>.</p>
 <div class="mdbook-alerts mdbook-alerts-tip">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
@@ -336,7 +329,7 @@ let group = Group::new_with_metadata(store.clone(), "/group", metadata)?;
 group.store_metadata()?;
 // group.async_store_metadata().await?;
 </code></pre>
-<h2 id="mutating-a-group"><a class="header" href="#mutating-a-group">Mutating a Group</a></h2>
+<h2 id="mutating-group-metadata"><a class="header" href="#mutating-group-metadata">Mutating Group Metadata</a></h2>
 <p>Group attributes can be changed after initialisation with <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.attributes_mut"><code>Group::attributes_mut</code></a>:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
