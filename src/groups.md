@@ -61,12 +61,8 @@ group.store_metadata()?;
 
 Note that the `/group` path is relative to the root of the store.
 
-### Remember to Store Metadata!
-`store_metadata` (or `async_store_metadata`) is explicitly called after creating the group in the above example.
-
-> [!WARNING]
-> Group metadata must **always** be stored explicitly, even if the attributes are empty.
-
+## Remember to Store Metadata!
+Group metadata must **always** be stored explicitly, even if the attributes are empty.
 Group metadata must be stored because support for implicit groups (without metadata) [was removed long after provisional acceptance of the Zarr V3 specification](https://github.com/zarr-developers/zarr-specs/pull/292/).
 
 > [!TIP]
@@ -125,7 +121,7 @@ group.store_metadata()?;
 // group.async_store_metadata().await?;
 ```
 
-## Mutating a Group
+## Mutating Group Metadata
 
 Group attributes can be changed after initialisation with [`Group::attributes_mut`](https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.attributes_mut):
 ```rust
