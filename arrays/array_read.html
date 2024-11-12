@@ -229,7 +229,7 @@
 <p>Array operations are divided into several categories based on the traits implemented for the backing storage.
 The core array methods are:</p>
 <ul>
-<li><a href="crate::storage::ReadableStorageTraits"><code>ReadableStorageTraits</code></a>: read array data and metadata
+<li><a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableStorageTraits.html"><code>[Async]ReadableStorageTraits</code></a>: read array data and metadata
 <ul>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunk_if_exists"><code>retrieve_chunk_if_exists</code></a></li>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunk"><code>retrieve_chunk</code></a></li>
@@ -240,7 +240,7 @@ The core array methods are:</p>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.partial_decoder"><code>partial_decoder</code></a></li>
 </ul>
 </li>
-<li><a href="crate::storage::WritableStorageTraits"><code>WritableStorageTraits</code></a>: store/erase array data and metadata
+<li><a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.WritableStorageTraits.html"><code>[Async]WritableStorageTraits</code></a>: store/erase array data and metadata
 <ul>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_metadata"><code>store_metadata</code></a></li>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_metadata"><code>erase_metadata</code></a></li>
@@ -251,7 +251,7 @@ The core array methods are:</p>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunks"><code>erase_chunks</code></a></li>
 </ul>
 </li>
-<li><a href="crate::storage::ReadableWritableStorageTraits"><code>ReadableWritableStorageTraits</code></a>: store operations requiring reading <em>and</em> writing
+<li><a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableWritableStorageTraits.html"><code>[Async]ReadableWritableStorageTraits</code></a>: store operations requiring reading <em>and</em> writing
 <ul>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunk_subset"><code>store_chunk_subset</code></a></li>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_array_subset"><code>store_array_subset</code></a></li>
@@ -260,6 +260,11 @@ The core array methods are:</p>
 </li>
 </ul>
 <p>This section focuses on the <code>ReadableStorageTraits</code> methods.</p>
+<p>Additional methods are offered by extension traits:</p>
+<ul>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedExt.html"><code>ArrayShardedExt</code></a> and <a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedReadableExt.html"><code>ArrayShardedReadableExt</code></a>: see <a href="#reading-inner-chunks-sharded-arrays">Reading Sharded Arrays</a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayChunkCacheExt.html"><code>ArrayChunkCacheExt</code></a>: see <a href="#chunk-caching">Chunk Caching</a></li>
+</ul>
 <h2 id="method-variants"><a class="header" href="#method-variants">Method Variants</a></h2>
 <p>Many <code>retrieve</code> and <code>store</code> methods have multiple variants:</p>
 <ul>
@@ -315,7 +320,7 @@ Async methods do not spawn tasks internally, so asynchronous storage calls are c
 Codec encoding and decoding operations still execute in parallel (where supported) in an asynchronous context.</p>
 <p>Due the lack of parallelism, methods like <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_retrieve_array_subset"><code>async_retrieve_array_subset</code></a> or <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_retrieve_chunks"><code>async_retrieve_chunks</code></a> do not parallelise over chunks and can be slow compared to the  API.
 Parallelism over chunks can be achieved by spawning tasks outside of <code>zarrs</code>.
-If executing many tasks concurrently, consider reducing the codec <a href="crate::array::codec::CodecOptions::set_concurrent_target"><code>concurrent_target</code></a>.</p>
+If executing many tasks concurrently, consider reducing the codec <a href="https://docs.rs/zarrs/latest/zarrs/array/codec/options/struct.CodecOptions.html#method.set_concurrent_target"><code>concurrent_target</code></a>.</p>
 <h2 id="reading-chunks-in-parallel"><a class="header" href="#reading-chunks-in-parallel">Reading Chunks in Parallel</a></h2>
 <p>The <code>retrieve_chunks</code> methods perform chunk retrieval with chunk parallelism.</p>
 <p>Rather than taking a <code>&amp;[u64]</code> parameter of the indices of a single chunk, these methods take an <code>ArraySubset</code> representing the chunks.
@@ -392,6 +397,17 @@ Additionally, the <em>inner chunk grid</em> can be queried, which is a <a href="
 </ul>
 <p>For unsharded arrays, these methods gracefully fallback to referencing standard chunks.
 Each method has a <code>cache</code> parameter (<a href="https://docs.rs/zarrs/latest/zarrs/array/struct.ArrayShardedReadableExtCache.html"><code>ArrayShardedReadableExtCache</code></a>) that stores shard indexes so that they do not have to be repeatedly retrieved and decoded.</p>
+<h2 id="querying-chunk-bounds"><a class="header" href="#querying-chunk-bounds">Querying Chunk Bounds</a></h2>
+<p>Several convenience methods are available for querying the underlying chunk grid:</p>
+<ul>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.chunk_origin"><code>chunk_origin</code></a>: Get the origin of a chunk.</li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.chunk_shape"><code>chunk_shape</code></a>: Get the shape of a chunk.</li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.chunk_subset"><code>chunk_subset</code></a>: Get the <code>ArraySubset</code> of a chunk.</li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.chunk_subset_bounded"><code>chunk_subset_bounded</code></a>: Get the <code>ArraySubset</code> of a chunk, bounded by the array shape.</li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.chunks_subset"><code>chunks_subset</code></a> / <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.chunks_subset_bounded"><code>chunks_subset_bounded</code></a>: Get the <code>ArraySubset</code> of a group of chunks.</li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.chunks_in_array_subset"><code>chunks_in_array_subset</code></a>: Get the chunks in an <code>ArraySubset</code>.</li>
+</ul>
+<p>An <code>ArraySubset</code> spanning an array can be retrieved with <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.subset_all"><code>subset_all</code></a>.</p>
 <h2 id="iterating-over-chunks--regions"><a class="header" href="#iterating-over-chunks--regions">Iterating Over Chunks / Regions</a></h2>
 <p>Iterating over chunks or regions is a common pattern.
 There are several approaches.</p>
@@ -412,7 +428,7 @@ chunks.into_par_iter().try_for_each(|chunk_indices| {
   <span class="mdbook-alerts-icon"></span>
   warning
 </p>
-<p>Iterating over chunks in parallel like this can use a lot of memory if chunks are large.</p>
+<p>Reading chunks in parallel (as above) can use a lot of memory if chunks are large.</p>
 </div>
 <p>The <code>zarrs</code> crate internally uses a macro from the <a href="https://docs.rs/rayon_iter_concurrent_limit/latest/rayon_iter_concurrent_limit/"><code>rayon_iter_concurrent_limit</code></a> crate to limit chunk parallelism where reasonable.
 This macro is a simple wrapper over <code>.into_par_iter().chunks(...).&lt;func&gt;</code>.
@@ -428,6 +444,23 @@ rayon_iter_concurrent_limit::iter_concurrent_limit!(
 )?;
 </code></pre>
 <!-- TODO more types of iteration -->
+<h2 id="chunk-caching"><a class="header" href="#chunk-caching">Chunk Caching</a></h2>
+<p>The standard <code>Array</code> retrieve methods do not perform any chunk caching.
+This means that requesting the same chunk again will result in another read from the store.</p>
+<p>The <a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayChunkCacheExt.html"><code>ArrayChunkCacheExt</code></a> trait adds <code>Array</code> retrieve methods that support chunk caching.
+Various type of chunk caches are supported (e.g. encoded cache, decoded cache, chunk limited, size limited, thread local, etc.).
+See the <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#chunk-caching">Chunk Caching</a> section of the <code>Array</code> docs for more information on these methods.</p>
+<p>Chunk caching is likely to be effective for remote stores where redundant retrievals are costly.
+However, chunk caching may not outperform disk caching with a filesystem store.
+The caches use internal locking to support multithreading, which has a performance overhead.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>Prefer not to use a chunk cache if chunks are not accessed repeatedly.
+Cached retrieve methods do not use partial decoders, and any intersected chunk is fully decoded if not present in the cache.</p>
+</div>
 
                     </main>
 
