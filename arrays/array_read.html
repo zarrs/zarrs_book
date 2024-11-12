@@ -461,6 +461,8 @@ The caches use internal locking to support multithreading, which has a performan
 <p>Prefer not to use a chunk cache if chunks are not accessed repeatedly.
 Cached retrieve methods do not use partial decoders, and any intersected chunk is fully decoded if not present in the cache.</p>
 </div>
+<p>For many access patterns, chunk caching may reduce performance.
+<strong>Benchmark your algorithm/data</strong>.</p>
 
                     </main>
 
