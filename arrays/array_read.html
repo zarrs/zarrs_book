@@ -227,9 +227,7 @@
 <h1 id="reading-arrays"><a class="header" href="#reading-arrays">Reading Arrays</a></h1>
 <h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
 <p>Array operations are divided into several categories based on the traits implemented for the backing storage.
-The core array methods are:</p>
-<ul>
-<li><a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableStorageTraits.html"><code>[Async]ReadableStorageTraits</code></a>: read array data and metadata
+This section focuses on the <a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableStorageTraits.html"><code>[Async]ReadableStorageTraits</code></a> methods:</p>
 <ul>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunk_if_exists"><code>retrieve_chunk_if_exists</code></a></li>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_chunk"><code>retrieve_chunk</code></a></li>
@@ -239,27 +237,6 @@ The core array methods are:</p>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.retrieve_encoded_chunk"><code>retrieve_encoded_chunk</code></a></li>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.partial_decoder"><code>partial_decoder</code></a></li>
 </ul>
-</li>
-<li><a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.WritableStorageTraits.html"><code>[Async]WritableStorageTraits</code></a>: store/erase array data and metadata
-<ul>
-<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_metadata"><code>store_metadata</code></a></li>
-<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_metadata"><code>erase_metadata</code></a></li>
-<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunk"><code>store_chunk</code></a></li>
-<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunks"><code>store_chunks</code></a></li>
-<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_encoded_chunk"><code>store_encoded_chunk</code></a></li>
-<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunk"><code>erase_chunk</code></a></li>
-<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunks"><code>erase_chunks</code></a></li>
-</ul>
-</li>
-<li><a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableWritableStorageTraits.html"><code>[Async]ReadableWritableStorageTraits</code></a>: store operations requiring reading <em>and</em> writing
-<ul>
-<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunk_subset"><code>store_chunk_subset</code></a></li>
-<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_array_subset"><code>store_array_subset</code></a></li>
-<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.partial_encoder"><code>partial_encoder</code></a></li>
-</ul>
-</li>
-</ul>
-<p>This section focuses on the <code>ReadableStorageTraits</code> methods.</p>
 <p>Additional methods are offered by extension traits:</p>
 <ul>
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedExt.html"><code>ArrayShardedExt</code></a> and <a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ArrayShardedReadableExt.html"><code>ArrayShardedReadableExt</code></a>: see <a href="#reading-inner-chunks-sharded-arrays">Reading Sharded Arrays</a></li>
@@ -472,7 +449,7 @@ Cached retrieve methods do not use partial decoders, and any intersected chunk i
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../v2_to_v3.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../arrays/array_write.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -486,7 +463,7 @@ Cached retrieve methods do not use partial decoders, and any intersected chunk i
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../v2_to_v3.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../arrays/array_write.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Converting Zarr V2 to V3 - The Rust zarrs Book</title>
+        <title>Writing - The Rust zarrs Book</title>
 
 
         <!-- Custom HTML head -->
@@ -12,34 +12,34 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="theme/custom.css">
-        <link rel="stylesheet" href="theme/pagetoc.css">
+        <link rel="stylesheet" href="../theme/custom.css">
+        <link rel="stylesheet" href="../theme/pagetoc.css">
 
 
         <!-- Provide site root to javascript -->
         <script>
-            var path_to_root = "";
+            var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc.js"></script>
+        <script src="../toc.js"></script>
     </head>
     <body>
     <div id="body-container">
@@ -91,7 +91,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -125,7 +125,7 @@
                     <h1 class="menu-title">The Rust zarrs Book</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/LDeakin/zarrs_book" title="Git repository" aria-label="Git repository">
@@ -224,77 +224,72 @@
 }
 
 </style>
-<h1 id="converting-zarr-v2-to-v3"><a class="header" href="#converting-zarr-v2-to-v3">Converting Zarr V2 to V3</a></h1>
-<h2 id="changing-the-internal-representation"><a class="header" href="#changing-the-internal-representation">Changing the Internal Representation</a></h2>
-<p>When an array or group is initialised, it internally holds metadata in the Zarr version it was created with.</p>
-<p>To change the internal representation to Zarr V3, call <code>to_v3()</code> on an <code>Array</code> or <code>Group</code>, then call <code>store_metadata()</code> to update the stored metadata.
-V2 metadata must be explicitly erased if needed (see below).</p>
-<div class="mdbook-alerts mdbook-alerts-note">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  note
-</p>
-<p>While <code>zarrs</code> fully supports manipulation of Zarr V2 and V3 hierarchies (with supported codecs, data types, etc.), it only supports <strong>forward conversion</strong> of metadata from Zarr V2 to V3.</p>
-</div>
-<h3 id="convert-a-group-to-v3"><a class="header" href="#convert-a-group-to-v3">Convert a Group to V3</a></h3>
-<pre><code class="language-rs">let group: Group = group.to_v3();
-group.store_metadata()?;
-// group.async_store_metadata().await?;
-group.erase_metadata_opt(MetadataEraseVersion::V2)?;
-// group.async_erase_metadata_opt(MetadataEraseVersion::V2).await?;
-</code></pre>
-<h3 id="convert-an-array-to-v3"><a class="header" href="#convert-an-array-to-v3">Convert an Array to V3</a></h3>
-<pre><code class="language-rs">let array: Array = array.to_v3()?;
-array.store_metadata()?;
-// array.async_store_metadata().await?;
-array.erase_metadata_opt(MetadataEraseVersion::V2)?;
-// array.async_erase_metadata_opt(MetadataEraseVersion::V2).await?;
-</code></pre>
-<p>Note that <code>Array::to_v3()</code> is fallible because some V2 metadata is not V3 compatible.</p>
-<h2 id="writing-versioned-metadata-explicitly"><a class="header" href="#writing-versioned-metadata-explicitly">Writing Versioned Metadata Explicitly</a></h2>
-<p>Rather than changing the internal representation, an alternative is to just write metadata with a specified version.</p>
-<p>For groups, the <code>store_metadata_opt</code> accepts a <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.GroupMetadataOptions.html"><code>GroupMetadataOptions</code></a> argument.
-<code>GroupMetadataOptions</code> currently has only one option that impacts the Zarr version of the metadata.
-By default, <code>GroupMetadataOptions</code> keeps the current Zarr version.</p>
-<p>To write Zarr V3 metadata:</p>
-<pre><code class="language-rs">group.store_metadata_opt(&amp;
-    GroupMetadataOptions::default()
-    .with_metadata_convert_version(MetadataConvertVersion::V3)
-)?;
-// group.async_store_metadata_opt(...).await?;
-</code></pre>
+<h1 id="writing-arrays"><a class="header" href="#writing-arrays">Writing Arrays</a></h1>
+<p>Array write methods are separated into two traits.
+The <code>[Async]WritableStorageTraits</code> perform write operations exclusively, and do not need to decode existing data.
+The <code>[Async]ReadableWritableStorageTraits</code> methods may need to read and decoding existing data, and <strong>misuse can result in data loss</strong>.</p>
 <div class="mdbook-alerts mdbook-alerts-warning">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
   warning
 </p>
-<p><code>zarrs</code> does not support converting Zarr V3 metadata to Zarr V2.</p>
+<p><code>zarrs</code> does not currently offer a “synchronisation” API for locking chunks or array subsets.</p>
 </div>
-<p>Note that the original metadata is not automatically deleted.
-If you want to delete it:</p>
-<pre><code class="language-rs">group.erase_metadata()?;
-// group.async_erase_metadata().await?;
-</code></pre>
+<h2 id="write-only-methods"><a class="header" href="#write-only-methods">Write-Only Methods</a></h2>
+<p>The <a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.WritableStorageTraits.html"><code>[Async]WritableStorageTraits</code></a> consist of methods that exclusively perform <em>write operations</em>:</p>
+<!-- - [`store_metadata`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_metadata) -->
+<!-- - [`erase_metadata`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_metadata) -->
+<ul>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunk"><code>store_chunk</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunks"><code>store_chunks</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_encoded_chunk"><code>store_encoded_chunk</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunk"><code>erase_chunk</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunks"><code>erase_chunks</code></a></li>
+</ul>
 <div class="mdbook-alerts mdbook-alerts-tip">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
   tip
 </p>
-<p>The <code>store_metadata</code> methods of <code>Array</code> and <code>Group</code> internally call <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.store_metadata_opt"><code>store_metadata_opt</code></a>.
-Global defaults can be changed, see <a href="https://docs.rs/zarrs/latest/zarrs/config/struct.Config.html">zarrs::global::Config</a>.</p>
+<p>If a chunk is written more than once, its element values depend on whichever operation wrote to the chunk last.</p>
 </div>
-<p><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.ArrayMetadataOptions.html"><code>ArrayMetadataOptions</code></a> has similar options for changing the Zarr version of the metadata.
-It also has various other configuration options, see its documentation.</p>
+<h2 id="read-write-methods"><a class="header" href="#read-write-methods">Read-Write Methods</a></h2>
+<p>Conversely, the <a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableWritableStorageTraits.html"><code>[Async]ReadableWritableStorageTraits</code></a> methods <em>may additionally perform read operations</em>:</p>
+<ul>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_chunk_subset"><code>store_chunk_subset</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_array_subset"><code>store_array_subset</code></a></li>
+<li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.partial_encoder"><code>partial_encoder</code></a></li>
+</ul>
+<p>These methods perform partial encoding.
+Codecs that do not support true partial encoding will retrieve chunks in their entirety, then decode, update, and store them.</p>
+<p>It is the responsibility of zarrs consumers to ensure:</p>
+<ul>
+<li><code>store_chunk_subset</code> is not called concurrently on the same chunk, and</li>
+<li><code>store_array_subset</code> is not called concurrently on array subsets sharing chunks.</li>
+</ul>
+<p>Partial writes to a chunk may be lost if these rules are not respected.</p>
+<h3 id="partial-encoding-with-the-sharding-codec"><a class="header" href="#partial-encoding-with-the-sharding-codec">Partial Encoding with the Sharding Codec</a></h3>
+<p>In <code>zarrs</code>, the <code>sharding_indexed</code> codec is the only codec that supports real partial encoding.
+Inner chunks can be written in an append-only fashion without reading previously written inner chunks (if their elements do not require updating).</p>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>True partial encoding is currently experimental. The <a href="https://docs.rs/zarrs/latest/zarrs/config/struct.Config.html#experimental-partial-decoding"><code>Experimental Partial Encoding</code></a> option must be enabled.
+If disabled (default), chunks are always fully decoded and updated before being stored.</p>
+</div>
+<!-- TODO: Warning about shards being much larger if chunks are updated -->
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="arrays/array_write.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../arrays/array_read.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="zarrs_ffi.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../v2_to_v3.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -304,11 +299,11 @@ It also has various other configuration options, see its documentation.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="arrays/array_write.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../arrays/array_read.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="zarrs_ffi.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../v2_to_v3.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
@@ -323,18 +318,18 @@ It also has various other configuration options, see its documentation.</p>
         </script>
 
 
-        <script src="elasticlunr.min.js"></script>
-        <script src="mark.min.js"></script>
-        <script src="searcher.js"></script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
 
-        <script src="clipboard.min.js"></script>
-        <script src="highlight.js"></script>
-        <script src="book.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="mermaid.min.js"></script>
-        <script src="mermaid-init.js"></script>
-        <script src="theme/pagetoc.js"></script>
+        <script src="../mermaid.min.js"></script>
+        <script src="../mermaid-init.js"></script>
+        <script src="../theme/pagetoc.js"></script>
 
 
     </div>
