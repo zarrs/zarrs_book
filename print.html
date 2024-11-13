@@ -1556,14 +1556,15 @@ Cached retrieve methods do not use partial decoders, and any intersected chunk i
 </style>
 <h1 id="writing-arrays"><a class="header" href="#writing-arrays">Writing Arrays</a></h1>
 <p>Array write methods are separated into two traits.
-The <code>[Async]WritableStorageTraits</code> perform write operations exclusively, and do not need to decode existing data.
-The <code>[Async]ReadableWritableStorageTraits</code> methods may need to read and decoding existing data, and <strong>misuse can result in data loss</strong>.</p>
+The <code>[Async]WritableStorageTraits</code> perform write operations exclusively.
+Conversely, the <code>[Async]ReadableWritableStorageTraits</code> methods may need to read and decode existing data before performing a write operation.</p>
 <div class="mdbook-alerts mdbook-alerts-warning">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
   warning
 </p>
-<p><code>zarrs</code> does not currently offer a “synchronisation” API for locking chunks or array subsets.</p>
+<p>Misuse of <code>[Async]ReadableWritableStorageTraits</code> methods can result in data loss due to partial writes being lost.
+<code>zarrs</code> does not currently offer a “synchronisation” API for locking chunks or array subsets.</p>
 </div>
 <h2 id="write-only-methods"><a class="header" href="#write-only-methods">Write-Only Methods</a></h2>
 <p>The <a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.WritableStorageTraits.html"><code>[Async]WritableStorageTraits</code></a> consist of methods that exclusively perform <em>write operations</em>:</p>
