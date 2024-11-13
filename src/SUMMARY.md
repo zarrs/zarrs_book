@@ -9,7 +9,7 @@
 - [Arrays](./arrays.md)
   - [Initialisation](./arrays/array_init.md)
   - [Reading](./arrays/array_read.md)
-  - [Writing]()
+  - [Writing](./arrays/array_write.md)
 - [Converting Zarr V2 to V3](v2_to_v3.md)
 
 # Bindings
