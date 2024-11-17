@@ -32,6 +32,8 @@
         <link rel="stylesheet" href="theme/custom.css">
         <link rel="stylesheet" href="theme/pagetoc.css">
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -226,21 +228,46 @@
 </style>
 <h1 id="python-bindings-zarrs-python"><a class="header" href="#python-bindings-zarrs-python">Python Bindings (zarrs-python)</a></h1>
 <p><code>zarrs-python</code> implements the <code>ZarrsCodecPipeline</code>.
-This can be used by the reference <a href="https://zarr.readthedocs.io/en/main/"><code>zarr</code></a> Python implementation (v3.0.0+) for improved performance over the default <code>BatchedCodecPipeline</code>.</p>
-<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip.svg" alt="benchmark" /></p>
-<p>The <code>ZarrsCodecPipeline</code> can be enabled as follows:</p>
+It can be used by the reference <a href="https://zarr.readthedocs.io/en/main/"><code>zarr</code></a> Python implementation (v3.0.0+) for improved performance over the default <code>BatchedCodecPipeline</code>.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p><code>zarrs-python</code> has some limitations compared to the reference implementation.
+See the <a href="https://github.com/ilan-gold/zarrs-python?tab=readme-ov-file#limitations">limitations</a> in <a href="https://github.com/ilan-gold/zarrs-python"><img src="https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github" alt="zarrs-python" /></a>.</p>
+</div>
+<h2 id="enabling-zarrs-python"><a class="header" href="#enabling-zarrs-python">Enabling <code>zarrs-python</code></a></h2>
+<p>The <code>ZarrsCodecPipeline</code> is enabled as follows:</p>
 <pre><code class="language-python">from zarr import config
-import zarrs_python # noqa: F401
+import zarrs # noqa: F401
 
-config.set({"codec_pipeline.path": "zarrs_python.ZarrsCodecPipeline"})
+config.set({"codec_pipeline.path": "zarrs.ZarrsCodecPipeline"})
 </code></pre>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>The <code>zarrs-python</code> bindings are located in a repository called <code>zarrs-python</code>, but the Python package is called <code>zarrs</code>.</p>
+</div>
 <p>Downstream libraries that use <code>zarr</code> internally (<a href="https://docs.dask.org/en/stable/index.html"><code>dask</code></a>, <a href="https://docs.xarray.dev/en/stable/"><code>xarray</code></a>, etc.) will also use the <code>ZarrsCodecPipeline</code>.</p>
-<h2 id="limitations-of-zarrs-python"><a class="header" href="#limitations-of-zarrs-python">Limitations of <code>zarrs-python</code></a></h2>
+<h2 id="performance"><a class="header" href="#performance">Performance</a></h2>
+<p>This benchmark measures time and peak memory usage to "round trip" a dataset (potentially chunk-by-chunk).</p>
 <ul>
-<li>It does not support all stores with the same level of configuration as the reference implementation, and</li>
-<li>with some advanced indexing operations, <code>zarrs-python</code> falls back to reading entire chunks and indexing in Python.</li>
+<li>The disk cache is cleared between each measurement</li>
+<li>These are best of 3 measurements</li>
 </ul>
-<p>See the <code>zarrs-python</code> documentation for more information about these limitations.</p>
+<p>All datasets are \(1024x2048x2048\) <code>uint16</code> arrays.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Chunk Shape</th><th>Shard Shape</th><th>Compression</th><th>Size</th></tr></thead><tbody>
+<tr><td>Uncompressed</td><td>\(256^3\)</td><td></td><td>None</td><td>8.0 GB</td></tr>
+<tr><td>Compressed</td><td>\(256^3\)</td><td></td><td><code>blosclz</code> 9 <br> + bitshuffling</td><td>377 MB</td></tr>
+<tr><td>Compressed <br> + Sharded</td><td>\(32^3\)</td><td>\(256^3\)</td><td><code>blosclz</code> 9 <br> + bitshuffling</td><td>1.1 GB</td></tr>
+</tbody></table>
+</div>
+<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip.svg" alt="benchmark standalone" /></p>
+<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip_dask.svg" alt="benchmark dask" /></p>
+<p>See <a href="https://github.com/LDeakin/zarr_benchmarks"><img src="https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks" /></a> for more details and additional benchmarks.</p>
 
                     </main>
 

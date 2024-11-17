@@ -33,6 +33,8 @@
         <link rel="stylesheet" href="theme/custom.css">
         <link rel="stylesheet" href="theme/pagetoc.css">
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -1958,21 +1960,46 @@ void main() {
 </style>
 <h1 id="python-bindings-zarrs-python"><a class="header" href="#python-bindings-zarrs-python">Python Bindings (zarrs-python)</a></h1>
 <p><code>zarrs-python</code> implements the <code>ZarrsCodecPipeline</code>.
-This can be used by the reference <a href="https://zarr.readthedocs.io/en/main/"><code>zarr</code></a> Python implementation (v3.0.0+) for improved performance over the default <code>BatchedCodecPipeline</code>.</p>
-<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip.svg" alt="benchmark" /></p>
-<p>The <code>ZarrsCodecPipeline</code> can be enabled as follows:</p>
+It can be used by the reference <a href="https://zarr.readthedocs.io/en/main/"><code>zarr</code></a> Python implementation (v3.0.0+) for improved performance over the default <code>BatchedCodecPipeline</code>.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p><code>zarrs-python</code> has some limitations compared to the reference implementation.
+See the <a href="https://github.com/ilan-gold/zarrs-python?tab=readme-ov-file#limitations">limitations</a> in <a href="https://github.com/ilan-gold/zarrs-python"><img src="https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github" alt="zarrs-python" /></a>.</p>
+</div>
+<h2 id="enabling-zarrs-python"><a class="header" href="#enabling-zarrs-python">Enabling <code>zarrs-python</code></a></h2>
+<p>The <code>ZarrsCodecPipeline</code> is enabled as follows:</p>
 <pre><code class="language-python">from zarr import config
-import zarrs_python # noqa: F401
+import zarrs # noqa: F401
 
-config.set({"codec_pipeline.path": "zarrs_python.ZarrsCodecPipeline"})
+config.set({"codec_pipeline.path": "zarrs.ZarrsCodecPipeline"})
 </code></pre>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>The <code>zarrs-python</code> bindings are located in a repository called <code>zarrs-python</code>, but the Python package is called <code>zarrs</code>.</p>
+</div>
 <p>Downstream libraries that use <code>zarr</code> internally (<a href="https://docs.dask.org/en/stable/index.html"><code>dask</code></a>, <a href="https://docs.xarray.dev/en/stable/"><code>xarray</code></a>, etc.) will also use the <code>ZarrsCodecPipeline</code>.</p>
-<h2 id="limitations-of-zarrs-python"><a class="header" href="#limitations-of-zarrs-python">Limitations of <code>zarrs-python</code></a></h2>
+<h2 id="performance"><a class="header" href="#performance">Performance</a></h2>
+<p>This benchmark measures time and peak memory usage to "round trip" a dataset (potentially chunk-by-chunk).</p>
 <ul>
-<li>It does not support all stores with the same level of configuration as the reference implementation, and</li>
-<li>with some advanced indexing operations, <code>zarrs-python</code> falls back to reading entire chunks and indexing in Python.</li>
+<li>The disk cache is cleared between each measurement</li>
+<li>These are best of 3 measurements</li>
 </ul>
-<p>See the <code>zarrs-python</code> documentation for more information about these limitations.</p>
+<p>All datasets are \(1024x2048x2048\) <code>uint16</code> arrays.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Chunk Shape</th><th>Shard Shape</th><th>Compression</th><th>Size</th></tr></thead><tbody>
+<tr><td>Uncompressed</td><td>\(256^3\)</td><td></td><td>None</td><td>8.0 GB</td></tr>
+<tr><td>Compressed</td><td>\(256^3\)</td><td></td><td><code>blosclz</code> 9 <br> + bitshuffling</td><td>377 MB</td></tr>
+<tr><td>Compressed <br> + Sharded</td><td>\(32^3\)</td><td>\(256^3\)</td><td><code>blosclz</code> 9 <br> + bitshuffling</td><td>1.1 GB</td></tr>
+</tbody></table>
+</div>
+<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip.svg" alt="benchmark standalone" /></p>
+<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip_dask.svg" alt="benchmark dask" /></p>
+<p>See <a href="https://github.com/LDeakin/zarr_benchmarks"><img src="https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks" /></a> for more details and additional benchmarks.</p>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
@@ -2120,37 +2147,31 @@ config.set({"codec_pipeline.path": "zarrs_python.ZarrsCodecPipeline"})
 </div>
 <h2 id="implementations-benchmarked"><a class="header" href="#implementations-benchmarked">Implementations Benchmarked</a></h2>
 <ul>
-<li><a href="https://github.com/LDeakin/zarrs"><code>LDeakin/zarrs</code></a> v0.17.0 (Rust 1.81.0) via <a href="https://github.com/LDeakin/zarrs_tools"><code>LDeakin/zarrs_tools</code></a> 0.6.0 (4beba5f)
+<li><a href="https://github.com/LDeakin/zarrs"><code>LDeakin/zarrs</code></a> via <a href="https://github.com/LDeakin/zarrs_tools"><code>LDeakin/zarrs_tools</code></a>
 <ul>
-<li>Benchmark executable (read): <a href="https://github.com/LDeakin/zarrs_tools/blob/main/src/bin/zarrs_benchmark_read_sync.rs">zarrs_benchmark_read_sync</a></li>
-<li>Benchmark executable (round trip): <a href="https://github.com/LDeakin/zarrs_tools/blob/main/src/bin/zarrs_reencode.rs">zarrs_reencode</a></li>
+<li>Read executable: <a href="https://github.com/LDeakin/zarrs_tools/blob/main/src/bin/zarrs_benchmark_read_sync.rs">zarrs_benchmark_read_sync</a></li>
+<li>Round trip executable: <a href="https://github.com/LDeakin/zarrs_tools/blob/main/src/bin/zarrs_reencode.rs">zarrs_reencode</a></li>
 </ul>
 </li>
-<li><a href="https://github.com/google/tensorstore"><code>google/tensorstore</code></a> v0.1.67 (Python 3.12.5)
+<li>Python (v3.12.7):
 <ul>
-<li>Benchmark script (read): <a href="zarr_benchmarks/./scripts/tensorstore_python_benchmark_read.py">scripts/tensorstore_python_benchmark_read.py</a></li>
-<li>Benchmark script (round trip): <a href="zarr_benchmarks/./scripts/tensorstore_python_benchmark_roundtrip.py">scripts/tensorstore_python_benchmark_roundtrip.py</a></li>
-</ul>
-</li>
-<li><a href="https://github.com/zarr-developers/zarr-python"><code>zarr-developers/zarr-python</code></a> 3.0.0b1 (Python 3.12.5)
+<li><a href="https://github.com/google/tensorstore"><code>google/tensorstore</code></a></li>
+<li><a href="https://github.com/zarr-developers/zarr-python"><code>zarr-developers/zarr-python</code></a>
 <ul>
-<li>Benchmark script (read): <a href="zarr_benchmarks/./scripts/zarr_python_benchmark_read.py">scripts/zarr_python_benchmark_read.py</a></li>
-<li>Benchmark script (roundtrip): <a href="zarr_benchmarks/./scripts/zarr_python_benchmark_roundtrip.py">scripts/zarr_python_benchmark_roundtrip.py</a></li>
-</ul>
-</li>
-<li><a href="https://github.com/zarr-developers/zarr-python"><code>zarr-developers/zarr-python</code></a> 3.0.0b1 (Python 3.12.5) with <a href="https://github.com/ilan-gold/zarrs-python"><code>ilan-gold/zarrs-python</code></a> <code>CodecPipeline</code>
-<ul>
-<li>Benchmark script (read): <a href="zarr_benchmarks/./scripts/zarrs_python_benchmark_read.py">scripts/zarrs_python_benchmark_read.py</a></li>
-<li>Benchmark script (roundtrip): <a href="zarr_benchmarks/./scripts/zarrs_python_benchmark_roundtrip.py">scripts/zarrs_python_benchmark_roundtrip.py</a></li>
+<li>With and without the <code>ZarrsCodecPipeline</code> from <a href="https://github.com/ilan-gold/zarrs-python"><code>ilan-gold/zarrs-python</code></a></li>
+<li>With and without <a href="https://github.com/dask/dask"><code>dask</code></a></li>
 </ul>
 </li>
 </ul>
+</li>
+</ul>
+<p>Benchmark scripts are in the <a href="zarr_benchmarks/./scripts/">scripts</a> folder and implementation versions are listed in the benchmark charts.</p>
 <div class="mdbook-alerts mdbook-alerts-warning">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
   warning
 </p>
-<p>Python benchmarks (<code>tensorstore</code> and <code>zarr-python</code>) are subject to the overheads of Python and may not be using an optimal API/parameters.</p>
+<p>Python benchmarks are subject to the overheads of Python and may not be using an optimal API/parameters.</p>
 <p>Please open a PR if you can improve these benchmarks.</p>
 </div>
 <h2 id="make-targets"><a class="header" href="#make-targets"><code>make</code> Targets</a></h2>
@@ -2164,7 +2185,7 @@ config.set({"codec_pipeline.path": "zarrs_python.ZarrsCodecPipeline"})
 <li><code>benchmark_all</code>: run all benchmarks</li>
 </ul>
 <h2 id="benchmark-data"><a class="header" href="#benchmark-data">Benchmark Data</a></h2>
-<p>All datasets are $1024x1024x2048$ <code>uint16</code> arrays.</p>
+<p>All datasets are $1024x2048x2048$ <code>uint16</code> arrays.</p>
 <div class="table-wrapper"><table><thead><tr><th>Name</th><th>Chunk Shape</th><th>Shard Shape</th><th>Compression</th><th>Size</th></tr></thead><tbody>
 <tr><td>data/benchmark.zarr</td><td>$256^3$</td><td></td><td>None</td><td>8.0 GB</td></tr>
 <tr><td>data/benchmark_compress.zarr</td><td>$256^3$</td><td></td><td><code>blosclz</code> 9 + bitshuffling</td><td>377 MB</td></tr>
@@ -2178,34 +2199,46 @@ config.set({"codec_pipeline.path": "zarrs_python.ZarrsCodecPipeline"})
 <li>2TB Samsung 990 Pro</li>
 <li>Ubuntu 22.04 (in Windows 11 WSL2, swap disabled, 32GB available memory)</li>
 </ul>
-<h2 id="read-all-benchmark"><a class="header" href="#read-all-benchmark">Read All Benchmark</a></h2>
-<p>This benchmark measures the minimum time and and peak memory usage to read an entire dataset into memory.</p>
-<ul>
-<li>The disk cache is cleared between each measurement</li>
-<li>These are best of 3 measurements</li>
-</ul>
-<p><img src="zarr_benchmarks/./plots/benchmark_read_all.svg" alt="read all benchmark image" /></p>
-<p><a href="zarr_benchmarks/./measurements/benchmark_read_all.html">Table of raw measurements (benchmarks_read_all.md)</a></p>
-<h2 id="read-chunk-by-chunk-benchmark"><a class="header" href="#read-chunk-by-chunk-benchmark">Read Chunk-By-Chunk Benchmark</a></h2>
-<p>This benchmark measures the the minimum time and peak memory usage to read a dataset chunk-by-chunk into memory.</p>
-<ul>
-<li>The disk cache is cleared between each measurement</li>
-<li>These are best of 1 measurements</li>
-</ul>
-<p><img src="zarr_benchmarks/./plots/benchmark_read_chunks.svg" alt="read chunks benchmark image" /></p>
-<blockquote>
-<p>[!NOTE]
-<code>zarr-python</code> benchmarks with sharding are not visible in this plot</p>
-</blockquote>
-<p><a href="zarr_benchmarks/./measurements/benchmark_read_chunks.html">Table of raw measurements (benchmarks_read_chunks.md)</a></p>
 <h2 id="round-trip-benchmark"><a class="header" href="#round-trip-benchmark">Round Trip Benchmark</a></h2>
 <p>This benchmark measures time and peak memory usage to "round trip" a dataset (potentially chunk-by-chunk).</p>
 <ul>
 <li>The disk cache is cleared between each measurement</li>
 <li>These are best of 3 measurements</li>
 </ul>
-<p><img src="zarr_benchmarks/./plots/benchmark_roundtrip.svg" alt="roundtrip benchmark image" /></p>
 <p><a href="zarr_benchmarks/./measurements/benchmark_roundtrip.html">Table of raw measurements (benchmarks_roundtrip.md)</a></p>
+<h3 id="standalone"><a class="header" href="#standalone">Standalone</a></h3>
+<p><img src="zarr_benchmarks/./plots/benchmark_roundtrip.svg" alt="roundtrip benchmark image" /></p>
+<h3 id="dask"><a class="header" href="#dask">Dask</a></h3>
+<p><img src="zarr_benchmarks/./plots/benchmark_roundtrip_dask.svg" alt="roundtrip benchmark image dask" /></p>
+<h2 id="read-chunk-by-chunk-benchmark"><a class="header" href="#read-chunk-by-chunk-benchmark">Read Chunk-By-Chunk Benchmark</a></h2>
+<p>This benchmark measures the the minimum time and peak memory usage to read a dataset chunk-by-chunk into memory.</p>
+<ul>
+<li>The disk cache is cleared between each measurement</li>
+<li>These are best of 1 measurements</li>
+</ul>
+<p><a href="zarr_benchmarks/./measurements/benchmark_read_chunks.html">Table of raw measurements (benchmarks_read_chunks.md)</a></p>
+<h3 id="standalone-1"><a class="header" href="#standalone-1">Standalone</a></h3>
+<p><img src="zarr_benchmarks/./plots/benchmark_read_chunks.svg" alt="read chunks benchmark image" /></p>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p><code>zarr-python</code> benchmarks with sharding are not visible in this plot</p>
+</div>
+<h3 id="dask-1"><a class="header" href="#dask-1">Dask</a></h3>
+<p><img src="zarr_benchmarks/./plots/benchmark_read_chunks_dask.svg" alt="read chunks benchmark image dask" /></p>
+<h2 id="read-all-benchmark"><a class="header" href="#read-all-benchmark">Read All Benchmark</a></h2>
+<p>This benchmark measures the minimum time and and peak memory usage to read an entire dataset into memory.</p>
+<ul>
+<li>The disk cache is cleared between each measurement</li>
+<li>These are best of 3 measurements</li>
+</ul>
+<p><a href="zarr_benchmarks/./measurements/benchmark_read_all.html">Table of raw measurements (benchmarks_read_all.md)</a></p>
+<h3 id="standalone-2"><a class="header" href="#standalone-2">Standalone</a></h3>
+<p><img src="zarr_benchmarks/./plots/benchmark_read_all.svg" alt="read all benchmark image" /></p>
+<h3 id="dask-2"><a class="header" href="#dask-2">Dask</a></h3>
+<p><img src="zarr_benchmarks/./plots/benchmark_read_all_dask.svg" alt="read all benchmark image dask" /></p>
 
                     </main>
 
@@ -2247,7 +2280,9 @@ config.set({"codec_pipeline.path": "zarrs_python.ZarrsCodecPipeline"})
 
         <script>
         window.addEventListener('load', function() {
-            window.setTimeout(window.print, 100);
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
         });
         </script>
 
