@@ -7,7 +7,7 @@ title = "The Rust zarrs Book"
 description = "This book covers the zarrs Rust crate (and associated tools) for the Zarr storage format for multidimensional arrays and metadata"
 
 [output.html]
-# mathjax-support = false
+mathjax-support = true
 git-repository-url = "https://github.com/LDeakin/zarrs_book"
 additional-js = ["mermaid.min.js", "mermaid-init.js", "theme/pagetoc.js"]
 additional-css = ["theme/custom.css", "theme/pagetoc.css"]
