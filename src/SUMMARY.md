@@ -14,8 +14,8 @@
 
 # Bindings
 
-- [C/C++ (zarrs_ffi)](zarrs_ffi.md)
 - [Python (zarrs_python)](zarrs_python.md)
+- [C/C++ (zarrs_ffi)](zarrs_ffi.md)
 
 # CLI Tools
 
