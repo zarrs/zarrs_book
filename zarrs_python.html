@@ -252,22 +252,6 @@ config.set({"codec_pipeline.path": "zarrs.ZarrsCodecPipeline"})
 <p>The <code>zarrs-python</code> bindings are located in a repository called <code>zarrs-python</code>, but the Python package is called <code>zarrs</code>.</p>
 </div>
 <p>Downstream libraries that use <code>zarr</code> internally (<a href="https://docs.dask.org/en/stable/index.html"><code>dask</code></a>, <a href="https://docs.xarray.dev/en/stable/"><code>xarray</code></a>, etc.) will also use the <code>ZarrsCodecPipeline</code>.</p>
-<h2 id="performance"><a class="header" href="#performance">Performance</a></h2>
-<p>This benchmark measures time and peak memory usage to "round trip" a dataset (potentially chunk-by-chunk).</p>
-<ul>
-<li>The disk cache is cleared between each measurement</li>
-<li>These are best of 3 measurements</li>
-</ul>
-<p>All datasets are \(1024x2048x2048\) <code>uint16</code> arrays.</p>
-<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Chunk Shape</th><th>Shard Shape</th><th>Compression</th><th>Size</th></tr></thead><tbody>
-<tr><td>Uncompressed</td><td>\(256^3\)</td><td></td><td>None</td><td>8.0 GB</td></tr>
-<tr><td>Compressed</td><td>\(256^3\)</td><td></td><td><code>blosclz</code> 9 <br> + bitshuffling</td><td>377 MB</td></tr>
-<tr><td>Compressed <br> + Sharded</td><td>\(32^3\)</td><td>\(256^3\)</td><td><code>blosclz</code> 9 <br> + bitshuffling</td><td>1.1 GB</td></tr>
-</tbody></table>
-</div>
-<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip.svg" alt="benchmark standalone" /></p>
-<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip_dask.svg" alt="benchmark dask" /></p>
-<p>See <a href="https://github.com/LDeakin/zarr_benchmarks"><img src="https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks" /></a> for more details and additional benchmarks.</p>
 
                     </main>
 
