@@ -15,16 +15,15 @@ However, it now supports a V3 compatible subset of Zarr V2, and has Python and C
 
 This book focuses mostly on the Rust implementation.
 
-## Using `zarrs` in the `zarr-python` Reference Implementation
+## Using `zarrs` with `zarr-python`
 
-If you are only interested in using `zarrs` from Python, skip ahead to the [Python Bindings (zarrs-python) Chapter](./zarrs_python.md).
+[![zarr-python](https://img.shields.io/badge/zarr--developers/zarr--python-GitHub-blue?logo=github)](https://github.com/zarr-developers/zarr-python) is the reference Python Zarr implementation.
 
-The Python bindings ([![zarr-python](https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github)](https://github.com/ilan-gold/zarrs-python)) expose a high-performance codec pipeline to the [![zarr-python](https://img.shields.io/badge/zarr--developers/zarr--python-GitHub-blue?logo=github)](https://github.com/zarr-developers/zarr-python) reference implementation that uses `zarrs` under the hood.
+The `zarrs` Python bindings [![zarr-python](https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github)](https://github.com/ilan-gold/zarrs-python) expose a high-performance codec pipeline to `zarr-python` that uses `zarrs` under the hood.
 There is no need to learn a new API and it is supported by downstream libraries like `dask`.
 
-> [!WARNING]
-> The `zarrs-python` implementation is highly experimental and has some limitations.
-> Consult the documentation for more information.
+> [!TIP]
+> Skip to the [Python Bindings Chapter](./zarrs_python.md) if you are not interested in the Rust library.
 
 ## 🚀 `zarrs` is Fast
 

@@ -1,3 +1,6 @@
 [submodule "src/zarrs_tools"]
 	path = src/zarrs_tools
 	url = git@github.com:LDeakin/zarrs_tools.git
+[submodule "src/zarr_benchmarks"]
+	path = src/zarr_benchmarks
+	url = git@github.com:LDeakin/zarr_benchmarks.git
