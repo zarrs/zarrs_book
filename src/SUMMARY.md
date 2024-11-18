@@ -20,3 +20,8 @@
 # CLI Tools
 
 - [zarrs_tools](zarrs_tools.md)
+  - [zarrs_reencode: reencode/rechunk Zarr arrays](zarrs_tools/docs/zarrs_reencode.md)
+  - [zarrs_ome: convert to OME-Zarr multiscales](zarrs_tools/docs/zarrs_ome.md)
+  - [zarrs_filter: apply image transformations](zarrs_tools/docs/zarrs_filter.md)
+  - [zarrs_binary2zarr: convert piped binary data to Zarr](zarrs_tools/docs/zarrs_binary2zarr.md)
+  - [zarrs_ncvar2zarr: convert NetCDF variables to Zarr](zarrs_tools/docs/zarrs_ncvar2zarr.md)

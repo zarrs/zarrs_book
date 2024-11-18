@@ -1,0 +1,3 @@
+[submodule "src/zarrs_tools"]
+	path = src/zarrs_tools
+	url = git@github.com:LDeakin/zarrs_tools.git
