@@ -1924,52 +1924,32 @@ It also has various other configuration options, see its documentation.</p>
 }
 
 </style>
-<h1 id="cc-bindings-zarrs_ffi"><a class="header" href="#cc-bindings-zarrs_ffi">C/C++ Bindings (zarrs_ffi)</a></h1>
-<p><code>zarrs_ffi</code> is a single header library: <code>zarrs.h</code> <a href="https://ldeakin.github.io/zarrs_ffi/zarrs_8h.html">(API docs)</a>.</p>
-<p>Currently <code>zarrs_ffi</code> only supports a subset of the <code>zarrs</code> API.
-However, it is sufficient for typical reading and writing of Zarr hierarchies.</p>
-<p>These bindings are used in production at the <a href="https://physics.anu.edu.au/research/mp/">Department of Materials Physics</a>, Australian National University, Canberra, Australia.</p>
-<h2 id="cmake-quickstart"><a class="header" href="#cmake-quickstart">CMake Quickstart</a></h2>
-<ol>
-<li>Install the Rust compiler (and cargo).</li>
-<li>Put <a href="https://github.com/LDeakin/zarrs_ffi/blob/main/examples/cmake_project/Findzarrs.cmake">Findzarrs.cmake</a> in your <code>CMAKE_MODULE_PATH</code></li>
-<li><code>find_package(zarrs &lt;version&gt; REQUIRED COMPONENTS zarrs/bz2)</code>
-<ul>
-<li>Replace <code>&lt;version&gt;</code> with the latest release: <a href="https://crates.io/crates/zarrs_ffi"><img src="https://img.shields.io/crates/v/zarrs_ffi.svg" alt="Latest Version" /></a> (e.g., <code>0.8</code> or <code>0.8.4</code>)</li>
-<li><code>zarrs</code> is retrieved from <code>GitHub</code> using <a href="https://cmake.org/cmake/help/latest/module/FetchContent.html">FetchContent</a> and built using <a href="https://github.com/corrosion-rs/corrosion">corrosion</a></li>
-<li>Components are optional <code>zarrs</code> codecs</li>
-</ul>
-</li>
-<li>the <code>zarrs_ffi</code> library is available as the <code>zarrs::zarrs</code> or  <code>zarrs::zarrs-static</code> target</li>
-</ol>
-<p>A complete <code>CMake</code> example can be found in <a href="https://github.com/LDeakin/zarrs_ffi/tree/main/examples/cmake_project">zarrs_ffi/examples/cmake_project</a>.</p>
-<p>For more comprehensive build instructions, see the <a href="https://github.com/LDeakin/zarrs_ffi">zarrs_ffi/README.md</a>.</p>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
-<pre><code class="language-C++">#include "zarrs.h"
+<h1 id="python-bindings-zarrs-python"><a class="header" href="#python-bindings-zarrs-python">Python Bindings (zarrs-python)</a></h1>
+<p><code>zarrs-python</code> implements the <code>ZarrsCodecPipeline</code>.
+It can be used by the reference <a href="https://zarr.readthedocs.io/en/main/"><code>zarr</code></a> Python implementation (v3.0.0+) for improved performance over the default <code>BatchedCodecPipeline</code>.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p><code>zarrs-python</code> has some limitations compared to the reference implementation.
+See the <a href="https://github.com/ilan-gold/zarrs-python?tab=readme-ov-file#limitations">limitations</a> in <a href="https://github.com/ilan-gold/zarrs-python"><img src="https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github" alt="zarrs-python" /></a>.</p>
+</div>
+<h2 id="enabling-zarrs-python"><a class="header" href="#enabling-zarrs-python">Enabling <code>zarrs-python</code></a></h2>
+<p>The <code>ZarrsCodecPipeline</code> is enabled as follows:</p>
+<pre><code class="language-python">from zarr import config
+import zarrs # noqa: F401
 
-void main() {
-  // Open a filesystem store pointing to a zarr hierarchy
-  ZarrsStorage storage = nullptr;
-  zarrs_assert(zarrsCreateStorageFilesystem("/path/to/hierarchy.zarr", &amp;storage));
-
-  // Open an array in the hierarchy
-  ZarrsArray array = nullptr;
-  zarrsOpenArrayRW(storage, "/array", metadata, &amp;array);
-
-  // Get the array dimensionality
-  size_t dimensionality;
-  zarrs_assert(zarrsArrayGetDimensionality(array, &amp;dimensionality));
-  assert(dimensionality == 2);
-
-  // Retrieve the decoded bytes of the chunk at [0, 0]
-  size_t indices[] = {0, 0};
-  size_t chunk_size;
-  zarrs_assert(zarrsArrayGetChunkSize(array, 2, indices, &amp;chunk_size));
-  std::unique_ptr&lt;uint8_t[]&gt; chunk_bytes(new uint8_t[chunk_size]);
-  zarrs_assert(zarrsArrayRetrieveChunk(array, 2, indices, chunk_size, chunk_bytes.get()));
-}
+config.set({"codec_pipeline.path": "zarrs.ZarrsCodecPipeline"})
 </code></pre>
-<p>Complete examples can be found in <a href="https://github.com/LDeakin/zarrs_ffi/tree/main/examples">zarrs_ffi/examples</a>.</p>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>The <code>zarrs-python</code> bindings are located in a repository called <code>zarrs-python</code>, but the Python package is called <code>zarrs</code>.</p>
+</div>
+<p>Downstream libraries that use <code>zarr</code> internally (<a href="https://docs.dask.org/en/stable/index.html"><code>dask</code></a>, <a href="https://docs.xarray.dev/en/stable/"><code>xarray</code></a>, etc.) will also use the <code>ZarrsCodecPipeline</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
@@ -2037,32 +2017,52 @@ void main() {
 }
 
 </style>
-<h1 id="python-bindings-zarrs-python"><a class="header" href="#python-bindings-zarrs-python">Python Bindings (zarrs-python)</a></h1>
-<p><code>zarrs-python</code> implements the <code>ZarrsCodecPipeline</code>.
-It can be used by the reference <a href="https://zarr.readthedocs.io/en/main/"><code>zarr</code></a> Python implementation (v3.0.0+) for improved performance over the default <code>BatchedCodecPipeline</code>.</p>
-<div class="mdbook-alerts mdbook-alerts-warning">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  warning
-</p>
-<p><code>zarrs-python</code> has some limitations compared to the reference implementation.
-See the <a href="https://github.com/ilan-gold/zarrs-python?tab=readme-ov-file#limitations">limitations</a> in <a href="https://github.com/ilan-gold/zarrs-python"><img src="https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github" alt="zarrs-python" /></a>.</p>
-</div>
-<h2 id="enabling-zarrs-python"><a class="header" href="#enabling-zarrs-python">Enabling <code>zarrs-python</code></a></h2>
-<p>The <code>ZarrsCodecPipeline</code> is enabled as follows:</p>
-<pre><code class="language-python">from zarr import config
-import zarrs # noqa: F401
+<h1 id="cc-bindings-zarrs_ffi"><a class="header" href="#cc-bindings-zarrs_ffi">C/C++ Bindings (zarrs_ffi)</a></h1>
+<p><code>zarrs_ffi</code> is a single header library: <code>zarrs.h</code> <a href="https://ldeakin.github.io/zarrs_ffi/zarrs_8h.html">(API docs)</a>.</p>
+<p>Currently <code>zarrs_ffi</code> only supports a subset of the <code>zarrs</code> API.
+However, it is sufficient for typical reading and writing of Zarr hierarchies.</p>
+<p>These bindings are used in production at the <a href="https://physics.anu.edu.au/research/mp/">Department of Materials Physics</a>, Australian National University, Canberra, Australia.</p>
+<h2 id="cmake-quickstart"><a class="header" href="#cmake-quickstart">CMake Quickstart</a></h2>
+<ol>
+<li>Install the Rust compiler (and cargo).</li>
+<li>Put <a href="https://github.com/LDeakin/zarrs_ffi/blob/main/examples/cmake_project/Findzarrs.cmake">Findzarrs.cmake</a> in your <code>CMAKE_MODULE_PATH</code></li>
+<li><code>find_package(zarrs &lt;version&gt; REQUIRED COMPONENTS zarrs/bz2)</code>
+<ul>
+<li>Replace <code>&lt;version&gt;</code> with the latest release: <a href="https://crates.io/crates/zarrs_ffi"><img src="https://img.shields.io/crates/v/zarrs_ffi.svg" alt="Latest Version" /></a> (e.g., <code>0.8</code> or <code>0.8.4</code>)</li>
+<li><code>zarrs</code> is retrieved from <code>GitHub</code> using <a href="https://cmake.org/cmake/help/latest/module/FetchContent.html">FetchContent</a> and built using <a href="https://github.com/corrosion-rs/corrosion">corrosion</a></li>
+<li>Components are optional <code>zarrs</code> codecs</li>
+</ul>
+</li>
+<li>the <code>zarrs_ffi</code> library is available as the <code>zarrs::zarrs</code> or  <code>zarrs::zarrs-static</code> target</li>
+</ol>
+<p>A complete <code>CMake</code> example can be found in <a href="https://github.com/LDeakin/zarrs_ffi/tree/main/examples/cmake_project">zarrs_ffi/examples/cmake_project</a>.</p>
+<p>For more comprehensive build instructions, see the <a href="https://github.com/LDeakin/zarrs_ffi">zarrs_ffi/README.md</a>.</p>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<pre><code class="language-C++">#include "zarrs.h"
 
-config.set({"codec_pipeline.path": "zarrs.ZarrsCodecPipeline"})
+void main() {
+  // Open a filesystem store pointing to a zarr hierarchy
+  ZarrsStorage storage = nullptr;
+  zarrs_assert(zarrsCreateStorageFilesystem("/path/to/hierarchy.zarr", &amp;storage));
+
+  // Open an array in the hierarchy
+  ZarrsArray array = nullptr;
+  zarrsOpenArrayRW(storage, "/array", metadata, &amp;array);
+
+  // Get the array dimensionality
+  size_t dimensionality;
+  zarrs_assert(zarrsArrayGetDimensionality(array, &amp;dimensionality));
+  assert(dimensionality == 2);
+
+  // Retrieve the decoded bytes of the chunk at [0, 0]
+  size_t indices[] = {0, 0};
+  size_t chunk_size;
+  zarrs_assert(zarrsArrayGetChunkSize(array, 2, indices, &amp;chunk_size));
+  std::unique_ptr&lt;uint8_t[]&gt; chunk_bytes(new uint8_t[chunk_size]);
+  zarrs_assert(zarrsArrayRetrieveChunk(array, 2, indices, chunk_size, chunk_bytes.get()));
+}
 </code></pre>
-<div class="mdbook-alerts mdbook-alerts-tip">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  tip
-</p>
-<p>The <code>zarrs-python</code> bindings are located in a repository called <code>zarrs-python</code>, but the Python package is called <code>zarrs</code>.</p>
-</div>
-<p>Downstream libraries that use <code>zarr</code> internally (<a href="https://docs.dask.org/en/stable/index.html"><code>dask</code></a>, <a href="https://docs.xarray.dev/en/stable/"><code>xarray</code></a>, etc.) will also use the <code>ZarrsCodecPipeline</code>.</p>
+<p>Complete examples can be found in <a href="https://github.com/LDeakin/zarrs_ffi/tree/main/examples">zarrs_ffi/examples</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
