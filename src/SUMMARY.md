@@ -17,12 +17,6 @@
 - [C/C++ (zarrs_ffi)](zarrs_ffi.md)
 - [Python (zarrs_python)](zarrs_python.md)
 
----
-
 # CLI Tools
 
 - [zarrs_tools](zarrs_tools.md)
-
----
-
-[Zarr Implementation Benchmarks](./zarr_benchmarks/README.md)

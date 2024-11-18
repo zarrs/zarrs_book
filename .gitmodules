@@ -1,3 +1,0 @@
-[submodule "zarr_benchmarks"]
-	path = src/zarr_benchmarks
-	url = git@github.com:LDeakin/zarr_benchmarks.git
