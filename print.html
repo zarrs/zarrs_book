@@ -258,7 +258,7 @@ There is no need to learn a new API and it is supported by downstream libraries 
 Consult the documentation for more information.</p>
 </div>
 <h2 id="-zarrs-is-fast"><a class="header" href="#-zarrs-is-fast">🚀 <code>zarrs</code> is Fast</a></h2>
-<p>The <a href="https://github.com/LDeakin/zarr_benchmarks"><img src="https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks" /></a> repository includes benchmarks <code>zarrs</code> against other Zarr V3 implementations.
+<p>The <a href="https://github.com/LDeakin/zarr_benchmarks"><img src="https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks" /></a> repository includes benchmarks of <code>zarrs</code> against other Zarr V3 implementations.
 Check out the benchmarks below that measure the time to round trip a \(1024x2048x2048\) <code>uint16</code> array encoded in various ways:</p>
 <p><img src="./zarr_benchmarks/plots/benchmark_roundtrip.svg" alt="benchmark standalone" /></p>
 <p><img src="./zarr_benchmarks/plots/benchmark_roundtrip_dask.svg" alt="benchmark dask" /></p>
@@ -2147,6 +2147,931 @@ config.set({"codec_pipeline.path": "zarrs.ZarrsCodecPipeline"})
 
 </style>
 <h3 id="zarrs_tools-1"><a class="header" href="#zarrs_tools-1"><code>zarrs_tools</code> <a href="https://crates.io/crates/zarrs_tools"><img src="https://img.shields.io/crates/v/zarrs_tools.svg" alt="zarrs_tools_ver" /></a> <a href="https://docs.rs/zarrs_tools"><img src="https://docs.rs/zarrs_tools/badge.svg" alt="zarrs_tools_doc" /></a></a></h3>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="zarrs_reencode"><a class="header" href="#zarrs_reencode">zarrs_reencode</a></h1>
+<p>Reencode/rechunk a Zarr V2/V3 to a Zarr v3 array.</p>
+<h2 id="installation-1"><a class="header" href="#installation-1">Installation</a></h2>
+<p><code>zarrs_reencode</code> packaged by default with <code>zarrs_tools</code> and requires no extra features.</p>
+<pre><code>cargo install zarrs_tools
+</code></pre>
+<h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
+<p>Reencode <code>array.zarr</code> (<code>uint16</code>) with:</p>
+<ul>
+<li>a chunk shape of [32, 32, 32],</li>
+<li>a shard shape of [128, 128, 0]
+<ul>
+<li>the last dimension of the shard shape will match the array shape to the nearest multiple of the chunk shape</li>
+</ul>
+</li>
+<li>level 9 blosclz compression with bitshuffling</li>
+<li>an input chunk cache with a size of 1GB</li>
+</ul>
+<pre><code class="language-bash">zarrs_reencode \
+--cache-size 1000000000 \
+--chunk-shape 32,32,32 \
+--shard-shape 128,128,0 \
+--bytes-to-bytes-codecs '[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]' \
+array.zarr array_reencode.zarr
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="zarrs_ome"><a class="header" href="#zarrs_ome">zarrs_ome</a></h1>
+<p>Convert a Zarr V3 array to <a href="https://ngff.openmicroscopy.org/latest/index.html">OME-Zarr</a> (0.5-dev).</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p><code>zarrs_ome</code> is highly experimental and has had limited production testing.</p>
+<p>Conformance with the OME-Zarr 0.5-dev specification is not guaranteed and input validation is currently limited.</p>
+</div>
+<p><code>zarrs_ome</code> creates a multi-resolution Zarr V3 array through various methods:</p>
+<ul>
+<li>Gaussian image pyramid</li>
+<li>Mean downsampling</li>
+<li>Mode downsampling (for discrete data)</li>
+</ul>
+<p>The downsample factor defaults to 2 on all axes (careful if data includes channels!).
+The physical size and units of the array elements can be set explicitly.
+The array can be reencoded when output to OME-Zarr.</p>
+<h2 id="installation-2"><a class="header" href="#installation-2">Installation</a></h2>
+<p><code>zarrs_ome</code> is installed with the <code>ome</code> feature of <code>zarrs_tools</code></p>
+<pre><code>cargo install --features=ome zarrs_tools
+</code></pre>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<details>
+<summary>zarrs_ome --help</summary>
+<pre><code class="language-text">Convert a Zarr V3 array to OME-Zarr (0.5-dev)
+
+Usage: zarrs_ome [OPTIONS] &lt;INPUT&gt; &lt;OUTPUT&gt; [DOWNSAMPLE_FACTOR]...
+
+Arguments:
+  &lt;INPUT&gt;
+          The input array path
+
+  &lt;OUTPUT&gt;
+          The output group path
+
+  [DOWNSAMPLE_FACTOR]...
+          The downsample factor.
+          
+          Defaults to 2 on each axis.
+
+Options:
+      --max-levels &lt;MAX_LEVELS&gt;
+          Maximum number of downsample levels
+          
+          [default: 10]
+
+      --physical-size &lt;PHYSICAL_SIZE&gt;
+          Physical size (per axis)
+
+      --physical-units &lt;PHYSICAL_UNITS&gt;
+          Physical units (per axis)
+
+      --name &lt;NAME&gt;
+          OME Zarr dataset name
+
+      --no-gaussian
+          Disable gaussian smoothing of continuous data
+
+      --discrete
+          Do majority downsampling and do not apply gaussian smoothing
+
+      --exists &lt;EXISTS&gt;
+          Behaviour if the output exists
+          
+          [default: overwrite]
+
+          Possible values:
+          - overwrite: Overwrite existing files. Useful if the output includes additional non-zarr files to be preserved
+          - erase:     Erase the output
+          - exit:      Exit if the output already exists
+
+      --group-attributes &lt;GROUP_ATTRIBUTES&gt;
+          Attributes (optional).
+          
+          JSON holding group attributes.
+
+  -d, --data-type &lt;DATA_TYPE&gt;
+          The data type as a string
+          
+          Valid data types:
+            - bool
+            - int8, int16, int32, int64
+            - uint8, uint16, uint32, uint64
+            - float16, float32, float64, bfloat16
+            - complex64, complex 128
+            - r* (raw bits, where * is a multiple of 8)
+
+  -f, --fill-value &lt;FILL_VALUE&gt;
+          Fill value. See &lt;https://zarr-specs.readthedocs.io/en/latest/v3/core/v3.0.html#fill-value&gt;
+          
+          The fill value must be compatible with the data type.
+          
+          Examples:
+            int/uint: 0
+            float: 0.0 "NaN" "Infinity" "-Infinity"
+            r*: "[0, 255]"
+
+      --separator &lt;SEPARATOR&gt;
+          The chunk key encoding separator. Either . or /
+
+  -c, --chunk-shape &lt;CHUNK_SHAPE&gt;
+          Chunk shape. A comma separated list of the chunk size along each array dimension.
+          
+          If any dimension has size zero, it will be set to match the array shape.
+
+  -s, --shard-shape &lt;SHARD_SHAPE&gt;
+          Shard shape. A comma separated list of the shard size along each array dimension.
+          
+          If specified, the array is encoded using the sharding codec.
+          If any dimension has size zero, it will be set to match the array shape.
+
+      --array-to-array-codecs &lt;ARRAY_TO_ARRAY_CODECS&gt;
+          Array to array codecs.
+          
+          JSON holding array to array codec metadata.
+          
+          Examples:
+            '[ { "name": "bitround", "configuration": { "keepbits": 9 } } ]'
+
+      --array-to-bytes-codec &lt;ARRAY_TO_BYTES_CODEC&gt;
+          Array to bytes codec.
+          
+          JSON holding array to array codec metadata.
+          
+          Examples:
+            '{ "name": "zfp", "configuration": { "mode": "fixedprecision", "precision": 19 } }'
+
+      --bytes-to-bytes-codecs &lt;BYTES_TO_BYTES_CODECS&gt;
+          Bytes to bytes codecs.
+          
+          JSON holding bytes to bytes codec configurations.
+          
+          Examples:
+            '[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]'
+            '[ { "name": "gzip", "configuration": { "level": 3 } } ]'
+
+      --attributes &lt;ATTRIBUTES&gt;
+          Attributes (optional).
+          
+          JSON holding array attributes.
+
+      --attributes-append &lt;ATTRIBUTES_APPEND&gt;
+          Attributes to append (optional).
+          
+          JSON holding array attributes.
+
+      --chunk-limit &lt;CHUNK_LIMIT&gt;
+          The maximum number of chunks concurrently processed.
+          
+          By default, this is set to the number of CPUs. Consider reducing this for images with large chunk sizes or on systems with low memory availability.
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+</code></pre>
+</details>
+<h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
+<h3 id="match-input-encoding"><a class="header" href="#match-input-encoding">Match Input Encoding</a></h3>
+<pre><code class="language-bash">zarrs_ome \
+    --name "ABC-123" \
+    --physical-size 2.0,2.0,2.0 \
+    --physical-units micrometer,micrometer,micrometer \
+    array.zarr array.ome.zarr
+</code></pre>
+<pre><code class="language-text">[00:00:00/00:00:00] 0 [1243, 1403, 1510] array.ome.zarr/0 rw:0.00/0.76 p:0.00
+[00:00:14/00:00:14] 1 [621, 701, 755] array.ome.zarr/1 rw:1.95/0.51 p:12.24
+[00:00:01/00:00:01] 2 [310, 350, 377] array.ome.zarr/2 rw:0.62/0.13 p:3.58
+[00:00:00/00:00:00] 3 [155, 175, 188] array.ome.zarr/3 rw:0.06/0.01 p:0.26
+[00:00:00/00:00:00] 4 [77, 87, 94] array.ome.zarr/4 rw:0.00/0.00 p:0.03
+[00:00:00/00:00:00] 5 [38, 43, 47] array.ome.zarr/5 rw:0.00/0.00 p:0.01
+[00:00:00/00:00:00] 6 [19, 21, 23] array.ome.zarr/6 rw:0.00/0.00 p:0.01
+[00:00:00/00:00:00] 7 [9, 10, 11] array.ome.zarr/7 rw:0.00/0.00 p:0.00
+[00:00:00/00:00:00] 8 [4, 5, 5] array.ome.zarr/8 rw:0.00/0.00 p:0.00
+[00:00:00/00:00:00] 9 [2, 2, 2] array.ome.zarr/9 rw:0.00/0.00 p:0.00
+[00:00:00/00:00:00] 10 [1, 1, 1] array.ome.zarr/10 rw:0.00/0.00 p:0.00
+</code></pre>
+<h3 id="change-encoding-and-downsampling-factor"><a class="header" href="#change-encoding-and-downsampling-factor">Change Encoding and Downsampling Factor</a></h3>
+<pre><code class="language-bash">zarrs_ome \
+    --name "ABC-123" \
+    --physical-size 2.0,2.0,2.0 \
+    --physical-units micrometer,micrometer,micrometer \
+    --shard-shape 256,256,256 \
+    --chunk-shape 32,32,32 \
+    array.zarr array.ome.zarr 1,4,4
+</code></pre>
+<pre><code class="language-text">[00:00:01/00:00:01] 0 [1243, 1403, 1510] array.ome.zarr/0 rw:25.09/24.50 p:0.00
+[00:00:12/00:00:12] 1 [1243, 350, 377] array.ome.zarr/1 rw:5.51/1.21 p:26.79
+[00:00:00/00:00:00] 2 [1243, 87, 94] array.ome.zarr/2 rw:0.47/0.13 p:2.97
+[00:00:00/00:00:00] 3 [1243, 21, 23] array.ome.zarr/3 rw:0.07/0.00 p:0.16
+[00:00:00/00:00:00] 4 [1243, 5, 5] array.ome.zarr/4 rw:0.01/0.00 p:0.02
+[00:00:00/00:00:00] 5 [1243, 1, 1] array.ome.zarr/5 rw:0.01/0.00 p:0.00
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="zarrs_filter"><a class="header" href="#zarrs_filter">zarrs_filter</a></h1>
+<p>Apply simple image filters (transformations) to an array.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p><code>zarrs_filter</code> is highly experimental, has had limited production testing, and is sparsely documented.</p>
+</div>
+<p>The filters currently supported are:</p>
+<ul>
+<li><strong>reencode</strong>:            Reencode (change encoding, data type, etc.).</li>
+<li><strong>crop</strong>:                Crop given an offset and shape.</li>
+<li><strong>rescale</strong>:             Rescale values given a multiplier and offset.</li>
+<li><strong>clamp</strong>:               Clamp values between a minimum and maximum.</li>
+<li><strong>equal</strong>:               Return a binary image where the input is equal to some value.</li>
+<li><strong>downsample</strong>:          Downsample given a stride.</li>
+<li><strong>gradient-magnitude</strong>:  Compute the gradient magnitude (sobel).</li>
+<li><strong>gaussian</strong>:            Apply a Gaussian kernel.</li>
+<li><strong>summed area table</strong>:   Compute the summed area table.</li>
+<li><strong>guided filter</strong>:       Apply a guided filter (edge-preserving noise filter).</li>
+</ul>
+<h2 id="installation-3"><a class="header" href="#installation-3">Installation</a></h2>
+<p><code>zarrs_filter</code> is installed with the <code>filter</code> feature of <code>zarrs_tools</code></p>
+<pre><code>cargo install --features=filter zarrs_tools
+</code></pre>
+<h2 id="help"><a class="header" href="#help">Help</a></h2>
+<pre><code class="language-bash">zarrs_filter --help
+zarrs_filter &lt;COMMAND&gt; --help
+</code></pre>
+<h2 id="examples-cli"><a class="header" href="#examples-cli">Examples (CLI)</a></h2>
+<pre><code class="language-bash">export ENCODE_ARGS="--shard-shape 256,256,256 --chunk-shape 32,32,32"
+zarrs_filter reencode           array.zarr       array_reenc.zarr               ${ENCODE_ARGS}
+zarrs_filter reencode           array_reenc.zarr array_reenc_int32.zarr         ${ENCODE_ARGS} --data-type int32
+zarrs_filter reencode           array_reenc.zarr array_reenc_float32.zarr       ${ENCODE_ARGS} --data-type float32
+zarrs_filter crop               array_reenc.zarr array_crop.zarr                ${ENCODE_ARGS} --data-type float32 256,256,256 768,768,768
+zarrs_filter rescale            array_reenc.zarr array_rescale.zarr             ${ENCODE_ARGS} --data-type float32 2.0 1.0 --fill-value 1.0
+zarrs_filter clamp              array_reenc.zarr array_clamp.zarr               ${ENCODE_ARGS} --data-type float32 5 255 --fill-value 5.0
+# zarrs_filter equal              array_reenc.zarr array_eq_bool.zarr             ${ENCODE_ARGS} --data-type bool 1 --fill-value true
+zarrs_filter equal              array_reenc.zarr array_eq_u8.zarr               ${ENCODE_ARGS} --data-type uint8 1 --fill-value 1
+zarrs_filter downsample         array_reenc.zarr array_downsample.zarr          ${ENCODE_ARGS} --data-type float32 2,2,2
+zarrs_filter downsample         array_eq_u8.zarr array_downsample_discrete.zarr ${ENCODE_ARGS} --data-type uint8 2,2,2 --discrete
+zarrs_filter gradient-magnitude array_reenc.zarr array_gradient_magnitude.zarr  ${ENCODE_ARGS} --data-type float32
+zarrs_filter gaussian           array_reenc.zarr array_gaussian.zarr            ${ENCODE_ARGS} --data-type float32 1.0,1.0,1.0 3,3,3
+zarrs_filter summed-area-table  array_reenc.zarr array_sat.zarr                 ${ENCODE_ARGS} --data-type int64
+zarrs_filter guided-filter      array_reenc.zarr array_guided_filter.zarr       ${ENCODE_ARGS} --data-type float32 40000 3
+zarrs_filter replace-value      array_reenc.zarr array_replace.zarr             ${ENCODE_ARGS} 65535 0 --fill-value 0
+</code></pre>
+<h2 id="examples-config"><a class="header" href="#examples-config">Examples (Config)</a></h2>
+<pre><code class="language-bash">zarrs_filter &lt;RUN.json&gt;
+</code></pre>
+<details>
+<summary>run.json</summary>
+<pre><code class="language-json">[
+    {
+        "_comment": "Rechunk the input",
+        "filter": "reencode",
+        "input": "array.zarr",
+        "output": "$reencode0",
+        "shard_shape": [256, 256, 256],
+        "chunk_shape": [32, 32, 32]
+    },
+    {
+        "_comment": "Reencode the previous output as float32, automatically cast the fill value",
+        "filter": "reencode",
+        "output": "array_float32.zarr",
+        "data_type": "float32"
+    },
+    {
+        "filter": "crop",
+        "input": "$reencode0",
+        "output": "array_crop.zarr",
+        "offset": [256, 256, 256],
+        "shape": [768, 768, 768]
+    },
+    {
+        "filter": "replace_value",
+        "input": "$reencode0",
+        "output": "array_replace.zarr",
+        "value": 65535,
+        "replace": 0
+    },
+    {
+        "_comment": "Multiply by 7.0/20000.0, casting most values in the image between 0 and 7, store in 8-bit (saturate cast)",
+        "filter": "rescale",
+        "input": "$reencode0",
+        "output": "array_3bit.zarr",
+        "multiply": 0.00035,
+        "add": 0.0,
+        "data_type": "uint8",
+        "fill_value": 0
+    },
+    {
+        "_comment": "Multiply by 255.0/20000.0, casting most values in the image between 0 and 7, store in 8-bit (saturate cast)",
+        "filter": "rescale",
+        "input": "$reencode0",
+        "output": "array_8bit.zarr",
+        "multiply": 0.01275,
+        "add": 0.0,
+        "data_type": "uint8",
+        "fill_value": 0
+    },
+    {
+        "_comment": "Clamp the 3-bit output between 2 and 5 and set the fill value to 2",
+        "filter": "clamp",
+        "output": "array_3bit_clamp.zarr",
+        "min": 2,
+        "max": 5,
+        "fill_value": 2
+    },
+    {
+        "_comment": "Calculate a binary image where the input is equal to 5 (the max from the clamp). Store as bool",
+        "filter": "equal",
+        "input": "array_3bit_clamp.zarr", 
+        "output": "array_clamp_equal_bool.zarr",
+        "value": 5
+    },
+    {
+        "_comment": "Calculate a binary image where the input is equal to 5 (the max from the clamp). Store as uint8",
+        "filter": "equal",
+        "input": "array_3bit_clamp.zarr",
+        "output": "array_3bit_max.zarr",
+        "value": 5,
+        "data_type": "uint8",
+        "fill_value": 0
+    },
+    {
+        "_comment": "Downsample clamped image by a factor of 2 with mean operator.",
+        "filter": "downsample",
+        "input": "array_3bit_clamp.zarr",
+        "output": "array_3bit_clamp_by2_continuous.zarr",
+        "stride": [2, 2, 2],
+        "discrete": false,
+        "data_type": "float32",
+        "shard_shape": [128, 128, 128],
+        "chunk_shape": [32, 32, 32]
+    },
+    {
+        "_comment": "Downsample clamped image by a factor of 2 with mode operator.",
+        "filter": "downsample",
+        "input": "array_3bit_clamp.zarr",
+        "output": "array_3bit_clamp_by2_discrete.zarr",
+        "stride": [2, 2, 2],
+        "discrete": true,
+        "shard_shape": [128, 128, 128],
+        "chunk_shape": [32, 32, 32]
+    },
+    {
+        "filter": "gradient_magnitude",
+        "input": "$reencode0",
+        "output": "array_gradient.zarr"
+    },
+    {
+        "filter": "gaussian",
+        "input": "$reencode0",
+        "output": "array_gaussian.zarr",
+        "sigma": [1.0, 1.0, 1.0],
+        "kernel_half_size": [3, 3, 3]
+    },
+    {
+        "filter": "summed_area_table",
+        "input": "$reencode0",
+        "output": "array_sat.zarr",
+        "data_type": "float32"
+    },
+    {
+        "filter": "guided_filter",
+        "input": "$reencode0",
+        "output": "array_guided_filter.zarr",
+        "epsilon": 40000.0,
+        "radius": 3,
+        "data_type": "float32"
+    }
+]
+</code></pre>
+</details>
+<details>
+<summary>output</summary>
+<pre><code class="language-text">0 reencode
+        args:   {}
+        encode: {"chunk_shape":[32,32,32],"shard_shape":[256,256,256]}
+        input:  uint16 [1243, 1403, 1510] "array.zarr"
+        output: uint16 [1243, 1403, 1510] "/tmp/.tmpCbeEcJ/$reencode0bxiFEM"
+1 reencode
+        args:   {}
+        encode: {"data_type":"float32"}
+        input:  uint16 [1243, 1403, 1510] "/tmp/.tmpCbeEcJ/$reencode0bxiFEM"
+        output: float32 [1243, 1403, 1510] "array_float32.zarr" (overwrite)
+2 crop
+        args:   {"offset":[256,256,256],"shape":[768,768,768]}
+        encode: {}
+        input:  uint16 [1243, 1403, 1510] "/tmp/.tmpCbeEcJ/$reencode0bxiFEM"
+        output: uint16 [768, 768, 768] "array_crop.zarr" (overwrite)
+3 replace_value
+        args:   {"value":65535,"replace":0}
+        encode: {}
+        input:  uint16 [1243, 1403, 1510] "/tmp/.tmpCbeEcJ/$reencode0bxiFEM"
+        output: uint16 [1243, 1403, 1510] "array_replace.zarr" (overwrite)
+4 rescale
+        args:   {"multiply":0.00035,"add":0.0,"add_first":false}
+        encode: {"data_type":"uint8","fill_value":0}
+        input:  uint16 [1243, 1403, 1510] "/tmp/.tmpCbeEcJ/$reencode0bxiFEM"
+        output: uint8 [1243, 1403, 1510] "array_3bit.zarr" (overwrite)
+5 rescale
+        args:   {"multiply":0.01275,"add":0.0,"add_first":false}
+        encode: {"data_type":"uint8","fill_value":0}
+        input:  uint16 [1243, 1403, 1510] "/tmp/.tmpCbeEcJ/$reencode0bxiFEM"
+        output: uint8 [1243, 1403, 1510] "array_8bit.zarr" (overwrite)
+6 clamp
+        args:   {"min":2.0,"max":5.0}
+        encode: {"fill_value":2}
+        input:  uint8 [1243, 1403, 1510] "array_8bit.zarr"
+        output: uint8 [1243, 1403, 1510] "array_3bit_clamp.zarr" (overwrite)
+7 equal
+        args:   {"value":5}
+        encode: {}
+        input:  uint8 [1243, 1403, 1510] "array_3bit_clamp.zarr"
+        output: bool [1243, 1403, 1510] "array_clamp_equal_bool.zarr" (overwrite)
+8 equal
+        args:   {"value":5}
+        encode: {"data_type":"uint8","fill_value":0}
+        input:  uint8 [1243, 1403, 1510] "array_3bit_clamp.zarr"
+        output: uint8 [1243, 1403, 1510] "array_3bit_max.zarr" (overwrite)
+9 downsample
+        args:   {"stride":[2,2,2],"discrete":false}
+        encode: {"data_type":"float32","chunk_shape":[32,32,32],"shard_shape":[128,128,128]}
+        input:  uint8 [1243, 1403, 1510] "array_3bit_clamp.zarr"
+        output: float32 [621, 701, 755] "array_3bit_clamp_by2_continuous.zarr" (overwrite)
+10 downsample
+        args:   {"stride":[2,2,2],"discrete":true}
+        encode: {"chunk_shape":[32,32,32],"shard_shape":[128,128,128]}
+        input:  uint8 [1243, 1403, 1510] "array_3bit_clamp.zarr"
+        output: uint8 [621, 701, 755] "array_3bit_clamp_by2_discrete.zarr" (overwrite)
+11 gradient_magnitude
+        args:   {}
+        encode: {}
+        input:  uint16 [1243, 1403, 1510] "/tmp/.tmpCbeEcJ/$reencode0bxiFEM"
+        output: uint16 [1243, 1403, 1510] "array_gradient.zarr" (overwrite)
+12 gaussian
+        args:   {"sigma":[1.0,1.0,1.0],"kernel_half_size":[3,3,3]}
+        encode: {}
+        input:  uint16 [1243, 1403, 1510] "/tmp/.tmpCbeEcJ/$reencode0bxiFEM"
+        output: uint16 [1243, 1403, 1510] "array_gaussian.zarr" (overwrite)
+13 summed area table
+        args:   {}
+        encode: {"data_type":"float32"}
+        input:  uint16 [1243, 1403, 1510] "/tmp/.tmpCbeEcJ/$reencode0bxiFEM"
+        output: float32 [1243, 1403, 1510] "array_sat.zarr" (overwrite)
+14 guided_filter
+        args:   {"epsilon":40000.0,"radius":3}
+        encode: {"data_type":"float32"}
+        input:  uint16 [1243, 1403, 1510] "/tmp/.tmpCbeEcJ/$reencode0bxiFEM"
+        output: float32 [1243, 1403, 1510] "array_guided_filter.zarr" (overwrite)
+[00:00:02/00:00:02] reencode /tmp/.tmpCbeEcJ/$reencode0bxiFEM rw:34.78/28.90 p:0.00
+[00:00:04/00:00:04] reencode array_float32.zarr rw:30.06/76.57 p:14.16
+[00:00:00/00:00:00] crop array_crop.zarr rw:3.46/3.34 p:0.00
+[00:00:02/00:00:02] replace_value array_replace.zarr rw:26.73/47.32 p:7.25
+[00:00:01/00:00:01] rescale array_3bit.zarr rw:18.11/14.43 p:11.55
+[00:00:01/00:00:01] rescale array_8bit.zarr rw:23.54/21.99 p:11.08
+[00:00:00/00:00:00] clamp array_3bit_clamp.zarr rw:9.70/10.34 p:0.96
+[00:00:00/00:00:00] equal array_clamp_equal_bool.zarr rw:10.61/9.32 p:4.56
+[00:00:00/00:00:00] equal array_3bit_max.zarr rw:10.29/9.49 p:3.61
+[00:00:02/00:00:02] downsample array_3bit_clamp_by2_continuous.zarr rw:7.01/1.95 p:71.76
+[00:00:06/00:00:06] downsample array_3bit_clamp_by2_discrete.zarr rw:16.08/1.01 p:168.86
+[00:00:20/00:00:20] gradient_magnitude array_gradient.zarr rw:147.16/14.38 p:289.05
+[00:00:10/00:00:10] gaussian array_gaussian.zarr rw:36.19/22.01 p:181.06
+[00:00:23/00:00:23] summed area table array_sat.zarr rw:190.51/215.68 p:54.39
+[00:01:51/00:01:51] guided_filter array_guided_filter.zarr rw:29.57/59.96 p:2427.96
+</code></pre>
+</details>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="zarrs_binary2zarr"><a class="header" href="#zarrs_binary2zarr">zarrs_binary2zarr</a></h1>
+<p>Create a Zarr V3 array from piped binary data.</p>
+<h2 id="installation-4"><a class="header" href="#installation-4">Installation</a></h2>
+<p><code>zarrs_binary2zarr</code> is installed with the <code>binary2zarr</code> feature of <code>zarrs_tools</code></p>
+<pre><code>cargo install --features=binary2zarr zarrs_tools
+</code></pre>
+<h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
+<p><code>chameleon_1024x1024x1080.uint16</code> is an uncompressed binary 3D image split into multiple files with</p>
+<ul>
+<li>(depth, height, width) = <code>(1080, 1024, 1024)</code></li>
+<li>data type = <code>uint16</code></li>
+</ul>
+<pre><code class="language-bash">tree --du -h chameleon_1024x1024x1080.uint16
+</code></pre>
+<pre><code class="language-text">[2.1G]  chameleon_1024x1024x1080.uint16
+├── [512M]  xaa
+├── [512M]  xab
+├── [512M]  xac
+├── [512M]  xad
+└── [112M]  xae
+</code></pre>
+<p>With the following command, the image is encoded as a zarr array with the <code>sharding</code> codec with a <em>shard shape</em> of <code>(128, 1024, 1024)</code></p>
+<ul>
+<li>inner chunks in each shard have a <em>chunk shape</em> of <code>(32, 32, 32)</code></li>
+<li>inner chunks are compressed using the <code>blosc</code> codec</li>
+</ul>
+<pre><code class="language-bash">cat chameleon_1024x1024x1080.uint16/* | \
+zarrs_binary2zarr \
+--data-type uint16 \
+--fill-value 0 \
+--separator '.' \
+--array-shape 1080,1024,1024 \
+--chunk-shape 32,32,32 \
+--shard-shape 128,1024,1024 \
+--bytes-to-bytes-codecs '[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]' \
+chameleon_1024x1024x1080.zarr
+</code></pre>
+<pre><code class="language-bash">tree --du -h chameleon_1024x1024x1080.zarr
+</code></pre>
+<pre><code class="language-text">[1.3G]  chameleon_1024x1024x1080.zarr
+├── [152M]  c.0.0.0
+├── [157M]  c.1.0.0
+├── [157M]  c.2.0.0
+├── [156M]  c.3.0.0
+├── [152M]  c.4.0.0
+├── [150M]  c.5.0.0
+├── [152M]  c.6.0.0
+├── [152M]  c.7.0.0
+├── [ 67M]  c.8.0.0
+└── [1.2K]  zarr.json
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="zarrs_ncvar2zarr"><a class="header" href="#zarrs_ncvar2zarr">zarrs_ncvar2zarr</a></h1>
+<p>Convert a NetCDF variable to a Zarr v3 array.
+Multi-file variables are supported.</p>
+<h2 id="installation-5"><a class="header" href="#installation-5">Installation</a></h2>
+<p><code>zarrs_ncvar2zarr</code> is installed with the <code>ncvar2zarr</code> feature of <code>zarrs_tools</code></p>
+<pre><code>cargo install --features=ncvar2zarr zarrs_tools
+</code></pre>
+<h2 id="example-3"><a class="header" href="#example-3">Example</a></h2>
+<p><code>tomoLoRes_nc</code> is a directory of netCDF files, each containing a "tomo" 3D variable, which has been split along dimension 0</p>
+<ul>
+<li>(depth, height, width) = <code>(1209, 480, 480)</code></li>
+<li>data type = <code>uint16</code></li>
+</ul>
+<pre><code class="language-bash">tree --du -h tomoLoRes_nc
+</code></pre>
+<pre><code class="language-text">[532M]  tomoLoRes_nc
+├── [528M]  block00000000.nc
+└── [4.0M]  block00000001.nc
+</code></pre>
+<p>With the following command, the image is encoded as a zarr array with the <code>sharding</code> codec with a <em>shard shape</em> of <code>(128, 480, 480)</code></p>
+<ul>
+<li>inner chunks in each shard have a <em>chunk shape</em> of <code>(32, 32, 32)</code></li>
+<li>inner chunks are compressed using the <code>blosc</code> codec</li>
+</ul>
+<pre><code class="language-bash">zarrs_ncvar2zarr \
+--fill-value -32768 \
+--separator '.' \
+--chunk-shape 32,32,32 \
+--shard-shape 128,0,0 \
+--bytes-to-bytes-codecs '[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]' \
+tomoLoRes_nc \
+tomo \
+tomoLoRes_nc.zarr
+</code></pre>
+<pre><code class="language-bash">tree --du -h tomoLoRes_nc.zarr
+[329M]  tomoLoRes_nc.zarr
+├── [ 30M]  c.0.0.0
+├── [ 35M]  c.1.0.0
+├── [ 36M]  c.2.0.0
+├── [ 36M]  c.3.0.0
+├── [ 36M]  c.4.0.0
+├── [ 36M]  c.5.0.0
+├── [ 36M]  c.6.0.0
+├── [ 36M]  c.7.0.0
+├── [ 35M]  c.8.0.0
+├── [ 14M]  c.9.0.0
+└── [1.5K]  zarr.json
+</code></pre>
 
                     </main>
 
