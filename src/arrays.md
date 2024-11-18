@@ -1,4 +1,4 @@
-# Arrays
+# Zarr Arrays
 
 An array is a node in a hierarchy that may not have any child nodes.
 

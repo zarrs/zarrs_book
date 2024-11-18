@@ -1,6 +1,8 @@
-# Group Initialisation
+# Zarr Groups
 
 A group is a node in a Zarr hierarchy that may have child nodes (arrays or groups).
+
+![zarr overview](https://zarr-specs.readthedocs.io/en/latest/_images/terminology-hierarchy.excalidraw.png)
 
 Each array or group in a hierarchy is represented by a metadata document, which is a machine-readable document containing essential processing information about the node.
 For a group, the metadata document contains the Zarr Version and optional user attributes.
