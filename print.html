@@ -1489,6 +1489,26 @@ Cached retrieve methods do not use partial decoders, and any intersected chunk i
 </div>
 <p>For many access patterns, chunk caching may reduce performance.
 <strong>Benchmark your algorithm/data</strong>.</p>
+<h2 id="reading-a-string-array"><a class="header" href="#reading-a-string-array">Reading a String Array</a></h2>
+<p>A string array can be read as normal with any of the array retrieve methods.</p>
+<pre><code class="language-rs">let chunks_elements: Vec&lt;String&gt; = array.retrieve_chunks_elements(&amp;chunks)?;
+let chunks_array: ndarray::ArrayD&lt;String&gt; =
+    array.retrieve_chunks_ndarray(&amp;chunks)?;
+</code></pre>
+<p>However, this results in a string allocation per element.
+This can be avoided by retrieving the bytes directly and converting them to a <code>Vec</code> of string references.
+For example:</p>
+<pre><code class="language-rs">let chunks_bytes: ArrayBytes = array.retrieve_chunks(&amp;chunks)?;
+let (bytes, offsets) = chunks_bytes.into_variable()?;
+let string = String::from_utf8(bytes.into_owned())?;
+let chunks_elements: Vec&lt;&amp;str&gt; = offsets
+    .iter()
+    .tuple_windows()
+    .map(|(&amp;curr, &amp;next)| &amp;string[curr..next])
+    .collect();
+let chunks_array =
+    ArrayD::&lt;&amp;str&gt;::from_shape_vec(subset_all.shape_usize(), chunks_elements)?;
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
