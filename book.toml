@@ -11,7 +11,7 @@ mathjax-support = true
 git-repository-url = "https://github.com/LDeakin/zarrs_book"
 additional-js = ["mermaid.min.js", "mermaid-init.js", "theme/pagetoc.js"]
 additional-css = ["theme/custom.css", "theme/pagetoc.css"]
-# TODO: cname
+cname = "zarrs.dev"
 # TODO: site-url
 
 [preprocessor]
