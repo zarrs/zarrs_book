@@ -252,3 +252,29 @@ The caches use internal locking to support multithreading, which has a performan
 
 For many access patterns, chunk caching may reduce performance.
 **Benchmark your algorithm/data**.
+
+## Reading a String Array
+
+A string array can be read as normal with any of the array retrieve methods.
+
+```rs
+let chunks_elements: Vec<String> = array.retrieve_chunks_elements(&chunks)?;
+let chunks_array: ndarray::ArrayD<String> =
+    array.retrieve_chunks_ndarray(&chunks)?;
+```
+
+However, this results in a string allocation per element.
+This can be avoided by retrieving the bytes directly and converting them to a `Vec` of string references.
+For example:
+```rs
+let chunks_bytes: ArrayBytes = array.retrieve_chunks(&chunks)?;
+let (bytes, offsets) = chunks_bytes.into_variable()?;
+let string = String::from_utf8(bytes.into_owned())?;
+let chunks_elements: Vec<&str> = offsets
+    .iter()
+    .tuple_windows()
+    .map(|(&curr, &next)| &string[curr..next])
+    .collect();
+let chunks_array =
+    ArrayD::<&str>::from_shape_vec(subset_all.shape_usize(), chunks_elements)?;
+```
