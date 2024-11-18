@@ -1629,6 +1629,9 @@ array.store_chunks(&amp;chunks, chunks_bytes.into())?;
 </code></pre>
 <h3 id="store-an-encoded-chunk"><a class="header" href="#store-an-encoded-chunk">Store an Encoded Chunk</a></h3>
 <p>An encoded chunk can be stored directly with <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_encoded_chunk">store_encoded_chunk</a>, bypassing the <code>zarrs</code> codec pipeline.</p>
+<pre><code class="language-rs">let encoded_chunk_bytes: Vec&lt;u8&gt; = ...;
+array.store_encoded_chunk(&amp;chunks, encoded_chunk_bytes.into())?;
+</code></pre>
 <div class="mdbook-alerts mdbook-alerts-tip">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
@@ -1653,23 +1656,49 @@ Codecs that do not support true partial encoding will retrieve chunks in their e
 </ul>
 <p>Partial writes to a chunk may be lost if these rules are not respected.</p>
 <h3 id="store-a-chunk-subset"><a class="header" href="#store-a-chunk-subset">Store a Chunk Subset</a></h3>
-<!-- TODO -->
+<pre><code class="language-rs">array.store_chunk_subset_elements::&lt;f32&gt;(
+    // chunk indices
+    &amp;[3, 1],
+    // subset within chunk
+    &amp;ArraySubset::new_with_ranges(&amp;[1..2, 0..4]),
+    // subset elements
+    &amp;[-4.0; 4],
+)?;
+</code></pre>
 <h3 id="store-an-array-subset"><a class="header" href="#store-an-array-subset">Store an Array Subset</a></h3>
-<!-- TODO -->
-<h3 id="store-array-subsets"><a class="header" href="#store-array-subsets">Store Array Subsets</a></h3>
-<!-- TODO -->
+<pre><code class="language-rs">array.store_array_subset_elements::&lt;f32&gt;(
+    &amp;ArraySubset::new_with_ranges(&amp;[0..8, 6..7]),
+    &amp;[123.0; 8],
+)?;
+</code></pre>
 <h3 id="partial-encoding-with-the-sharding-codec"><a class="header" href="#partial-encoding-with-the-sharding-codec">Partial Encoding with the Sharding Codec</a></h3>
-<p>In <code>zarrs</code>, the <code>sharding_indexed</code> codec is the only codec that supports real partial encoding.
-Inner chunks can be written in an append-only fashion without reading previously written inner chunks (if their elements do not require updating).</p>
-<div class="mdbook-alerts mdbook-alerts-tip">
+<p>In <code>zarrs</code>, the <code>sharding_indexed</code> codec is the only codec that supports real partial encoding if the <a href="https://docs.rs/zarrs/latest/zarrs/config/struct.Config.html#experimental-partial-decoding"><code>Experimental Partial Encoding</code></a> option is enabled.
+If disabled (default), chunks are always fully decoded and updated before being stored.</p>
+<p>To enable partial encoding:</p>
+<pre><code class="language-rs">// Set experimental_partial_encoding to true by default
+zarrs::config::global_config_mut().set_experimental_partial_encoding(true);
+
+// Manually set experimental_partial_encoding to true for an operation
+let mut options = CodecOptions::default();
+options.set_experimental_partial_encoding(true);
+</code></pre>
+<div class="mdbook-alerts mdbook-alerts-warning">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
-  tip
+  warning
 </p>
-<p>True partial encoding is currently experimental. The <a href="https://docs.rs/zarrs/latest/zarrs/config/struct.Config.html#experimental-partial-decoding"><code>Experimental Partial Encoding</code></a> option must be enabled.
-If disabled (default), chunks are always fully decoded and updated before being stored.</p>
+<p>The asynchronous API does not yet support partial encoding.</p>
 </div>
-<!-- TODO: Warning about shards being much larger if chunks are updated -->
+<p>This enables <code>Array::store_array_subset</code>, <code>Array::store_chunk_subset</code>, <code>Array::partial_encoder</code>, and variants to use partial encoding for sharded arrays.
+Inner chunks can be written in an append-only fashion without reading previously written inner chunks (if their elements do not require updating).</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>Since partial encoding is append-only for sharded arrays, updating a chunk does not remove the originally encoded data.
+Make sure to align writes to the inner chunks, otherwise your shards will be much larger than they should be.</p>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
