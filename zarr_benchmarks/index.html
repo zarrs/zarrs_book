@@ -278,9 +278,9 @@
 <h2 id="benchmark-data"><a class="header" href="#benchmark-data">Benchmark Data</a></h2>
 <p>All datasets are $1024x2048x2048$ <code>uint16</code> arrays.</p>
 <div class="table-wrapper"><table><thead><tr><th>Name</th><th>Chunk Shape</th><th>Shard Shape</th><th>Compression</th><th>Size</th></tr></thead><tbody>
-<tr><td>data/benchmark.zarr</td><td>$256^3$</td><td></td><td>None</td><td>8.0 GB</td></tr>
-<tr><td>data/benchmark_compress.zarr</td><td>$256^3$</td><td></td><td><code>blosclz</code> 9 + bitshuffling</td><td>377 MB</td></tr>
-<tr><td>data/benchmark_compress_shard.zarr</td><td>$32^3$</td><td>$256^3$</td><td><code>blosclz</code> 9 + bitshuffling</td><td>1.1 GB</td></tr>
+<tr><td>Uncompressed</td><td>$256^3$</td><td></td><td>None</td><td>8.0 GB</td></tr>
+<tr><td>Compressed</td><td>$256^3$</td><td></td><td><code>blosclz</code> 9 + bitshuffling</td><td>377 MB</td></tr>
+<tr><td>Compressed + Sharded</td><td>$32^3$</td><td>$256^3$</td><td><code>blosclz</code> 9 + bitshuffling</td><td>1.1 GB</td></tr>
 </tbody></table>
 </div>
 <h2 id="benchmark-system"><a class="header" href="#benchmark-system">Benchmark System</a></h2>

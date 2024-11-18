@@ -228,11 +228,41 @@
 
 </style>
 <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
-<h3 id="-this-book-is-under-construction"><a class="header" href="#-this-book-is-under-construction">🚧 This book is under construction!</a></h3>
-<h3 id="the-zarr-array-storage-format"><a class="header" href="#the-zarr-array-storage-format">The Zarr Array Storage Format</a></h3>
-<p><img src="https://zarr-specs.readthedocs.io/en/latest/_images/terminology-hierarchy.excalidraw.png" alt="zarr overview" /></p>
-<h3 id="zarrs---a-rust-based-implementation-of-zarr"><a class="header" href="#zarrs---a-rust-based-implementation-of-zarr"><code>zarrs</code> - A Rust-Based implementation of Zarr</a></h3>
-<!-- TODO -->
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>🚧 This book is under construction!</p>
+</div>
+<h2 id="zarrs---a-rust-library-for-the-zarr-storage-format"><a class="header" href="#zarrs---a-rust-library-for-the-zarr-storage-format"><code>zarrs</code> - A Rust Library for the Zarr Storage Format</a></h2>
+<p><code>zarrs</code> is a Rust library for the Zarr V2 and Zarr V3 array storage formats.
+If you don't know what Zarr is, check out:</p>
+<ul>
+<li>the official Zarr website: <a href="https://zarr.dev">zarr.dev</a>, and</li>
+<li>the <a href="https://zarr-specs.readthedocs.io/en/latest/v3/core/v3.0.html">Zarr V3 specification</a>.</li>
+</ul>
+<p><code>zarrs</code> was originally designed exclusively as a Rust library for Zarr V3.
+However, it now supports a V3 compatible subset of Zarr V2, and has Python and C/C++ bindings.</p>
+<p>This book focuses mostly on the Rust implementation.</p>
+<h2 id="using-zarrs-in-the-zarr-python-reference-implementation"><a class="header" href="#using-zarrs-in-the-zarr-python-reference-implementation">Using <code>zarrs</code> in the <code>zarr-python</code> Reference Implementation</a></h2>
+<p>If you are only interested in using <code>zarrs</code> from Python, skip ahead to the <a href="./zarrs_python.html">Python Bindings (zarrs-python) Chapter</a>.</p>
+<p>The Python bindings (<a href="https://github.com/ilan-gold/zarrs-python"><img src="https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github" alt="zarr-python" /></a>) expose a high-performance codec pipeline to the <a href="https://github.com/zarr-developers/zarr-python"><img src="https://img.shields.io/badge/zarr--developers/zarr--python-GitHub-blue?logo=github" alt="zarr-python" /></a> reference implementation that uses <code>zarrs</code> under the hood.
+There is no need to learn a new API and it is supported by downstream libraries like <code>dask</code>.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>The <code>zarrs-python</code> implementation is highly experimental and has some limitations.
+Consult the documentation for more information.</p>
+</div>
+<h2 id="-zarrs-is-fast"><a class="header" href="#-zarrs-is-fast">🚀 <code>zarrs</code> is Fast</a></h2>
+<p>The <a href="https://github.com/LDeakin/zarr_benchmarks"><img src="https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks" /></a> repository includes benchmarks <code>zarrs</code> against other Zarr V3 implementations.
+Check out the benchmarks below that measure the time to round trip a \(1024x2048x2048\) <code>uint16</code> array encoded in various ways:</p>
+<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip.svg" alt="benchmark standalone" /></p>
+<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip_dask.svg" alt="benchmark dask" /></p>
+<p>More information on these benchmarks can be found in the <a href="https://github.com/LDeakin/zarr_benchmarks"><img src="https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks" /></a> repository.</p>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
@@ -2236,9 +2266,9 @@ config.set({"codec_pipeline.path": "zarrs.ZarrsCodecPipeline"})
 <h2 id="benchmark-data"><a class="header" href="#benchmark-data">Benchmark Data</a></h2>
 <p>All datasets are $1024x2048x2048$ <code>uint16</code> arrays.</p>
 <div class="table-wrapper"><table><thead><tr><th>Name</th><th>Chunk Shape</th><th>Shard Shape</th><th>Compression</th><th>Size</th></tr></thead><tbody>
-<tr><td>data/benchmark.zarr</td><td>$256^3$</td><td></td><td>None</td><td>8.0 GB</td></tr>
-<tr><td>data/benchmark_compress.zarr</td><td>$256^3$</td><td></td><td><code>blosclz</code> 9 + bitshuffling</td><td>377 MB</td></tr>
-<tr><td>data/benchmark_compress_shard.zarr</td><td>$32^3$</td><td>$256^3$</td><td><code>blosclz</code> 9 + bitshuffling</td><td>1.1 GB</td></tr>
+<tr><td>Uncompressed</td><td>$256^3$</td><td></td><td>None</td><td>8.0 GB</td></tr>
+<tr><td>Compressed</td><td>$256^3$</td><td></td><td><code>blosclz</code> 9 + bitshuffling</td><td>377 MB</td></tr>
+<tr><td>Compressed + Sharded</td><td>$32^3$</td><td>$256^3$</td><td><code>blosclz</code> 9 + bitshuffling</td><td>1.1 GB</td></tr>
 </tbody></table>
 </div>
 <h2 id="benchmark-system"><a class="header" href="#benchmark-system">Benchmark System</a></h2>
