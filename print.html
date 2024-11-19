@@ -812,14 +812,14 @@ group.store_metadata()?;
 <p>Note that the <code>/group</code> path is relative to the root of the store.</p>
 <h2 id="remember-to-store-metadata"><a class="header" href="#remember-to-store-metadata">Remember to Store Metadata!</a></h2>
 <p>Group metadata must <strong>always</strong> be stored explicitly, even if the attributes are empty.
-Group metadata must be stored because support for implicit groups (without metadata) <a href="https://github.com/zarr-developers/zarr-specs/pull/292/">was removed long after provisional acceptance of the Zarr V3 specification</a>.</p>
+Support for implicit groups without metadata <a href="https://github.com/zarr-developers/zarr-specs/pull/292/">was removed long after provisional acceptance of the Zarr V3 specification</a>.</p>
 <div class="mdbook-alerts mdbook-alerts-tip">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
   tip
 </p>
 <p>Consider deferring storage of group metadata until child group/array operations are complete.
-Ths presence of valid metadata can act as a signal that the data is ready.</p>
+The presence of valid metadata can act as a signal that the data is ready.</p>
 </div>
 <h2 id="creating-a-group-from-groupmetadata"><a class="header" href="#creating-a-group-from-groupmetadata">Creating a Group from <code>GroupMetadata</code></a></h2>
 <h3 id="zarr-v3"><a class="header" href="#zarr-v3">Zarr V3</a></h3>
