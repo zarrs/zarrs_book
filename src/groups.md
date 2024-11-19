@@ -65,11 +65,11 @@ Note that the `/group` path is relative to the root of the store.
 
 ## Remember to Store Metadata!
 Group metadata must **always** be stored explicitly, even if the attributes are empty.
-Group metadata must be stored because support for implicit groups (without metadata) [was removed long after provisional acceptance of the Zarr V3 specification](https://github.com/zarr-developers/zarr-specs/pull/292/).
+Support for implicit groups without metadata [was removed long after provisional acceptance of the Zarr V3 specification](https://github.com/zarr-developers/zarr-specs/pull/292/).
 
 > [!TIP]
 > Consider deferring storage of group metadata until child group/array operations are complete.
-> Ths presence of valid metadata can act as a signal that the data is ready.
+> The presence of valid metadata can act as a signal that the data is ready.
 
 
 ## Creating a Group from `GroupMetadata`
