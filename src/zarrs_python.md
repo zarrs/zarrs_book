@@ -1,11 +1,17 @@
-# Python Bindings (zarrs-python)
+# Python Bindings (zarrs-python) 
+
+[![zarrs_python_ver]](https://pypi.org/project/zarrs/) [![zarrs_python_doc]](https://zarrs-python.readthedocs.io/en/latest/) [![zarrs_python_repo]](https://github.com/ilan-gold/zarrs-python)
+
+[zarrs_python_ver]: https://img.shields.io/pypi/v/zarrs
+[zarrs_python_doc]: https://img.shields.io/readthedocs/zarrs-python
+[zarrs_python_repo]: https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github
 
 `zarrs-python` implements the `ZarrsCodecPipeline`.
 It can be used by the reference [`zarr`](https://zarr.readthedocs.io/en/main/) Python implementation (v3.0.0+) for improved performance over the default `BatchedCodecPipeline`.
 
 > [!WARNING]
 > `zarrs-python` has some limitations compared to the reference implementation.
-> See the [limitations](https://github.com/ilan-gold/zarrs-python?tab=readme-ov-file#limitations) in [![zarrs-python](https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github)](https://github.com/ilan-gold/zarrs-python).
+> See the [limitations](https://github.com/ilan-gold/zarrs-python?tab=readme-ov-file#limitations).
 
 ## Enabling `zarrs-python`
 

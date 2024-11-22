@@ -130,9 +130,9 @@ A subset of `zarrs` exposed as a C/C++ API.
 
 This crate is detailed in the [C/C++ Bindings](./zarrs_ffi.md) chapter.
 
-#### `zarrs-python` [![zarrs_python_ver]](https://crates.io/crates/zarrs_python) [![zarrs_python_doc]](https://docs.rs/zarrs_python) [![zarrs_python_repo]](https://github.com/ilan-gold/zarrs-python)
-[zarrs_python_ver]: https://img.shields.io/crates/v/zarrs_python
-[zarrs_python_doc]: https://docs.rs/zarrs_python/badge.svg
+#### `zarrs-python` [![zarrs_python_ver]](https://pypi.org/project/zarrs/) [![zarrs_python_doc]](https://zarrs-python.readthedocs.io/en/latest/) [![zarrs_python_repo]](https://github.com/ilan-gold/zarrs-python)
+[zarrs_python_ver]: https://img.shields.io/pypi/v/zarrs
+[zarrs_python_doc]: https://img.shields.io/readthedocs/zarrs-python
 [zarrs_python_repo]: https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github
 
 A `CodecPipeline` for the `zarr` Python reference implementation that uses `zarrs`.
