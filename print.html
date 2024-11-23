@@ -384,11 +384,14 @@ features = ["filesystem", "blosc"]
     subgraph Bindings
         direction LR
         zarrs_ffi
-        zarrs_python
+        zarrs-python
     end
     zarrs --&gt; Bindings
     subgraph CLI Tools
     zarrs --&gt; zarrs_tools
+    end
+    subgraph metadata_conventions[Zarr Metadata Conventions]
+    ome_zarr_metadata --&gt; zarrs_tools
     end
 </pre>
 <h3 id="core-crates"><a class="header" href="#core-crates">Core Crates</a></h3>
@@ -427,6 +430,11 @@ features = ["filesystem", "blosc"]
 <h4 id="zarrs_tools"><a class="header" href="#zarrs_tools"><code>zarrs_tools</code> <a href="https://crates.io/crates/zarrs_tools"><img src="https://img.shields.io/crates/v/zarrs_tools" alt="zarrs_tools_ver" /></a> <a href="https://docs.rs/zarrs_tools"><img src="https://docs.rs/zarrs_tools/badge.svg" alt="zarrs_tools_doc" /></a> <a href="https://github.com/LDeakin/zarrs_tools"><img src="https://img.shields.io/badge/LDeakin/zarrs__tools-GitHub-blue?logo=github" alt="zarrs_tools_repo" /></a></a></h4>
 <p>Various tools for creating and manipulating Zarr v3 data with the <code>zarrs</code> rust crate.</p>
 <p>This crate is detailed in the <a href="./zarrs_tools.html">zarrs_tools</a> chapter.</p>
+<h3 id="zarr-metadata-conventions"><a class="header" href="#zarr-metadata-conventions">Zarr Metadata Conventions</a></h3>
+<h4 id="ome_zarr_metadata"><a class="header" href="#ome_zarr_metadata"><code>ome_zarr_metadata</code> <a href="https://crates.io/crates/ome_zarr_metadata"><img src="https://img.shields.io/crates/v/ome_zarr_metadata" alt="ome_zarr_metadata_ver" /></a> <a href="https://docs.rs/ome_zarr_metadata"><img src="https://docs.rs/ome_zarr_metadata/badge.svg" alt="ome_zarr_metadata_doc" /></a> <a href="https://github.com/LDeakin/zarrs/tree/main/rust_ome_zarr_metadata"><img src="https://img.shields.io/badge/LDeakin/zarrs/ome__zarr__metadata-GitHub-blue?logo=github" alt="ome_zarr_metadata_repo" /></a></a></h4>
+<p>A Rust library for <a href="https://ngff.openmicroscopy.org/latest/">OME-Zarr</a> (previously OME-NGFF) metadata.</p>
+<p>OME-Zarr, formerly known as OME-NGFF (Open Microscopy Environment Next Generation File Format), is a specification designed to support modern scientific imaging needs.
+It is widely used in microscopy, bioimaging, and other scientific fields requiring high-dimensional data management, visualisation, and analysis.</p>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
