@@ -23,5 +23,7 @@
   - [zarrs_reencode: reencode/rechunk Zarr arrays](zarrs_tools/docs/zarrs_reencode.md)
   - [zarrs_ome: convert to OME-Zarr multiscales](zarrs_tools/docs/zarrs_ome.md)
   - [zarrs_filter: apply image transformations](zarrs_tools/docs/zarrs_filter.md)
+  - [zarrs_validate: validate array equivalence](zarrs_tools/docs/zarrs_validate.md)
+  - [zarrs_info: get array/group information](zarrs_tools/docs/zarrs_info.md)
   - [zarrs_binary2zarr: convert piped binary data to Zarr](zarrs_tools/docs/zarrs_binary2zarr.md)
   - [zarrs_ncvar2zarr: convert NetCDF variables to Zarr](zarrs_tools/docs/zarrs_ncvar2zarr.md)

@@ -7,4 +7,4 @@ An array contains zero or more data elements all of the same data type.
 
 ![array overview](https://zarr-specs.readthedocs.io/en/latest/_images/terminology-read.excalidraw.png)
 
-<!-- TODO: Expand -->
+The following sections will detail the initialisation, reading, and writing of arrays.
