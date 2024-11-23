@@ -74,11 +74,14 @@ graph LR
     subgraph Bindings
         direction LR
         zarrs_ffi
-        zarrs_python
+        zarrs-python
     end
     zarrs --> Bindings
     subgraph CLI Tools
     zarrs --> zarrs_tools
+    end
+    subgraph metadata_conventions[Zarr Metadata Conventions]
+    ome_zarr_metadata --> zarrs_tools
     end
 ```
 
@@ -149,3 +152,15 @@ This crate is detailed in the [Python Bindings](./zarrs_python.md) chapter.
 Various tools for creating and manipulating Zarr v3 data with the `zarrs` rust crate.
 
 This crate is detailed in the [zarrs_tools](./zarrs_tools.md) chapter.
+
+### Zarr Metadata Conventions
+
+#### `ome_zarr_metadata` [![ome_zarr_metadata_ver]](https://crates.io/crates/ome_zarr_metadata) [![ome_zarr_metadata_doc]](https://docs.rs/ome_zarr_metadata) [![ome_zarr_metadata_repo]](https://github.com/LDeakin/rust_ome_zarr_metadata)
+[ome_zarr_metadata_ver]: https://img.shields.io/crates/v/ome_zarr_metadata
+[ome_zarr_metadata_doc]: https://docs.rs/ome_zarr_metadata/badge.svg
+[ome_zarr_metadata_repo]: https://img.shields.io/badge/LDeakin/rust__ome__zarr__metadata-GitHub-blue?logo=github
+
+A Rust library for [OME-Zarr](https://ngff.openmicroscopy.org/latest/) (previously OME-NGFF) metadata.
+
+OME-Zarr, formerly known as OME-NGFF (Open Microscopy Environment Next Generation File Format), is a specification designed to support modern scientific imaging needs.
+It is widely used in microscopy, bioimaging, and other scientific fields requiring high-dimensional data management, visualisation, and analysis.
