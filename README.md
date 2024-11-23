@@ -1,6 +1,6 @@
-# The Rust `zarrs` Book
+# The `zarrs` Book
 
-The source to [The Rust `zarrs` Book](https://ldeakin.github.io/zarrs_book/).
+The source to [The `zarrs` Book](https://ldeakin.github.io/zarrs_book/).
 
 ## Licence
 `zarrs_book` is licensed under either of
