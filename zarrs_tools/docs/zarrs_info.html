@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>zarrs_binary2zarr: convert piped binary data to Zarr - The zarrs Book</title>
+        <title>zarrs_info: get array/group information - The zarrs Book</title>
 
 
         <!-- Custom HTML head -->
@@ -226,72 +226,94 @@
 }
 
 </style>
-<h1 id="zarrs_binary2zarr"><a class="header" href="#zarrs_binary2zarr">zarrs_binary2zarr</a></h1>
-<p>Create a Zarr V3 array from piped binary data.</p>
+<h1 id="zarrs_info"><a class="header" href="#zarrs_info">zarrs_info</a></h1>
+<p>Get information about a Zarr array or group.</p>
 <h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
-<p><code>zarrs_binary2zarr</code> is installed with the <code>binary2zarr</code> feature of <code>zarrs_tools</code>.</p>
+<p><code>zarrs_info</code> is installed with the <code>info</code> feature of <code>zarrs_tools</code>.</p>
 <h3 id="prebuilt-binaries"><a class="header" href="#prebuilt-binaries">Prebuilt Binaries</a></h3>
 <pre><code class="language-shell"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
 cargo binstall zarrs_tools
 </code></pre>
 <h3 id="from-source"><a class="header" href="#from-source">From Source</a></h3>
-<pre><code class="language-shell">cargo install --features=binary2zarr zarrs_tools
+<pre><code class="language-shell">cargo install --features=info zarrs_tools
 </code></pre>
-<h2 id="example"><a class="header" href="#example">Example</a></h2>
-<p><code>chameleon_1024x1024x1080.uint16</code> is an uncompressed binary 3D image split into multiple files with</p>
-<ul>
-<li>(depth, height, width) = <code>(1080, 1024, 1024)</code></li>
-<li>data type = <code>uint16</code></li>
-</ul>
-<pre><code class="language-bash">tree --du -h chameleon_1024x1024x1080.uint16
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<details>
+<summary>zarrs_info --help</summary>
+<pre><code class="language-text">Get information about a Zarr array or group.
+
+Outputs are JSON encoded.
+
+Usage: zarrs_info [OPTIONS] &lt;PATH&gt; &lt;COMMAND&gt;
+
+Commands:
+  metadata         Get the array/group metadata
+  metadata-v3      Get the array/group metadata (interpreted as V3)
+  attributes       Get the array/group attributes
+  shape            Get the array shape
+  data-type        Get the array data type
+  fill-value       Get the array fill value
+  dimension-names  Get the array dimension names
+  range            Get the array data range
+  histogram        Get the array data histogram
+  help             Print this message or the help of the given subcommand(s)
+
+Arguments:
+  &lt;PATH&gt;
+          Path to the Zarr input array or group
+
+Options:
+      --chunk-limit &lt;CHUNK_LIMIT&gt;
+          The maximum number of chunks concurrently processed.
+          
+          Defaults to the RAYON_NUM_THREADS environment variable or the number of logical CPUs. Consider reducing this for images with large chunk sizes or on systems with low memory availability.
+          
+          [default: 24]
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
 </code></pre>
-<pre><code class="language-text">[2.1G]  chameleon_1024x1024x1080.uint16
-├── [512M]  xaa
-├── [512M]  xab
-├── [512M]  xac
-├── [512M]  xad
-└── [112M]  xae
+</details>
+<h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
+<h4 id="data-type"><a class="header" href="#data-type">Data Type</a></h4>
+<pre><code class="language-shell">zarrs_info array.zarr data-type
 </code></pre>
-<p>With the following command, the image is encoded as a zarr array with the <code>sharding</code> codec with a <em>shard shape</em> of <code>(128, 1024, 1024)</code></p>
-<ul>
-<li>inner chunks in each shard have a <em>chunk shape</em> of <code>(32, 32, 32)</code></li>
-<li>inner chunks are compressed using the <code>blosc</code> codec</li>
-</ul>
-<pre><code class="language-bash">cat chameleon_1024x1024x1080.uint16/* | \
-zarrs_binary2zarr \
---data-type uint16 \
---fill-value 0 \
---separator '.' \
---array-shape 1080,1024,1024 \
---chunk-shape 32,32,32 \
---shard-shape 128,1024,1024 \
---bytes-to-bytes-codecs '[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]' \
-chameleon_1024x1024x1080.zarr
+<pre><code class="language-text">{
+  "data_type": "uint16"
+}
 </code></pre>
-<pre><code class="language-bash">tree --du -h chameleon_1024x1024x1080.zarr
+<h3 id="array-shape"><a class="header" href="#array-shape">Array Shape</a></h3>
+<pre><code class="language-shell">zarrs_info array.zarr shape
 </code></pre>
-<pre><code class="language-text">[1.3G]  chameleon_1024x1024x1080.zarr
-├── [152M]  c.0.0.0
-├── [157M]  c.1.0.0
-├── [157M]  c.2.0.0
-├── [156M]  c.3.0.0
-├── [152M]  c.4.0.0
-├── [150M]  c.5.0.0
-├── [152M]  c.6.0.0
-├── [152M]  c.7.0.0
-├── [ 67M]  c.8.0.0
-└── [1.2K]  zarr.json
+<pre><code class="language-text">{
+  "shape": [
+    1243,
+    1403,
+    1510
+  ]
+}
+</code></pre>
+<h3 id="data-range"><a class="header" href="#data-range">Data Range</a></h3>
+<pre><code class="language-shell">zarrs_info array.zarr range
+</code></pre>
+<pre><code class="language-text">{
+  "min": 0,
+  "max": 65535
+}
 </code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../zarrs_tools/docs/zarrs_info.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../zarrs_tools/docs/zarrs_validate.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../zarrs_tools/docs/zarrs_ncvar2zarr.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../zarrs_tools/docs/zarrs_binary2zarr.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -301,11 +323,11 @@ chameleon_1024x1024x1080.zarr
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../zarrs_tools/docs/zarrs_info.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../zarrs_tools/docs/zarrs_validate.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../zarrs_tools/docs/zarrs_ncvar2zarr.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../zarrs_tools/docs/zarrs_binary2zarr.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

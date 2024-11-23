@@ -946,7 +946,7 @@ group.store_metadata()?;
 <p>An array is a data structure with zero or more dimensions whose lengths define the shape of the array.
 An array contains zero or more data elements all of the same data type.</p>
 <p><img src="https://zarr-specs.readthedocs.io/en/latest/_images/terminology-read.excalidraw.png" alt="array overview" /></p>
-<!-- TODO: Expand -->
+<p>The following sections will detail the initialisation, reading, and writing of arrays.</p>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
@@ -1926,15 +1926,16 @@ It also has various other configuration options, see its documentation.</p>
 </style>
 <h1 id="python-bindings-zarrs-python"><a class="header" href="#python-bindings-zarrs-python">Python Bindings (zarrs-python)</a></h1>
 <p><a href="https://pypi.org/project/zarrs/"><img src="https://img.shields.io/pypi/v/zarrs" alt="zarrs_python_ver" /></a> <a href="https://zarrs-python.readthedocs.io/en/latest/"><img src="https://img.shields.io/readthedocs/zarrs-python" alt="zarrs_python_doc" /></a> <a href="https://github.com/ilan-gold/zarrs-python"><img src="https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github" alt="zarrs_python_repo" /></a></p>
+<p>The <code>zarrs</code>(https://github.com/ilan-gold/zarrs-python) Python package exposes a high-performance codec pipeline to the <a href="https://github.com/zarr-developers/zarr-python"><code>zarr</code></a> reference implementation that uses <code>zarrs</code> under the hood.
+There is no need to learn a new API and it is supported by downstream libraries like <code>dask</code>.</p>
 <p><code>zarrs-python</code> implements the <code>ZarrsCodecPipeline</code>.
-It can be used by the reference <a href="https://zarr.readthedocs.io/en/main/"><code>zarr</code></a> Python implementation (v3.0.0+) for improved performance over the default <code>BatchedCodecPipeline</code>.</p>
+It can be used by the reference zarr Python implementation (v3.0.0+) for improved performance over the default <code>BatchedCodecPipeline</code>.</p>
 <div class="mdbook-alerts mdbook-alerts-warning">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
   warning
 </p>
-<p><code>zarrs-python</code> has some limitations compared to the reference implementation.
-See the <a href="https://github.com/ilan-gold/zarrs-python?tab=readme-ov-file#limitations">limitations</a>.</p>
+<p><code>zarrs-python</code> is highly experimental and has <a href="https://github.com/ilan-gold/zarrs-python?tab=readme-ov-file#limitations">some limitations</a> compared to the reference implementation.</p>
 </div>
 <h2 id="enabling-zarrs-python"><a class="header" href="#enabling-zarrs-python">Enabling <code>zarrs-python</code></a></h2>
 <p>The <code>ZarrsCodecPipeline</code> is enabled as follows:</p>
@@ -2203,8 +2204,149 @@ void main() {
 <p>Reencode/rechunk a Zarr V2/V3 to a Zarr v3 array.</p>
 <h2 id="installation-1"><a class="header" href="#installation-1">Installation</a></h2>
 <p><code>zarrs_reencode</code> packaged by default with <code>zarrs_tools</code> and requires no extra features.</p>
-<pre><code>cargo install zarrs_tools
+<h3 id="prebuilt-binaries"><a class="header" href="#prebuilt-binaries">Prebuilt Binaries</a></h3>
+<pre><code class="language-shell"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
+cargo binstall zarrs_tools
 </code></pre>
+<h3 id="from-source"><a class="header" href="#from-source">From Source</a></h3>
+<pre><code class="language-shell">cargo install zarrs_tools
+</code></pre>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<details>
+<summary>zarrs_reencode --help</summary>
+<pre><code class="language-text">Reencode a Zarr array
+
+Usage: zarrs_reencode [OPTIONS] &lt;PATH_IN&gt; &lt;PATH_OUT&gt;
+
+Arguments:
+  &lt;PATH_IN&gt;
+          The zarr array input path or URL
+
+  &lt;PATH_OUT&gt;
+          The zarr array output directory
+
+Options:
+  -d, --data-type &lt;DATA_TYPE&gt;
+          The data type as a string
+          
+          Valid data types:
+            - bool
+            - int8, int16, int32, int64
+            - uint8, uint16, uint32, uint64
+            - float16, float32, float64, bfloat16
+            - complex64, complex 128
+            - r* (raw bits, where * is a multiple of 8)
+
+  -f, --fill-value &lt;FILL_VALUE&gt;
+          Fill value. See &lt;https://zarr-specs.readthedocs.io/en/latest/v3/core/v3.0.html#fill-value&gt;
+          
+          The fill value must be compatible with the data type.
+          
+          Examples:
+            int/uint: 0 100 -100
+            float: 0.0 "NaN" "Infinity" "-Infinity"
+            r*: "[0, 255]"
+
+      --separator &lt;SEPARATOR&gt;
+          The chunk key encoding separator. Either . or /
+
+  -c, --chunk-shape &lt;CHUNK_SHAPE&gt;
+          Chunk shape. A comma separated list of the chunk size along each array dimension.
+          
+          If any dimension has size zero, it will be set to match the array shape.
+
+  -s, --shard-shape &lt;SHARD_SHAPE&gt;
+          Shard shape. A comma separated list of the shard size along each array dimension.
+          
+          If specified, the array is encoded using the sharding codec.
+          If any dimension has size zero, it will be set to match the array shape.
+
+      --array-to-array-codecs &lt;ARRAY_TO_ARRAY_CODECS&gt;
+          Array to array codecs.
+          
+          JSON holding an array of array to array codec metadata.
+          
+          Examples:
+            '[ { "name": "transpose", "configuration": { "order": [0, 2, 1] } } ]'
+            '[ { "name": "bitround", "configuration": { "keepbits": 9 } } ]'
+
+      --array-to-bytes-codec &lt;ARRAY_TO_BYTES_CODEC&gt;
+          Array to bytes codec.
+          
+          JSON holding array to bytes codec metadata.
+          
+          Examples:
+            '{ "name": "bytes", "configuration": { "endian": "little" } }'
+            '{ "name": "pcodec", "configuration": { "level": 12 } }'
+            '{ "name": "zfp", "configuration": { "mode": "fixedprecision", "precision": 19 } }'
+
+      --bytes-to-bytes-codecs &lt;BYTES_TO_BYTES_CODECS&gt;
+          Bytes to bytes codecs.
+          
+          JSON holding an array bytes to bytes codec configurations.
+          
+          Examples:
+            '[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]'
+            '[ { "name": "bz2", "configuration": { "level": 9 } } ]'
+            '[ { "name": "crc32c" } ]'
+            '[ { "name": "gzip", "configuration": { "level": 9 } } ]'
+            '[ { "name": "zstd", "configuration": { "level": 22, "checksum": false } } ]'
+
+      --dimension-names &lt;DIMENSION_NAMES&gt;
+          Dimension names (optional). Comma separated.
+
+      --attributes &lt;ATTRIBUTES&gt;
+          Attributes (optional).
+          
+          JSON holding array attributes.
+
+      --attributes-append &lt;ATTRIBUTES_APPEND&gt;
+          Attributes to append (optional).
+          
+          JSON holding array attributes.
+
+      --concurrent-chunks &lt;CONCURRENT_CHUNKS&gt;
+          Number of concurrent chunks
+
+      --ignore-checksums
+          Ignore checksums.
+          
+          If set, checksum validation in codecs (e.g. crc32c) is skipped.
+
+      --validate
+          Validate written data
+
+  -v, --verbose
+          Print verbose information, such as the array header
+
+      --cache-size &lt;CACHE_SIZE&gt;
+          An optional chunk cache size (in bytes)
+
+      --cache-chunks &lt;CACHE_CHUNKS&gt;
+          An optional chunk cache size (in chunks)
+
+      --cache-size-thread &lt;CACHE_SIZE_THREAD&gt;
+          An optional per-thread chunk cache size (in bytes)
+
+      --cache-chunks-thread &lt;CACHE_CHUNKS_THREAD&gt;
+          An optional per-thread chunk cache size (in chunks)
+
+      --write-shape &lt;WRITE_SHAPE&gt;
+          Write shape (optional). A comma separated list of the write size along each array dimension.
+          
+          Use this parameter to incrementally write shards in batches of chunks of the specified write shape.
+          The write shape defaults to the shard shape for sharded arrays.
+          This parameter is ignored for unsharded arrays (the write shape is the chunk shape).
+          
+          Prefer to set the write shape to an integer multiple of the chunk shape to avoid unnecessary reads.
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+</code></pre>
+</details>
 <h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
 <p>Reencode <code>array.zarr</code> (<code>uint16</code>) with:</p>
 <ul>
@@ -2292,7 +2434,7 @@ array.zarr array_reencode.zarr
 
 </style>
 <h1 id="zarrs_ome"><a class="header" href="#zarrs_ome">zarrs_ome</a></h1>
-<p>Convert a Zarr V3 array to <a href="https://ngff.openmicroscopy.org/latest/index.html">OME-Zarr</a> (0.5-dev).</p>
+<p>Convert a Zarr array to an <a href="https://ngff.openmicroscopy.org/0.5/index.html">OME-Zarr</a> multiscales hierarchy.</p>
 <div class="mdbook-alerts mdbook-alerts-warning">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
@@ -2311,13 +2453,18 @@ array.zarr array_reencode.zarr
 The physical size and units of the array elements can be set explicitly.
 The array can be reencoded when output to OME-Zarr.</p>
 <h2 id="installation-2"><a class="header" href="#installation-2">Installation</a></h2>
-<p><code>zarrs_ome</code> is installed with the <code>ome</code> feature of <code>zarrs_tools</code></p>
-<pre><code>cargo install --features=ome zarrs_tools
+<p><code>zarrs_ome</code> is installed with the <code>ome</code> feature of <code>zarrs_tools</code>.</p>
+<h3 id="prebuilt-binaries-1"><a class="header" href="#prebuilt-binaries-1">Prebuilt Binaries</a></h3>
+<pre><code class="language-shell"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
+cargo binstall zarrs_tools
 </code></pre>
-<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<h3 id="from-source-1"><a class="header" href="#from-source-1">From Source</a></h3>
+<pre><code class="language-shell">cargo install --features=ome zarrs_tools
+</code></pre>
+<h2 id="usage-1"><a class="header" href="#usage-1">Usage</a></h2>
 <details>
 <summary>zarrs_ome --help</summary>
-<pre><code class="language-text">Convert a Zarr V3 array to OME-Zarr (0.5-dev)
+<pre><code class="language-text">Convert a Zarr array to an OME-Zarr multiscales hierarchy
 
 Usage: zarrs_ome [OPTIONS] &lt;INPUT&gt; &lt;OUTPUT&gt; [DOWNSAMPLE_FACTOR]...
 
@@ -2329,39 +2476,60 @@ Arguments:
           The output group path
 
   [DOWNSAMPLE_FACTOR]...
-          The downsample factor.
+          The downsample factor per axis, comma separated.
           
           Defaults to 2 on each axis.
 
 Options:
+      --ome-zarr-version &lt;OME_ZARR_VERSION&gt;
+          [default: 0.5]
+
+          Possible values:
+          - 0.5: https://ngff.openmicroscopy.org/0.5/
+
       --max-levels &lt;MAX_LEVELS&gt;
           Maximum number of downsample levels
           
           [default: 10]
 
       --physical-size &lt;PHYSICAL_SIZE&gt;
-          Physical size (per axis)
+          Physical size per axis, comma separated
 
       --physical-units &lt;PHYSICAL_UNITS&gt;
-          Physical units (per axis)
+          Physical units per axis, comma separated.
+          
+          Set to "channel" for a channel axis.
 
       --name &lt;NAME&gt;
           OME Zarr dataset name
 
-      --no-gaussian
-          Disable gaussian smoothing of continuous data
-
       --discrete
-          Do majority downsampling and do not apply gaussian smoothing
+          Set to true for discrete data.
+          
+          Performs majority downsampling instead of creating a Gaussian image pyramid or mean downsampling.
+
+      --gaussian-sigma &lt;GAUSSIAN_SIGMA&gt;
+          The Gaussian "sigma" to apply when creating a Gaussian image pyramid per axis, comma separated.
+          
+          This is typically set to 0.5 times the downsample factor for each axis. If omitted, then mean downsampling is applied.
+          
+          Ignored for discrete data.
+
+      --gaussian-kernel-half-size &lt;GAUSSIAN_KERNEL_HALF_SIZE&gt;
+          The Gaussian kernel half size per axis, comma separated.
+          
+          If omitted, defaults to ceil(3 * sigma).
+          
+          Ignored for discrete data or if --gaussian-sigma is not set.
 
       --exists &lt;EXISTS&gt;
           Behaviour if the output exists
           
-          [default: overwrite]
+          [default: erase]
 
           Possible values:
-          - overwrite: Overwrite existing files. Useful if the output includes additional non-zarr files to be preserved
           - erase:     Erase the output
+          - overwrite: Overwrite existing files. Useful if the output includes additional non-zarr files to be preserved. May fail if changing the encoding
           - exit:      Exit if the output already exists
 
       --group-attributes &lt;GROUP_ATTRIBUTES&gt;
@@ -2386,7 +2554,7 @@ Options:
           The fill value must be compatible with the data type.
           
           Examples:
-            int/uint: 0
+            int/uint: 0 100 -100
             float: 0.0 "NaN" "Infinity" "-Infinity"
             r*: "[0, 255]"
 
@@ -2407,27 +2575,36 @@ Options:
       --array-to-array-codecs &lt;ARRAY_TO_ARRAY_CODECS&gt;
           Array to array codecs.
           
-          JSON holding array to array codec metadata.
+          JSON holding an array of array to array codec metadata.
           
           Examples:
+            '[ { "name": "transpose", "configuration": { "order": [0, 2, 1] } } ]'
             '[ { "name": "bitround", "configuration": { "keepbits": 9 } } ]'
 
       --array-to-bytes-codec &lt;ARRAY_TO_BYTES_CODEC&gt;
           Array to bytes codec.
           
-          JSON holding array to array codec metadata.
+          JSON holding array to bytes codec metadata.
           
           Examples:
+            '{ "name": "bytes", "configuration": { "endian": "little" } }'
+            '{ "name": "pcodec", "configuration": { "level": 12 } }'
             '{ "name": "zfp", "configuration": { "mode": "fixedprecision", "precision": 19 } }'
 
       --bytes-to-bytes-codecs &lt;BYTES_TO_BYTES_CODECS&gt;
           Bytes to bytes codecs.
           
-          JSON holding bytes to bytes codec configurations.
+          JSON holding an array bytes to bytes codec configurations.
           
           Examples:
             '[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]'
-            '[ { "name": "gzip", "configuration": { "level": 3 } } ]'
+            '[ { "name": "bz2", "configuration": { "level": 9 } } ]'
+            '[ { "name": "crc32c" } ]'
+            '[ { "name": "gzip", "configuration": { "level": 9 } } ]'
+            '[ { "name": "zstd", "configuration": { "level": 22, "checksum": false } } ]'
+
+      --dimension-names &lt;DIMENSION_NAMES&gt;
+          Dimension names (optional). Comma separated.
 
       --attributes &lt;ATTRIBUTES&gt;
           Attributes (optional).
@@ -2577,13 +2754,67 @@ Options:
 <li><strong>guided filter</strong>:       Apply a guided filter (edge-preserving noise filter).</li>
 </ul>
 <h2 id="installation-3"><a class="header" href="#installation-3">Installation</a></h2>
-<p><code>zarrs_filter</code> is installed with the <code>filter</code> feature of <code>zarrs_tools</code></p>
-<pre><code>cargo install --features=filter zarrs_tools
+<p><code>zarrs_filter</code> is installed with the <code>filter</code> feature of <code>zarrs_tools</code>.</p>
+<h3 id="prebuilt-binaries-2"><a class="header" href="#prebuilt-binaries-2">Prebuilt Binaries</a></h3>
+<pre><code class="language-shell"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
+cargo binstall zarrs_tools
 </code></pre>
-<h2 id="help"><a class="header" href="#help">Help</a></h2>
-<pre><code class="language-bash">zarrs_filter --help
-zarrs_filter &lt;COMMAND&gt; --help
+<h3 id="from-source-2"><a class="header" href="#from-source-2">From Source</a></h3>
+<pre><code class="language-shell">cargo install --features=filter zarrs_tools
 </code></pre>
+<h2 id="usage-2"><a class="header" href="#usage-2">Usage</a></h2>
+<details>
+<summary>zarrs_filter --help</summary>
+<pre><code class="language-text">Apply simple image filters (transformations) to a Zarr array
+
+Usage: zarrs_filter [OPTIONS] [RUN_CONFIG] [COMMAND]
+
+Commands:
+  reencode            Reencode an array
+  crop                Crop an array given an offset and shape
+  rescale             Rescale array values given a multiplier and offset
+  clamp               Clamp values between a minimum and maximum
+  equal               Return a binary image where the input is equal to some value
+  downsample          Downsample an image given a stride
+  gradient-magnitude  Compute the gradient magnitude (sobel)
+  gaussian            Apply a Gaussian kernel
+  summed-area-table   Compute a summed area table (integral image)
+  guided-filter       Apply a guided filter (edge-preserving noise filter)
+  replace-value       Replace a value with another value
+  help                Print this message or the help of the given subcommand(s)
+
+Arguments:
+  [RUN_CONFIG]
+          Path to a JSON run configuration
+
+Options:
+      --exists &lt;EXISTS&gt;
+          Behaviour if the output exists
+          
+          [default: erase]
+
+          Possible values:
+          - erase: Erase the output
+          - exit:  Exit if the output already exists
+
+      --tmp &lt;TMP&gt;
+          Directory for temporary arrays.
+          
+          If omitted, defaults to the platform-specific temporary directory (e.g. ${TMPDIR}, /tmp, etc.)
+
+      --chunk-limit &lt;CHUNK_LIMIT&gt;
+          The maximum number of chunks concurrently processed.
+          
+          By default, this is set to the number of CPUs. Consider reducing this for images with large chunk sizes or on systems with low memory availability.
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+</code></pre>
+</details>
+<p>Run <code>zarrs_filter &lt;COMMAND&gt; --help</code> for more information on a specific command.</p>
 <h2 id="examples-cli"><a class="header" href="#examples-cli">Examples (CLI)</a></h2>
 <pre><code class="language-bash">export ENCODE_ARGS="--shard-shape 256,256,256 --chunk-shape 32,32,32"
 zarrs_filter reencode           array.zarr       array_reenc.zarr               ${ENCODE_ARGS}
@@ -2891,11 +3122,268 @@ zarrs_filter replace-value      array_reenc.zarr array_replace.zarr             
 }
 
 </style>
+<h1 id="zarrs_validate"><a class="header" href="#zarrs_validate">zarrs_validate</a></h1>
+<p>Compare the data in two Zarr arrays.</p>
+<h2 id="installation-4"><a class="header" href="#installation-4">Installation</a></h2>
+<p><code>zarrs_validate</code> is installed with the <code>validate</code> feature of <code>zarrs_tools</code>.</p>
+<h3 id="prebuilt-binaries-3"><a class="header" href="#prebuilt-binaries-3">Prebuilt Binaries</a></h3>
+<pre><code class="language-shell"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
+cargo binstall zarrs_tools
+</code></pre>
+<h3 id="from-source-3"><a class="header" href="#from-source-3">From Source</a></h3>
+<pre><code class="language-shell">cargo install --features=validate zarrs_tools
+</code></pre>
+<h2 id="usage-3"><a class="header" href="#usage-3">Usage</a></h2>
+<details>
+<summary>zarrs_validate --help</summary>
+<pre><code class="language-text">Compare the data in two Zarr arrays.
+
+Equality of the arrays is determined by comparing the shape, data type, and data.
+
+Differences in encoding (e.g codecs, chunk key encoding) and attributes are ignored.
+
+Usage: zarrs_validate [OPTIONS] &lt;FIRST&gt; &lt;SECOND&gt;
+
+Arguments:
+  &lt;FIRST&gt;
+          The path to the first zarr array
+
+  &lt;SECOND&gt;
+          The path to the second zarr array
+
+Options:
+      --concurrent-chunks &lt;CONCURRENT_CHUNKS&gt;
+          Number of concurrent chunks to compare
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+</code></pre>
+</details>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="zarrs_info"><a class="header" href="#zarrs_info">zarrs_info</a></h1>
+<p>Get information about a Zarr array or group.</p>
+<h2 id="installation-5"><a class="header" href="#installation-5">Installation</a></h2>
+<p><code>zarrs_info</code> is installed with the <code>info</code> feature of <code>zarrs_tools</code>.</p>
+<h3 id="prebuilt-binaries-4"><a class="header" href="#prebuilt-binaries-4">Prebuilt Binaries</a></h3>
+<pre><code class="language-shell"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
+cargo binstall zarrs_tools
+</code></pre>
+<h3 id="from-source-4"><a class="header" href="#from-source-4">From Source</a></h3>
+<pre><code class="language-shell">cargo install --features=info zarrs_tools
+</code></pre>
+<h2 id="usage-4"><a class="header" href="#usage-4">Usage</a></h2>
+<details>
+<summary>zarrs_info --help</summary>
+<pre><code class="language-text">Get information about a Zarr array or group.
+
+Outputs are JSON encoded.
+
+Usage: zarrs_info [OPTIONS] &lt;PATH&gt; &lt;COMMAND&gt;
+
+Commands:
+  metadata         Get the array/group metadata
+  metadata-v3      Get the array/group metadata (interpreted as V3)
+  attributes       Get the array/group attributes
+  shape            Get the array shape
+  data-type        Get the array data type
+  fill-value       Get the array fill value
+  dimension-names  Get the array dimension names
+  range            Get the array data range
+  histogram        Get the array data histogram
+  help             Print this message or the help of the given subcommand(s)
+
+Arguments:
+  &lt;PATH&gt;
+          Path to the Zarr input array or group
+
+Options:
+      --chunk-limit &lt;CHUNK_LIMIT&gt;
+          The maximum number of chunks concurrently processed.
+          
+          Defaults to the RAYON_NUM_THREADS environment variable or the number of logical CPUs. Consider reducing this for images with large chunk sizes or on systems with low memory availability.
+          
+          [default: 24]
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+</code></pre>
+</details>
+<h2 id="examples-1"><a class="header" href="#examples-1">Examples</a></h2>
+<h4 id="data-type"><a class="header" href="#data-type">Data Type</a></h4>
+<pre><code class="language-shell">zarrs_info array.zarr data-type
+</code></pre>
+<pre><code class="language-text">{
+  "data_type": "uint16"
+}
+</code></pre>
+<h3 id="array-shape"><a class="header" href="#array-shape">Array Shape</a></h3>
+<pre><code class="language-shell">zarrs_info array.zarr shape
+</code></pre>
+<pre><code class="language-text">{
+  "shape": [
+    1243,
+    1403,
+    1510
+  ]
+}
+</code></pre>
+<h3 id="data-range"><a class="header" href="#data-range">Data Range</a></h3>
+<pre><code class="language-shell">zarrs_info array.zarr range
+</code></pre>
+<pre><code class="language-text">{
+  "min": 0,
+  "max": 65535
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
 <h1 id="zarrs_binary2zarr"><a class="header" href="#zarrs_binary2zarr">zarrs_binary2zarr</a></h1>
 <p>Create a Zarr V3 array from piped binary data.</p>
-<h2 id="installation-4"><a class="header" href="#installation-4">Installation</a></h2>
-<p><code>zarrs_binary2zarr</code> is installed with the <code>binary2zarr</code> feature of <code>zarrs_tools</code></p>
-<pre><code>cargo install --features=binary2zarr zarrs_tools
+<h2 id="installation-6"><a class="header" href="#installation-6">Installation</a></h2>
+<p><code>zarrs_binary2zarr</code> is installed with the <code>binary2zarr</code> feature of <code>zarrs_tools</code>.</p>
+<h3 id="prebuilt-binaries-5"><a class="header" href="#prebuilt-binaries-5">Prebuilt Binaries</a></h3>
+<pre><code class="language-shell"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
+cargo binstall zarrs_tools
+</code></pre>
+<h3 id="from-source-5"><a class="header" href="#from-source-5">From Source</a></h3>
+<pre><code class="language-shell">cargo install --features=binary2zarr zarrs_tools
 </code></pre>
 <h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
 <p><code>chameleon_1024x1024x1080.uint16</code> is an uncompressed binary 3D image split into multiple files with</p>
@@ -3012,10 +3500,111 @@ chameleon_1024x1024x1080.zarr
 <h1 id="zarrs_ncvar2zarr"><a class="header" href="#zarrs_ncvar2zarr">zarrs_ncvar2zarr</a></h1>
 <p>Convert a NetCDF variable to a Zarr v3 array.
 Multi-file variables are supported.</p>
-<h2 id="installation-5"><a class="header" href="#installation-5">Installation</a></h2>
-<p><code>zarrs_ncvar2zarr</code> is installed with the <code>ncvar2zarr</code> feature of <code>zarrs_tools</code></p>
-<pre><code>cargo install --features=ncvar2zarr zarrs_tools
+<h2 id="installation-7"><a class="header" href="#installation-7">Installation</a></h2>
+<p><code>zarrs_ncvar2zarr</code> is installed with the <code>ncvar2zarr</code> feature of <code>zarrs_tools</code>.</p>
+<h3 id="prebuilt-binaries-6"><a class="header" href="#prebuilt-binaries-6">Prebuilt Binaries</a></h3>
+<pre><code class="language-shell"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
+cargo binstall zarrs_tools
 </code></pre>
+<h3 id="from-source-6"><a class="header" href="#from-source-6">From Source</a></h3>
+<pre><code class="language-shell">cargo install --features=ncvar2zarr zarrs_tools
+</code></pre>
+<h2 id="usage-5"><a class="header" href="#usage-5">Usage</a></h2>
+<details>
+<summary>zarrs_ncvar2zarr --help</summary>
+<pre><code class="language-text">Convert a netCDF variable to a Zarr V3 array
+
+Usage: zarrs_ncvar2zarr [OPTIONS] --fill-value &lt;FILL_VALUE&gt; --chunk-shape &lt;CHUNK_SHAPE&gt; &lt;INPUT&gt; &lt;VARIABLE&gt; &lt;OUT&gt;
+
+Arguments:
+  &lt;INPUT&gt;
+          The path to a netCDF file or a directory of netcdf files
+
+  &lt;VARIABLE&gt;
+          The name of the netCDF variable
+
+  &lt;OUT&gt;
+          The output directory for the zarr array
+
+Options:
+  -f, --fill-value &lt;FILL_VALUE&gt;
+          Fill value. See https://zarr-specs.readthedocs.io/en/latest/v3/core/v3.0.html#fill-value
+          
+          The fill value must be compatible with the data type.
+          
+          Examples:
+            int/uint: 0 100 -100
+            float: 0.0 "NaN" "Infinity" "-Infinity"
+            r*: "[0, 255]"
+
+      --separator &lt;SEPARATOR&gt;
+          The chunk key encoding separator. Either . or /
+          
+          [default: /]
+
+  -c, --chunk-shape &lt;CHUNK_SHAPE&gt;
+          Chunk shape. A comma separated list of the chunk size along each array dimension.
+          
+          If any dimension has size zero, it will be set to match the array shape.
+
+  -s, --shard-shape &lt;SHARD_SHAPE&gt;
+          Shard shape (optional). A comma separated list of the shard size along each array dimension.
+          
+          If specified, the array is encoded using the sharding codec.
+          If any dimension has size zero, it will be set to match the array shape.
+
+      --array-to-array-codecs &lt;ARRAY_TO_ARRAY_CODECS&gt;
+          Array to array codecs (optional).
+          
+          JSON holding an array of array to array codec metadata.
+          
+          Examples:
+            '[ { "name": "transpose", "configuration": { "order": [0, 2, 1] } } ]'
+            '[ { "name": "bitround", "configuration": { "keepbits": 9 } } ]'
+
+      --array-to-bytes-codec &lt;ARRAY_TO_BYTES_CODEC&gt;
+          Array to bytes codec (optional).
+          
+          JSON holding array to bytes codec metadata.
+          If unspecified, this defaults to the `bytes` codec.
+          
+          The sharding codec can be used by setting `shard_shape`, but this can also be done explicitly here.
+          
+          Examples:
+            '{ "name": "bytes", "configuration": { "endian": "little" } }'
+            '{ "name": "pcodec", "configuration": { "level": 12 } }'
+            '{ "name": "zfp", "configuration": { "mode": "fixedprecision", "precision": 19 } }'
+
+      --bytes-to-bytes-codecs &lt;BYTES_TO_BYTES_CODECS&gt;
+          Bytes to bytes codecs (optional).
+          
+          JSON holding an array of bytes to bytes codec configurations.
+          
+          Examples:
+            '[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]'
+            '[ { "name": "bz2", "configuration": { "level": 9 } } ]'
+            '[ { "name": "crc32c" ]'
+            '[ { "name": "gzip", "configuration": { "level": 9 } } ]'
+            '[ { "name": "zstd", "configuration": { "level": 22, "checksum": false } } ]'
+
+      --attributes &lt;ATTRIBUTES&gt;
+          Attributes (optional).
+          
+          JSON holding array attributes.
+
+      --concurrent-chunks &lt;CONCURRENT_CHUNKS&gt;
+          Number of concurrent chunks
+
+      --memory-test
+          Write to memory
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+</code></pre>
+</details>
 <h2 id="example-3"><a class="header" href="#example-3">Example</a></h2>
 <p><code>tomoLoRes_nc</code> is a directory of netCDF files, each containing a "tomo" 3D variable, which has been split along dimension 0</p>
 <ul>

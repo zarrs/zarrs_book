@@ -12,7 +12,9 @@ use zarrs::{
     node::{Node, NodeMetadata},
 };
 
-/// Get information about a Zarr V3 array as JSON.
+/// Get information about a Zarr array or group.
+///
+/// Outputs are JSON encoded.
 #[derive(Parser)]
 #[command(author, version=zarrs_tools::ZARRS_TOOLS_VERSION_WITH_ZARRS)]
 struct Cli {
@@ -23,10 +25,7 @@ struct Cli {
     #[arg(long, default_value_t = current_num_threads())]
     chunk_limit: usize,
 
-    #[arg(long, default_value_t = false)]
-    time: bool,
-
-    /// Path to zarr input array.
+    /// Path to the Zarr input array or group.
     path: std::path::PathBuf,
 
     #[command(subcommand)]
@@ -42,23 +41,23 @@ struct HistogramParams {
 
 #[derive(Subcommand, Debug)]
 enum InfoCommand {
-    /// The array/group metadata.
+    /// Get the array/group metadata.
     Metadata,
-    /// The array/group metadata (interpreted as V3).
+    /// Get the array/group metadata (interpreted as V3).
     MetadataV3,
-    /// The array/group attributes.
+    /// Get the array/group attributes.
     Attributes,
-    /// The array shape.
+    /// Get the array shape.
     Shape,
-    /// The array data type.
+    /// Get the array data type.
     DataType,
-    /// The array fill value.
+    /// Get the array fill value.
     FillValue,
-    /// The array dimension names.
+    /// Get the array dimension names.
     DimensionNames,
-    /// The array range.
+    /// Get the array data range.
     Range,
-    /// The array histogram.
+    /// Get the array data histogram.
     Histogram(HistogramParams),
 }
 
@@ -86,8 +85,6 @@ fn array_metadata_options_v3() -> ArrayMetadataOptions {
 
 fn run() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
-
-    let start = std::time::Instant::now();
 
     let storage = Arc::new(FilesystemStore::new(&cli.path)?);
 
@@ -200,11 +197,6 @@ fn run() -> Result<(), Box<dyn Error>> {
                 );
             }
         }
-    }
-
-    if cli.time {
-        let duration_s = start.elapsed().as_secs_f32();
-        eprintln!("Completed in {duration_s:.2}s");
     }
 
     Ok(())

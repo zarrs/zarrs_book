@@ -10,9 +10,9 @@ use half::{bf16, f16};
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use itertools::Itertools;
 use num_traits::AsPrimitive;
-use ome_zarr_metadata::v0_5_dev::{
-    Axis, AxisUnit, CoordinateTransform, CoordinateTransformScale, CoordinateTransformTranslation,
-    MultiscaleImageDataset, MultiscaleImageMetadata,
+use ome_zarr_metadata::v0_5::{
+    Axis, AxisType, AxisUnit, CoordinateTransform, CoordinateTransformScale,
+    CoordinateTransformTranslation, MultiscaleImageDataset, MultiscaleImageMetadata,
 };
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use zarrs::{
@@ -46,26 +46,20 @@ enum OutputExists {
 #[allow(non_camel_case_types)]
 #[derive(clap::ValueEnum, Debug, Clone)]
 enum OMEZarrVersion {
-    /// 0.5-dev (Zarr V3 version of Editor's Draft 12 June 2024).
-    ///
-    /// Supported by Neuroglancer since v2.37.
-    #[value(name = "0.5-dev")]
-    V0_5_dev,
-    /// 0.5-dev1 (Identical to 0.5-dev aside from the "version").
-    #[value(name = "0.5-dev1")]
-    V0_5_dev1,
+    /// https://ngff.openmicroscopy.org/0.5/
+    #[value(name = "0.5")]
+    V0_5,
 }
 
 impl std::fmt::Display for OMEZarrVersion {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            OMEZarrVersion::V0_5_dev => write!(f, "0.5-dev"),
-            OMEZarrVersion::V0_5_dev1 => write!(f, "0.5-dev1"),
+            OMEZarrVersion::V0_5 => write!(f, "0.5"),
         }
     }
 }
 
-/// Convert a Zarr V3 array to OME-Zarr (0.5-dev).
+/// Convert a Zarr array to an OME-Zarr multiscales hierarchy.
 #[derive(Parser, Debug)]
 #[command(author, version=zarrs_tools::ZARRS_TOOLS_VERSION_WITH_ZARRS)]
 struct Cli {
@@ -75,10 +69,10 @@ struct Cli {
     output: PathBuf,
 
     // The OME-Zarr version.
-    #[arg(long, default_value_t = OMEZarrVersion::V0_5_dev)]
-    version: OMEZarrVersion,
+    #[arg(long, default_value_t = OMEZarrVersion::V0_5)]
+    ome_zarr_version: OMEZarrVersion,
 
-    /// The downsample factor.
+    /// The downsample factor per axis, comma separated.
     ///
     /// Defaults to 2 on each axis.
     #[arg(value_delimiter = ',')]
@@ -88,11 +82,13 @@ struct Cli {
     #[arg(long, default_value_t = 10)]
     max_levels: usize,
 
-    /// Physical size (per axis).
+    /// Physical size per axis, comma separated.
     #[arg(long, value_delimiter = ',')]
     physical_size: Option<Vec<f32>>,
 
-    /// Physical units (per axis).
+    /// Physical units per axis, comma separated.
+    ///
+    /// Set to "channel" for a channel axis.
     #[arg(long, value_delimiter = ',')]
     physical_units: Option<Vec<String>>,
 
@@ -100,13 +96,28 @@ struct Cli {
     #[arg(long)]
     name: Option<String>,
 
-    /// Disable gaussian smoothing of continuous data.
-    #[arg(long)]
-    no_gaussian: bool,
-
-    /// Do majority downsampling and do not apply gaussian smoothing.
+    /// Set to true for discrete data.
+    ///
+    /// Performs majority downsampling instead of creating a Gaussian image pyramid or mean downsampling.
     #[arg(long)]
     discrete: bool,
+
+    /// The Gaussian "sigma" to apply when creating a Gaussian image pyramid per axis, comma separated.
+    ///
+    /// This is typically set to 0.5 times the downsample factor for each axis.
+    /// If omitted, then mean downsampling is applied.
+    ///
+    /// Ignored for discrete data.
+    #[arg(long, value_delimiter = ',')]
+    gaussian_sigma: Option<Vec<f32>>,
+
+    /// The Gaussian kernel half size per axis, comma separated.
+    ///
+    /// If omitted, defaults to ceil(3 * sigma).
+    ///
+    /// Ignored for discrete data or if --gaussian-sigma is not set.
+    #[arg(long, value_delimiter = ',')]
+    gaussian_kernel_half_size: Option<Vec<u64>>,
 
     /// Behaviour if the output exists.
     #[arg(long)]
@@ -377,26 +388,63 @@ fn run() -> Result<(), Box<dyn Error>> {
         .physical_units
         .map(|physical_units| physical_units.into_iter().map(to_unit).collect_vec())
         .unwrap_or_else(|| vec![None; array0.dimensionality()]);
+
+    let units_to_axis = |name: String, unit: Option<AxisUnit>| {
+        if let Some(unit) = unit {
+            match unit {
+                AxisUnit::Space(unit) => Axis {
+                    name,
+                    r#type: Some(AxisType::Space),
+                    unit: Some(AxisUnit::Space(unit)),
+                },
+                AxisUnit::Time(unit) => Axis {
+                    name,
+                    r#type: Some(AxisType::Time),
+                    unit: Some(AxisUnit::Time(unit)),
+                },
+                AxisUnit::Custom(unit) => {
+                    if unit == "channel" {
+                        Axis {
+                            name,
+                            r#type: Some(AxisType::Channel),
+                            unit: None,
+                        }
+                    } else {
+                        Axis {
+                            name,
+                            r#type: None,
+                            unit: Some(AxisUnit::Custom(unit)),
+                        }
+                    }
+                }
+                _ => unimplemented!("Unsupported axis unit"),
+            }
+        } else {
+            Axis {
+                name,
+                r#type: None,
+                unit: None,
+            }
+        }
+    };
+
     if let Some(dimension_names) = array0.dimension_names() {
         for (i, (dimension_name, unit)) in
             std::iter::zip(dimension_names.iter(), physical_units).enumerate()
         {
-            axes.push(Axis {
-                name: dimension_name
+            let axis = units_to_axis(
+                dimension_name
                     .as_str()
                     .map(|s| s.to_string())
                     .unwrap_or_else(|| i.to_string()),
-                r#type: Some(ome_zarr_metadata::v0_5_dev::AxisType::Space),
                 unit,
-            })
+            );
+            axes.push(axis)
         }
     } else {
         for (i, unit) in physical_units.into_iter().enumerate() {
-            axes.push(Axis {
-                name: i.to_string(),
-                r#type: Some(ome_zarr_metadata::v0_5_dev::AxisType::Space),
-                unit,
-            })
+            let axis = units_to_axis(i.to_string(), unit);
+            axes.push(axis)
         }
     }
 
@@ -419,7 +467,7 @@ fn run() -> Result<(), Box<dyn Error>> {
 
     let downsample_type = if cli.discrete {
         "mode"
-    } else if cli.no_gaussian {
+    } else if cli.gaussian_sigma.is_none() {
         "average"
     } else {
         "gaussian"
@@ -443,14 +491,25 @@ fn run() -> Result<(), Box<dyn Error>> {
     let downsample_factor: Vec<u64> = cli
         .downsample_factor
         .unwrap_or_else(|| vec![2; array0.dimensionality()]);
-    let sigma: Vec<f32> = downsample_factor
-        .iter()
-        .map(|downsample_factor| 2.0 * *downsample_factor as f32 / 6.0)
-        .collect_vec();
-    let kernel_half_size = sigma
-        .iter()
-        .map(|sigma| (sigma * 4.0).ceil() as u64)
-        .collect_vec();
+    let gaussian_filter = if let Some(gaussian_sigma) = cli.gaussian_sigma {
+        let kernel_half_size = if let Some(kernel_half_size) = cli.gaussian_kernel_half_size {
+            kernel_half_size
+        } else {
+            gaussian_sigma
+                .iter()
+                .map(|sigma| (sigma * 3.0).ceil() as u64)
+                .collect_vec()
+        };
+        Some(Gaussian::new(
+            gaussian_sigma.clone(),
+            kernel_half_size.clone(),
+            None,
+        ))
+    } else {
+        None
+    };
+
+    let downsample_filter = Downsample::new(downsample_factor.clone(), cli.discrete, None);
     // println!("sigma:{sigma} kernel_half_size:{kernel_half_size}");
 
     for i in 1..=cli.max_levels {
@@ -465,8 +524,6 @@ fn run() -> Result<(), Box<dyn Error>> {
         let array_input = Array::open(store.into(), &format!("/{}", i - 1))?;
 
         // Filters
-        let gaussian_filter = Gaussian::new(sigma.clone(), kernel_half_size.clone(), None);
-        let downsample_filter = Downsample::new(downsample_factor.clone(), cli.discrete, None);
 
         // Setup reencoding (this is a bit hacky)
         let chunk_representation =
@@ -539,9 +596,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             let downsample_memory =
                 downsample_filter.memory_per_chunk(&output_chunk /* unused */, &output_chunk);
             let memory_per_chunk = downsample_memory
-                + if cli.no_gaussian {
-                    0
-                } else {
+                + if let Some(gaussian_filter) = &gaussian_filter {
                     let downsample_input_subset = downsample_filter.input_subset(
                         array_input.shape(),
                         &ArraySubset::new_with_shape(output_chunk.shape_u64()),
@@ -556,6 +611,8 @@ fn run() -> Result<(), Box<dyn Error>> {
                         array_input.fill_value().clone(),
                     )?;
                     gaussian_filter.memory_per_chunk(&downsample_input, &downsample_input)
+                } else {
+                    0
                 };
             // let system = sysinfo::System::new_with_specifics(
             //     sysinfo::RefreshKind::new()
@@ -591,21 +648,21 @@ fn run() -> Result<(), Box<dyn Error>> {
                                 &downsample_filter,
                                 &progress,
                             )?
-                        } else if cli.no_gaussian {
-                            apply_chunk_continuous::<$t>(
-                                &array_input,
-                                &array_output,
-                                &chunk_indices,
-                                &downsample_filter,
-                                &progress,
-                            )?
-                        } else {
+                        } else if let Some(gaussian_filter) = &gaussian_filter {
                             apply_chunk_continuous_gaussian::<$t>(
                                 &array_input,
                                 &array_output,
                                 &chunk_indices,
                                 &downsample_filter,
                                 &gaussian_filter,
+                                &progress,
+                            )?
+                        } else {
+                            apply_chunk_continuous::<$t>(
+                                &array_input,
+                                &array_output,
+                                &chunk_indices,
+                                &downsample_filter,
                                 &progress,
                             )?
                         }
@@ -613,21 +670,21 @@ fn run() -> Result<(), Box<dyn Error>> {
                 }
                 macro_rules! continuous {
                     ( $t:ty ) => {{
-                        if cli.no_gaussian {
-                            apply_chunk_continuous::<$t>(
-                                &array_input,
-                                &array_output,
-                                &chunk_indices,
-                                &downsample_filter,
-                                &progress,
-                            )?
-                        } else {
+                        if let Some(gaussian_filter) = &gaussian_filter {
                             apply_chunk_continuous_gaussian::<$t>(
                                 &array_input,
                                 &array_output,
                                 &chunk_indices,
                                 &downsample_filter,
                                 &gaussian_filter,
+                                &progress,
+                            )?
+                        } else {
+                            apply_chunk_continuous::<$t>(
+                                &array_input,
+                                &array_output,
+                                &chunk_indices,
+                                &downsample_filter,
                                 &progress,
                             )?
                         }
@@ -685,25 +742,9 @@ fn run() -> Result<(), Box<dyn Error>> {
         }
     }
 
-    match cli.version {
-        OMEZarrVersion::V0_5_dev => {
-            let multiscales = [ome_zarr_metadata::v0_5_dev::MultiscaleImage {
-                version: Default::default(),
-                name: cli.name,
-                axes,
-                datasets,
-                coordinate_transformations: base_transform,
-                r#type: Some(downsample_type),
-                metadata: Some(multiscales_metadata),
-            }];
-            group.attributes_mut().insert(
-                "multiscales".to_string(),
-                serde_json::to_value(multiscales).unwrap(),
-            );
-        }
-        OMEZarrVersion::V0_5_dev1 => {
-            let multiscales = [ome_zarr_metadata::v0_5_dev1::MultiscaleImage {
-                version: Default::default(),
+    match cli.ome_zarr_version {
+        OMEZarrVersion::V0_5 => {
+            let multiscales = [ome_zarr_metadata::v0_5::MultiscaleImage {
                 name: cli.name,
                 axes,
                 datasets,
