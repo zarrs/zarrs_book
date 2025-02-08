@@ -26,4 +26,3 @@
   - [zarrs_validate: validate array equivalence](zarrs_tools/docs/zarrs_validate.md)
   - [zarrs_info: get array/group information](zarrs_tools/docs/zarrs_info.md)
   - [zarrs_binary2zarr: convert piped binary data to Zarr](zarrs_tools/docs/zarrs_binary2zarr.md)
-  - [zarrs_ncvar2zarr: convert NetCDF variables to Zarr](zarrs_tools/docs/zarrs_ncvar2zarr.md)
