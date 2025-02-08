@@ -1,5 +1,9 @@
 # Converting Zarr V2 to V3
 
+## CLI tool
+
+`zarrs_reencode` is a CLI tool that supports Zarr V2 to V3 conversion. See the [zarrs_reencode](./zarrs_tools/docs/zarrs_reencode.md) section.
+
 ## Changing the Internal Representation
 When an array or group is initialised, it internally holds metadata in the Zarr version it was created with.
 
