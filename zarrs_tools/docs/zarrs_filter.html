@@ -243,7 +243,7 @@
 <li><strong>clamp</strong>:               Clamp values between a minimum and maximum.</li>
 <li><strong>equal</strong>:               Return a binary image where the input is equal to some value.</li>
 <li><strong>downsample</strong>:          Downsample given a stride.</li>
-<li><strong>gradient-magnitude</strong>:  Compute the gradient magnitude (sobel).</li>
+<li><strong>gradient-magnitude</strong>:  Compute the gradient magnitude.</li>
 <li><strong>gaussian</strong>:            Apply a Gaussian kernel.</li>
 <li><strong>summed area table</strong>:   Compute the summed area table.</li>
 <li><strong>guided filter</strong>:       Apply a guided filter (edge-preserving noise filter).</li>
@@ -251,11 +251,11 @@
 <h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
 <p><code>zarrs_filter</code> is installed with the <code>filter</code> feature of <code>zarrs_tools</code>.</p>
 <h3 id="prebuilt-binaries"><a class="header" href="#prebuilt-binaries">Prebuilt Binaries</a></h3>
-<pre><code class="language-shell"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
+<pre><code class="language-bash"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
 cargo binstall zarrs_tools
 </code></pre>
 <h3 id="from-source"><a class="header" href="#from-source">From Source</a></h3>
-<pre><code class="language-shell">cargo install --features=filter zarrs_tools
+<pre><code class="language-bash">cargo install --features=filter zarrs_tools
 </code></pre>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <details>
@@ -271,7 +271,7 @@ Commands:
   clamp               Clamp values between a minimum and maximum
   equal               Return a binary image where the input is equal to some value
   downsample          Downsample an image given a stride
-  gradient-magnitude  Compute the gradient magnitude (sobel)
+  gradient-magnitude  Compute the gradient magnitude
   gaussian            Apply a Gaussian kernel
   summed-area-table   Compute a summed area table (integral image)
   guided-filter       Apply a guided filter (edge-preserving noise filter)

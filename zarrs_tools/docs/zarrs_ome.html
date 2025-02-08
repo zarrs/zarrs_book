@@ -227,14 +227,14 @@
 
 </style>
 <h1 id="zarrs_ome"><a class="header" href="#zarrs_ome">zarrs_ome</a></h1>
-<p>Convert a Zarr array to an <a href="https://ngff.openmicroscopy.org/0.5/index.html">OME-Zarr</a> multiscales hierarchy.</p>
+<p>Convert a Zarr array to an <a href="https://ngff.openmicroscopy.org/0.5/index.html">OME-Zarr</a> 0.5 multiscales hierarchy.</p>
 <div class="mdbook-alerts mdbook-alerts-warning">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
   warning
 </p>
-<p><code>zarrs_ome</code> is highly experimental and has had limited production testing.</p>
-<p>Conformance with the OME-Zarr 0.5-dev specification is not guaranteed and input validation is currently limited.</p>
+<p>Conformance with the OME-Zarr 0.5 specification is not guaranteed, and input validation is limited.
+For example, it is possible to create multiscale arrays with nonconformant axis ordering.</p>
 </div>
 <p><code>zarrs_ome</code> creates a multi-resolution Zarr V3 array through various methods:</p>
 <ul>
@@ -248,11 +248,11 @@ The array can be reencoded when output to OME-Zarr.</p>
 <h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
 <p><code>zarrs_ome</code> is installed with the <code>ome</code> feature of <code>zarrs_tools</code>.</p>
 <h3 id="prebuilt-binaries"><a class="header" href="#prebuilt-binaries">Prebuilt Binaries</a></h3>
-<pre><code class="language-shell"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
+<pre><code class="language-bash"># Requires cargo-binstall https://github.com/cargo-bins/cargo-binstall
 cargo binstall zarrs_tools
 </code></pre>
 <h3 id="from-source"><a class="header" href="#from-source">From Source</a></h3>
-<pre><code class="language-shell">cargo install --features=ome zarrs_tools
+<pre><code class="language-bash">cargo install --features=ome zarrs_tools
 </code></pre>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <details>
