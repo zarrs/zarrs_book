@@ -147,23 +147,9 @@ let store: AsyncReadableStorage =
 ### Icechunk
 
 [`icechunk`](https://crates.io/crates/icechunk) is a transactional storage engine for Zarr designed for use on cloud object storage.
+It enables `git`-like functionality for array data.
 
-```rust
-// Create an icechunk store
-let storage = Arc::new(icechunk::ObjectStorage::new_in_memory_store(None));
-let icechunk_store = icechunk::Store::new_from_storage(storage).await?;
-let store =
-    Arc::new(zarrs_icechunk::AsyncIcechunkStore::new(icechunk_store));
-
-// Do some array/metadata manipulation with zarrs, then commit a snapshot
-let snapshot0 = store.commit("Initial commit").await?;
-
-// Do some more array/metadata manipulation, then commit another snapshot
-let snapshot1 = store.commit("Update data").await?;
-
-// Checkout the first snapshot
-store.checkout(icechunk::zarr::VersionInfo::SnapshotId(snapshot0)).await?;
-```
+See an up-to-date example at <https://github.com/LDeakin/zarrs_icechunk>.
 
 ## Storage Adapters
 
