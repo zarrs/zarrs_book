@@ -146,6 +146,12 @@ let store: AsyncReadableStorage =
 
 ### Icechunk
 
+[![zarrs_icechunk_repo]](https://github.com/LDeakin/zarrs_icechunk) [![zarrs_icechunk_ver]](https://crates.io/crates/zarrs_icechunk) [![zarrs_icechunk_doc]](https://docs.rs/zarrs_icechunk)
+
+[zarrs_icechunk_repo]: https://img.shields.io/badge/LDeakin/zarrs/zarrs__icechunk-GitHub-blue?logo=github
+[zarrs_icechunk_ver]: https://img.shields.io/crates/v/zarrs_icechunk
+[zarrs_icechunk_doc]: https://docs.rs/zarrs_icechunk/badge.svg
+
 [`icechunk`](https://crates.io/crates/icechunk) is a transactional storage engine for Zarr designed for use on cloud object storage.
 It enables `git`-like functionality for array data.
 
@@ -156,6 +162,12 @@ See an up-to-date example at <https://github.com/LDeakin/zarrs_icechunk>.
 Storage adapters can be layered on top of stores to change their functionality.
 
 ### Zip
+
+[![zarrs_zip_repo]](https://github.com/LDeakin/zarrs/tree/main/zarrs_zip) [![zarrs_zip_ver]](https://crates.io/crates/zarrs_zip) [![zarrs_zip_doc]](https://docs.rs/zarrs_zip)
+
+[zarrs_zip_repo]: https://img.shields.io/badge/LDeakin/zarrs/zarrs__zip-GitHub-blue?logo=github
+[zarrs_zip_ver]: https://img.shields.io/crates/v/zarrs_zip
+[zarrs_zip_doc]: https://docs.rs/zarrs_zip/badge.svg
 
 A storage adapter for zip files.
 
