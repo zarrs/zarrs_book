@@ -169,11 +169,25 @@ store.checkout(icechunk::zarr::VersionInfo::SnapshotId(snapshot0)).await?;
 
 Storage adapters can be layered on top of stores to change their functionality.
 
-The below storage adapters are all available in the `zarrs::storage` submodule (via the [`zarrs_storage`](https://docs.rs/zarrs_storage) crate).
+### Zip
+
+A storage adapter for zip files.
+
+```rust
+use zarrs_storage::StoreKey;
+use zarrs_filesystem::FilesystemStore;
+use zarrs_zip::ZipStorageAdapter;
+
+let fs_root = PathBuf::from("/path/to/a/directory");
+let fs_store = Arc::new(FilesystemStore::new(&fs_root)?);
+let zip_key = StoreKey::new("zarr.zip")?;
+let zip_store = Arc::new(ZipStorageAdapter::new(fs_store, zip_key)?);
+// or ZipStorageAdapter::new_with_path
+```
 
 ### Async to Sync
 
-Asynchronous stores can be used in a synchronous context with the [`AsyncToSyncStorageAdapter`](https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/async_to_sync/struct.AsyncToSyncStorageAdapter.html).
+Asynchronous stores can be used in a synchronous context with the [`zarrs::storage::AsyncToSyncStorageAdapter`](https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/async_to_sync/struct.AsyncToSyncStorageAdapter.html).
 
 The `AsyncToSyncBlockOn` trait must be implemented for a runtime or runtime handle in order to block on futures.
 See the below `tokio` example:
@@ -209,7 +223,7 @@ let store: ReadableStorage =
 
 ### Usage Log
 
-The [`UsageLogStorageAdapter`](https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/usage_log/struct.UsageLogStorageAdapter.html) logs storage method calls.
+The [`zarrs::storage::UsageLogStorageAdapter`](https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/usage_log/struct.UsageLogStorageAdapter.html) logs storage method calls.
 
 It is intended to aid in debugging and optimising performance by revealing storage access patterns.
 
@@ -227,7 +241,7 @@ let store = Arc::new(UsageLogStorageAdapter::new(store, log_writer, || {
 
 ### Performance Metrics
 
-The [`PerformanceMetricsStorageAdapter`](https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/performance_metrics/struct.PerformanceMetricsStorageAdapter.html) accumulates metrics, such as bytes read and written.
+The [`zarrs::storage::PerformanceMetricsStorageAdapter`](https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/performance_metrics/struct.PerformanceMetricsStorageAdapter.html) accumulates metrics, such as bytes read and written.
 
 It is intended to aid in testing by allowing the application to validate that metrics (e.g., bytes read/written, total read/write operations) match expected values for specific operations.
 
