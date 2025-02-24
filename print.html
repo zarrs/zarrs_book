@@ -615,29 +615,29 @@ let store: AsyncReadableStorage =
 <p>Some <code>opendal</code> stores can also be used in a synchronous context with <a href="https://docs.rs/zarrs_opendal/latest/zarrs_opendal/struct.OpendalStore.html"><code>zarrs_object_store::OpendalStore</code></a>, which wraps <a href="https://docs.rs/opendal/0.50.2/opendal/struct.BlockingOperator.html"><code>opendal::BlockingOperator</code></a>.</p>
 </div>
 <h3 id="icechunk"><a class="header" href="#icechunk">Icechunk</a></h3>
-<p><a href="https://crates.io/crates/icechunk"><code>icechunk</code></a> is a transactional storage engine for Zarr designed for use on cloud object storage.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>// Create an icechunk store
-let storage = Arc::new(icechunk::ObjectStorage::new_in_memory_store(None));
-let icechunk_store = icechunk::Store::new_from_storage(storage).await?;
-let store =
-    Arc::new(zarrs_icechunk::AsyncIcechunkStore::new(icechunk_store));
-
-// Do some array/metadata manipulation with zarrs, then commit a snapshot
-let snapshot0 = store.commit("Initial commit").await?;
-
-// Do some more array/metadata manipulation, then commit another snapshot
-let snapshot1 = store.commit("Update data").await?;
-
-// Checkout the first snapshot
-store.checkout(icechunk::zarr::VersionInfo::SnapshotId(snapshot0)).await?;
-<span class="boring">}</span></code></pre></pre>
+<p><a href="https://github.com/LDeakin/zarrs_icechunk"><img src="https://img.shields.io/badge/LDeakin/zarrs/zarrs__icechunk-GitHub-blue?logo=github" alt="zarrs_icechunk_repo" /></a> <a href="https://crates.io/crates/zarrs_icechunk"><img src="https://img.shields.io/crates/v/zarrs_icechunk" alt="zarrs_icechunk_ver" /></a> <a href="https://docs.rs/zarrs_icechunk"><img src="https://docs.rs/zarrs_icechunk/badge.svg" alt="zarrs_icechunk_doc" /></a></p>
+<p><a href="https://crates.io/crates/icechunk"><code>icechunk</code></a> is a transactional storage engine for Zarr designed for use on cloud object storage.
+It enables <code>git</code>-like functionality for array data.</p>
+<p>See an up-to-date example at <a href="https://github.com/LDeakin/zarrs_icechunk">https://github.com/LDeakin/zarrs_icechunk</a>.</p>
 <h2 id="storage-adapters"><a class="header" href="#storage-adapters">Storage Adapters</a></h2>
 <p>Storage adapters can be layered on top of stores to change their functionality.</p>
-<p>The below storage adapters are all available in the <code>zarrs::storage</code> submodule (via the <a href="https://docs.rs/zarrs_storage"><code>zarrs_storage</code></a> crate).</p>
+<h3 id="zip"><a class="header" href="#zip">Zip</a></h3>
+<p><a href="https://github.com/LDeakin/zarrs/tree/main/zarrs_zip"><img src="https://img.shields.io/badge/LDeakin/zarrs/zarrs__zip-GitHub-blue?logo=github" alt="zarrs_zip_repo" /></a> <a href="https://crates.io/crates/zarrs_zip"><img src="https://img.shields.io/crates/v/zarrs_zip" alt="zarrs_zip_ver" /></a> <a href="https://docs.rs/zarrs_zip"><img src="https://docs.rs/zarrs_zip/badge.svg" alt="zarrs_zip_doc" /></a></p>
+<p>A storage adapter for zip files.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use zarrs_storage::StoreKey;
+use zarrs_filesystem::FilesystemStore;
+use zarrs_zip::ZipStorageAdapter;
+
+let fs_root = PathBuf::from("/path/to/a/directory");
+let fs_store = Arc::new(FilesystemStore::new(&amp;fs_root)?);
+let zip_key = StoreKey::new("zarr.zip")?;
+let zip_store = Arc::new(ZipStorageAdapter::new(fs_store, zip_key)?);
+// or ZipStorageAdapter::new_with_path
+<span class="boring">}</span></code></pre></pre>
 <h3 id="async-to-sync"><a class="header" href="#async-to-sync">Async to Sync</a></h3>
-<p>Asynchronous stores can be used in a synchronous context with the <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/async_to_sync/struct.AsyncToSyncStorageAdapter.html"><code>AsyncToSyncStorageAdapter</code></a>.</p>
+<p>Asynchronous stores can be used in a synchronous context with the <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/async_to_sync/struct.AsyncToSyncStorageAdapter.html"><code>zarrs::storage::AsyncToSyncStorageAdapter</code></a>.</p>
 <p>The <code>AsyncToSyncBlockOn</code> trait must be implemented for a runtime or runtime handle in order to block on futures.
 See the below <code>tokio</code> example:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -675,7 +675,7 @@ let store: ReadableStorage =
 <p>Many async stores are not runtime-agnostic (i.e. only support <code>tokio</code>).</p>
 </div>
 <h3 id="usage-log"><a class="header" href="#usage-log">Usage Log</a></h3>
-<p>The <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/usage_log/struct.UsageLogStorageAdapter.html"><code>UsageLogStorageAdapter</code></a> logs storage method calls.</p>
+<p>The <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/usage_log/struct.UsageLogStorageAdapter.html"><code>zarrs::storage::UsageLogStorageAdapter</code></a> logs storage method calls.</p>
 <p>It is intended to aid in debugging and optimising performance by revealing storage access patterns.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -690,7 +690,7 @@ let store = Arc::new(UsageLogStorageAdapter::new(store, log_writer, || {
 }));
 <span class="boring">}</span></code></pre></pre>
 <h3 id="performance-metrics"><a class="header" href="#performance-metrics">Performance Metrics</a></h3>
-<p>The <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/performance_metrics/struct.PerformanceMetricsStorageAdapter.html"><code>PerformanceMetricsStorageAdapter</code></a> accumulates metrics, such as bytes read and written.</p>
+<p>The <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/performance_metrics/struct.PerformanceMetricsStorageAdapter.html"><code>zarrs::storage::PerformanceMetricsStorageAdapter</code></a> accumulates metrics, such as bytes read and written.</p>
 <p>It is intended to aid in testing by allowing the application to validate that metrics (e.g., bytes read/written, total read/write operations) match expected values for specific operations.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
