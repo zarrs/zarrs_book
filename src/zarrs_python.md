@@ -6,7 +6,7 @@
 [zarrs_python_doc]: https://img.shields.io/readthedocs/zarrs-python
 [zarrs_python_repo]: https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github
 
-The `zarrs`(https://github.com/ilan-gold/zarrs-python) Python package exposes a high-performance codec pipeline to the [`zarr`](https://github.com/zarr-developers/zarr-python) reference implementation that uses `zarrs` under the hood.
+The [`zarrs-python`](https://github.com/ilan-gold/zarrs-python) Python package exposes a high-performance codec pipeline to the [`zarr`](https://github.com/zarr-developers/zarr-python) reference implementation that uses `zarrs` under the hood.
 There is no need to learn a new API and it is supported by downstream libraries like `dask`.
 
 `zarrs-python` implements the `ZarrsCodecPipeline`.
