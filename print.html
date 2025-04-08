@@ -25,9 +25,9 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="theme/custom.css">
@@ -36,10 +36,11 @@
         <!-- MathJax -->
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -49,8 +50,8 @@
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -64,7 +65,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -77,8 +79,8 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -114,6 +116,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
@@ -1867,6 +1870,448 @@ Global defaults can be changed, see <a href="https://docs.rs/zarrs/latest/zarrs/
 </div>
 <p><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.ArrayMetadataOptions.html"><code>ArrayMetadataOptions</code></a> has similar options for changing the Zarr version of the metadata.
 It also has various other configuration options, see its documentation.</p>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<p>The Zarr v3 specification defines several explicit <strong>extension points</strong>, which are specific components of the Zarr model that can be replaced or augmented with custom implementations:</p>
+<ul>
+<li><strong>Codecs</strong>: Codecs define how chunk data is transformed between its in-memory representation and its stored (bytes) representation.
+Zarr allows chaining multiple codecs, creating sophisticated data transformation pipelines.</li>
+<li><strong>Data types</strong>: The element representation of the array. Array-to-array codecs may change the data type of chunk data on encoding, but this is reversed on decoding.</li>
+<li><strong>Chunk Grids</strong>: Define how the N-dimensional array space is partitioned into chunks. The specification only defines a <code>regular</code> grid, and a <code>rectangular</code> grid is proposed.</li>
+<li><strong>Chunk Key Encoding</strong>: Specifies how the logical coordinates of a chunk are mapped to the string key used for storage (e.g., <code>(0, 1, 0)</code> to <code>c/0/1/0</code>, <code>c.0.1.0</code>, <code>/0/1/0</code>, etc.). The specification defines <code>default</code> and <code>v2</code> encodings.</li>
+<li><strong>Storage Transformers</strong>: These modify the interaction between the logical Zarr hierarchy (groups, arrays, chunks) and the underlying storage system. The specification does not define nay storage transformers.</li>
+<li><strong>Stores</strong> While not strictly an extension point, the ability to interact with different storage backends is a crucial aspect of Zarr's flexibility.
+The <code>zarrs</code> library, like other Zarr implementations, leverages this by providing its own Storage API for reading, writing, and listing data.
+<code>zarrs</code> can work with virtually any storage system – in-memory buffers, local filesystems, object stores (like S3 or GCS), databases, etc.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="codec-extensions"><a class="header" href="#codec-extensions">Codec Extensions</a></h1>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>This page is written against <code>zarrs</code> 0.20, which is unreleased at the time of writing.</p>
+</div>
+<p>Among the most impactful and frequently utilised extension points are <strong>codecs</strong>. At their core, codecs define the transformations applied to array chunk data as it moves between its logical, in-memory representation and its serialized, stored representation as a sequence of bytes.</p>
+<p>Codecs are the workhorses behind essential Zarr features like <strong>compression</strong> (reducing storage size and transfer time) and <strong>filtering</strong> (rearranging or modifying data to improve compression effectiveness). The Zarr v3 specification allows for a <strong>pipeline of codecs</strong> to be defined for each array, where the output of one codec becomes the input for the next during encoding, and the process is reversed during decoding. This composability allows for sophisticated data processing workflows to be embedded directly into the storage layer.</p>
+<h2 id="types-of-codecs"><a class="header" href="#types-of-codecs">Types of Codecs</a></h2>
+<p>The Zarr v3 specification categorizes codecs based on the type of data they operate on and produce:</p>
+<ol>
+<li>
+<p><strong>Array-to-Array (A-&gt;A) Codecs:</strong> These codecs transform an array chunk <em>before</em> it is serialized into bytes. They operate on an in-memory array representation and produce another in-memory array representation. Examples could include codecs that transpose data within a chunk, change the data type (e.g., <code>float32</code> to <code>float16</code>), or apply operations that make an array more amenable to compression.</p>
+</li>
+<li>
+<p><strong>Array-to-Bytes (A-&gt;B) Codecs:</strong> This type of codec handles the crucial step of converting an in-memory array chunk into a sequence of bytes. This typically involves flattening the multidimensional array data and handling endianness conversions if necessary. Every codec pipeline must include at least one <code>A-&gt;B</code> codec.</p>
+</li>
+<li>
+<p><strong>Bytes-to-Bytes (B-&gt;B) Codecs:</strong> These codecs take a sequence of bytes as input and produce a sequence of bytes as output. This is the category where most common compression algorithms (like <code>blosc</code>, <code>zstd</code>, <code>gzip</code>) and byte-level filters (like <code>shuffle</code> for improving compressibility, or checksums) reside. Multiple <code>B-&gt;B</code> codecs can be chained together.</p>
+</li>
+</ol>
+<h2 id="codecs-in-zarrs"><a class="header" href="#codecs-in-zarrs">Codecs in <code>zarrs</code></a></h2>
+<p>The <code>zarrs</code> library mirrors these conceptual types using a set of Rust <strong>traits</strong>. To implement a custom codec, you must implement the following traits depending on the codec type:</p>
+<ul>
+<li><code>A-&gt;A</code>: <code>CodecTraits</code> + <code>ArrayCodecTraits</code> + <code>ArrayToArrayCodecTraits</code></li>
+<li><code>A-&gt;B</code>: <code>CodecTraits</code> + <code>ArrayCodecTraits</code> + <code>ArrayToBytesCodecTraits</code></li>
+<li><code>B-&gt;B</code>: <code>CodecTraits</code> + <code>BytesToBytesCodecTraits</code></li>
+</ul>
+<p>The traits are:</p>
+<ul>
+<li><code>CodecTraits</code>: Defines the codec <code>configuration</code> creation method, the unique <code>zarrs</code> codec <code>identifier</code>, and some hints related to partial decoding.</li>
+<li><code>ArrayCodecTraits</code>: defines the <code>recommended_concurrency</code> and <code>partial_decode_granularity</code>.</li>
+<li><code>ArrayToArrayCodecTraits</code> / <code>ArrayToBytesCodecTraits</code> / <code>BytesToBytesCodecTraits</code>: Defines the codec <code>encode</code> and <code>decode</code> methods (including partial encoding and decoding), as well as methods for querying the encoded representation.</li>
+</ul>
+<p>These traits define the necessary <code>encode</code> and <code>decode</code> methods (complete and partial), methods for inspecting the encoded chunk representation, hints for concurrent processing, and more.</p>
+<p>The best way to learn to implement a new codec is to look at the existing codecs implemented in <code>zarrs</code>.</p>
+<h2 id="example-an-lz4-bytes-to-bytes-codec"><a class="header" href="#example-an-lz4-bytes-to-bytes-codec">Example: An <code>LZ4</code> Bytes-to-Bytes Codec</a></h2>
+<p><code>LZ4</code> is common lossless compression algorithm.
+Let's implement the <code>numcodecs.lz4</code> codec, which is supported by <code>zarr-python</code> 3.0.0+ for Zarr V3 data.</p>
+<h3 id="the-lz4codecconfiguration-struct"><a class="header" href="#the-lz4codecconfiguration-struct">The <code>Lz4CodecConfiguration</code> Struct</a></h3>
+<p>Looking at the <a href="https://numcodecs.readthedocs.io/en/stable/compression/lz4.html">docs for the <code>numcodecs</code> <code>LZ4</code> codec</a>, it has a single <code>"acceleration"</code> parameter.
+The valid range for <code>"accleration"</code> is not documented, but the <code>LZ4</code> library itself will <a href="https://github.com/lz4/lz4/blob/fa1634e2ccd41ac09c087ab65e96bcbbd003fd20/lib/lz4.h#L228-L235">clamp the acceleration between 1 and the maximum supported compression level</a>.
+So, any <code>i32</code> can be permitted here and there is no need follow <a href="https://doc.rust-lang.org/rust-by-example/generics/new_types.html">New Type Idiom</a>.</p>
+<p>The expected form of the codec in array metadata is:</p>
+<pre><code class="language-json">[
+    ...
+    {
+        "name": "numcodecs.lz4",
+        "configuration": {
+            "acceleration": 1
+        }
+    }
+    ...
+]
+</code></pre>
+<p>The configuration can be represented by a simple struct:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// `lz4` codec configuration parameters
+#[derive(Serialize, Deserialize, Clone, Eq, PartialEq, Debug, Display)]
+pub struct Lz4CodecConfiguration {
+    pub acceleration: i32
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Note that codec configurations in <a href="https://docs.rs/zarrs_metadata/latest/zarrs_metadata/"><code>zarrs_metadata</code></a> are versioned so that they can adapt to potential codec specification revisions.</p>
+<p><code>Lz4CodecConfiguration</code> is JSON serialisable, so implement the <code>MetadataConfigurationSerialize</code> trait:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl MetadataConfigurationSerialize for Lz4CodecConfiguration {}
+<span class="boring">}</span></code></pre></pre>
+<p>This trait requires <code>Serialize + DeserializeOwned</code>, and enables any implementing struct to be infallibly converted from a JSON object or anything convertible to a JSON object.
+A codec configuration must not be able to hold unrepresentable JSON state, otherwise such a conversion could panic at runtime.</p>
+<h3 id="the-lz4codec-struct"><a class="header" href="#the-lz4codec-struct">The <code>Lz4Codec</code> Struct</a></h3>
+<p>Now create the codec struct.
+For encoding, the <code>acceleration</code> needs to be known, so this must be a field of the struct:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct Lz4Codec {
+    acceleration: i32
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Next we define two constructors.
+These are not officially required for the codec to be used, but it is common practice in <code>zarrs</code> to include constructors based on the underlying codec parameters as well as a constructor from configuration.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Lz4Codec {
+    #[must_use]
+    pub fn new(acceleration: i32) -&gt; Self {
+        Self { acceleration }
+    }
+
+    #[must_use]
+    pub fn new_with_configuration(
+        configuration: &amp;Lz4CodecConfiguration,
+    ) -&gt; Self {
+        Self { acceleration: configuration.acceleration }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="codectraits"><a class="header" href="#codectraits"><code>CodecTraits</code></a></h3>
+<p>Now we implement the <code>CodecTraits</code>, which are required for every codec.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Unique identifier for the LZ4 codec
+pub const LZ4: &amp;str = "example.lz4";
+
+impl CodecTraits for Lz4Codec {
+    /// Unique identifier for the codec.
+    fn identifier(&amp;self) -&gt; &amp;str {
+        LZ4
+    }
+
+    /// Create the codec configuration.
+    fn configuration_opt(
+        &amp;self,
+        _name: &amp;str,
+        _options: &amp;CodecMetadataOptions,
+    ) -&gt; Option&lt;MetadataConfiguration&gt; {
+        // The into comes from the auto implementation of From&lt;T: MetadataConfigurationSerialize&gt; for MetadataConfiguration
+        Some(Lz4CodecConfiguration::new(self.acceleration).into())
+    }
+
+    /// Indicates if the input to a codecs partial decoder should be cached for optimal performance.
+    /// If true, a cache may be inserted *before* it in a [`CodecChain`] partial decoder.
+    fn partial_decoder_should_cache_input(&amp;self) -&gt; bool {
+        false
+    }
+
+    /// Indicates if a partial decoder decodes all bytes from its input handle and its output should be cached for optimal performance.
+    /// If true, a cache will be inserted at some point *after* it in a [`CodecChain`] partial decoder.
+    fn partial_decoder_decodes_all(&amp;self) -&gt; bool {
+        true
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>A unique identifier is defined for the LZ4 codec, which is chosen as to not conflict with a potential future codec that may be implemented in <code>zarrs</code> itself (likely <code>lz4</code>).
+This is returned by the <code>identifier()</code> method.
+The identifier is used in codec registration, and enables features such as renaming of codecs for serialisation, and supporting multiple codec aliases.</p>
+<p>The <code>configuration_opt</code> method creates the codec configuration.
+Note that this takes a <code>name</code> and <code>options</code> which are typically unneeded.
+However, there are cases where the configuration may be dependent on the codec <code>name</code>, or a runtime option could impact serialisation behaviour.</p>
+<p>While the <code>lz4</code> codec may actually support partial decoding, this needs to be implemented by the wrapper (and it may not be efficient anyway, depending on the access pattern).
+For simplicity in this example, let us indicate that partial decoding is NOT supported and make <code>partial_decoder_decodes_all()</code> return <code>true</code>.
+This ensures that a cache is inserted at the appropriate location in a partial decoder codec chain.</p>
+<h3 id="bytestobytescodectraits"><a class="header" href="#bytestobytescodectraits"><code>BytesToBytesCodecTraits</code></a></h3>
+<p>The <code>BytesToBytesCodecTraits</code> are where the encoding and decoding methods are implemented.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl BytesToBytesCodecTraits for BloscCodec {
+    /// Return a dynamic version of the codec.
+    fn into_dyn(self: Arc&lt;Self&gt;) -&gt; Arc&lt;dyn BytesToBytesCodecTraits&gt; {
+        self as Arc&lt;dyn BytesToBytesCodecTraits&gt;
+    }
+
+    /// Return the maximum internal concurrency supported for the requested decoded representation.
+    fn recommended_concurrency(
+        &amp;self,
+        _decoded_representation: &amp;BytesRepresentation,
+    ) -&gt; Result&lt;RecommendedConcurrency, CodecError&gt; {
+        Ok(RecommendedConcurrency::new_maximum(1))
+    }
+
+    /// Returns the size of the encoded representation given a size of the decoded representation.
+    fn encoded_representation(
+        &amp;self,
+        decoded_representation: &amp;BytesRepresentation,
+    ) -&gt; BytesRepresentation {
+        todo!()
+    }
+
+    fn encode&lt;'a&gt;(
+        &amp;self,
+        decoded_value: RawBytes&lt;'a&gt;,
+        _options: &amp;CodecOptions,
+    ) -&gt; Result&lt;RawBytes&lt;'a&gt;, CodecError&gt; {
+        todo!()
+    }
+
+    fn decode&lt;'a&gt;(
+        &amp;self,
+        encoded_value: RawBytes&lt;'a&gt;,
+        _decoded_representation: &amp;BytesRepresentation,
+        _options: &amp;CodecOptions,
+    ) -&gt; Result&lt;RawBytes&lt;'a&gt;, CodecError&gt; {
+        todo!()
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>In the above example, the encode and decode methods have been left as an exercise to the reader.
+A crate like <a href="https://crates.io/crates/lz4"><code>lz4</code></a> could be used to implement these methods with only a few lines in each method.</p>
+<p>The encoded representation of an <strong>array-to-bytes</strong> or <strong>bytes-to-bytes</strong> filter is a <a href="https://docs.rs/zarrs/latest/zarrs/array/enum.BytesRepresentation.html"><code>BytesRepresentation</code></a>, which is either <code>Fixed</code>, <code>Bounded</code>, or <code>Unbounded</code>.
+Typically compression codecs like <code>lz4</code> have an upper bound on the compressed size (see See <a href="https://github.com/lz4/lz4/blob/fa1634e2ccd41ac09c087ab65e96bcbbd003fd20/lib/lz4.h#L217-L226"><code>LZ4_compressBound</code></a>), so the <code>encoded_representation()</code> should return a <code>BytesRepresentation::BoundedSize</code> (unless the proceeding filter outputs an unbounded size).
+This has been left as an exercise for the reader.</p>
+<h4 id="codec-parallelism"><a class="header" href="#codec-parallelism">Codec Parallelism</a></h4>
+<p>In the above snippet, the <code>recommended_concurrency</code> is set to 1.
+This indicates to higher level <code>zarrs</code> operations that the codec <code>encode</code>/<code>decode</code> operations will only use one thread and that <code>zarrs</code> should use <em>chunk parallelism</em> over <em>codec parallelism</em>.
+For large chunks, it may be preferable to use <em>codec parallelism</em>, and this can be achieved by increasing the recommended concurrency and using multithreading in the <code>encode</code>/<code>decode</code> methods.
+However, the cost of multithreading in external libraries can be expensive, so benchmark this!
+For example, the <code>blosc</code> codec in <code>zarrs</code> activates <em>codec parallelism</em> when the chunk size is greater than <code>4 MB</code>.</p>
+<h4 id="partial-encoding--decoding"><a class="header" href="#partial-encoding--decoding">Partial Encoding / Decoding</a></h4>
+<p>Note that the <code>[async_]partial_decoder</code> and <code>[async_]partial_encoder</code> methods of <code>BytesToBytesCodecTraits</code> are not implemented in the above example, and the default implementations encode/decode the entire chunk.
+Partial encoding is not applicable to the <code>lz4</code> codec, but it <em>could</em> support partial decoding.
+The <code>blosc</code> codec in <code>zarrs</code> is an example of partial decoding.
+The input is always fully decoded (and is cached because <code>partial_decoder_should_cache_input()</code> returns <code>true</code>), but only requested byte ranges are decompressed.</p>
+<h3 id="codec-registration"><a class="header" href="#codec-registration">Codec Registration</a></h3>
+<p><code>zarrs</code> uses <a href="https://crates.io/crates/inventory"><code>inventory</code></a> for compile time registration of codecs.
+Registration involves creating a method that is used to check if the identifier is a match, and a function that actually creates the codec from a configuration.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Register the codec.
+inventory::submit! {
+    CodecPlugin::new(LZ4, is_identifier_lz4, create_codec_lz4)
+}
+
+fn is_identifier_lz4(identifier: &amp;str) -&gt; bool {
+    identifier == LZ4
+}
+
+pub(crate) fn create_codec_lz4(metadata: &amp;MetadataV3) -&gt; Result&lt;Codec, PluginCreateError&gt; {
+    let configuration: Lz4Codec = metadata
+        .to_configuration()
+        .map_err(|_| PluginMetadataInvalidError::new(LZ4, "codec", metadata.clone()))?;
+    let codec = Arc::new(Lz4Codec::new_with_configuration(&amp;configuration)?);
+    Ok(Codec::BytesToBytes(codec))
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="codec-aliasing"><a class="header" href="#codec-aliasing">Codec Aliasing</a></h3>
+<p>By default, the codec <code>name</code> will be the codec <code>identifier()</code>, however that may not be desirable (especially with <code>example.lz4</code>!).</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>assert_eq!(Lz4::new(1).default_name(), "example.lz4");
+<span class="boring">}</span></code></pre></pre>
+<p><code>zarrs</code> includes a mechanism for setting the serialised <code>name</code> of codecs, as well as supported <code>name</code> aliases for decoding.
+By default, <code>zarrs</code> will preserve the alias if an array is rewritten, but this can be changed (see the <code>zarrs</code> global config).</p>
+<p>If the codec is confirmed to be fully compatible with <code>numcodecs.lz4</code>, its default name could be changed with a runtime configuration:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>global_config_mut()
+    .codec_aliases_v3_mut()
+    .default_names
+    .entry(LZ4.into())
+    .and_modify(|entry| {
+        *entry = "numcodecs.lz4".into();
+    });
+assert_eq!(Lz4::new(1).default_name(), "numcodecs.lz4");
+<span class="boring">}</span></code></pre></pre>
+<p>Or the <code>identifier</code> could just be changed to <code>numcodecs.lz4</code>, for example.</p>
+<h3 id="ready-to-test"><a class="header" href="#ready-to-test">Ready to Test</a></h3>
+<p>At this point, the <code>lz4</code> is ready to go and could be tested for compatibility against <code>numcodecs.lz4</code> in <code>zarr-python</code>.</p>
+<p>This codec would be a great candidate for merging into <code>zarrs</code> itself.
+Using the <code>lz4</code> identifier would be recommended in this case and the default name would be set to <code>numcodecs.lz4</code> by default.
+If <code>lz4</code> were ever standardised without a <code>numcodecs.</code> prefix, then the default name could be <code>lz4</code> but an alias would remain for <code>numcodecs.lz4</code>.</p>
+<h2 id="array-to-array-and-array-to-bytes-codecs"><a class="header" href="#array-to-array-and-array-to-bytes-codecs">Array-to-Array and Array-to-Bytes Codecs</a></h2>
+<p>Implementing an <strong>Array-to-Array</strong> or <strong>Array-to-Bytes</strong> codec is similar, but the <code>ArrayCodecTraits</code> and <code>ArraytoArrayCodecTraits</code> or <code>ArrayToBytesCodecTraits</code> must be implemented too.</p>
+<h3 id="arraycodectraits"><a class="header" href="#arraycodectraits"><code>ArrayCodecTraits</code></a></h3>
+<p><a href="https://docs.rs/zarrs/latest/zarrs/array/codec/trait.ArrayCodecTraits.html"><code>ArrayCodecTraits</code></a> has two methods.</p>
+<p><strong><code>recommended_concurrency()</code></strong> (Required)</p>
+<p>This method differs from that of <code>BytesToBytesCodecTraits</code> only in the type of the <code>decoded_representation</code> parameter.
+It takes a <a href="https://docs.rs/zarrs/latest/zarrs/array/type.ChunkRepresentation.html"><code>ChunkRepresentation</code></a> which holds a chunk shape, data type, and fill value.</p>
+<p><strong><code>partial_decode_granularity()</code></strong> (Provided)</p>
+<p>Returns the shape of the smallest subset of a chunk that can be efficiently decoded if the chunk were subdivided into a regular grid.
+For most codecs, this is just the shape of the chunk.
+It is the shape of the "inner chunks" for the sharding codec.
+The default implementation just returns the chunk shape.</p>
+<h3 id="arraytoarraycodectraits"><a class="header" href="#arraytoarraycodectraits"><code>ArrayToArrayCodecTraits</code></a></h3>
+<p>This trait is similar to <code>BytesToBytesCodecTraits</code> except the <code>encode</code> and <code>decode</code> methods input and return <a href="https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html"><code>ArrayBytes</code></a>, which can represent arrays with fixed or variable sized elements.</p>
+<p>Key methods beyond <code>encode</code> and <code>decode</code> are:</p>
+<ul>
+<li><code>encoded_data_type()</code> (required).
+<ul>
+<li>This is where a codec can put an input data type compatibility check and indicate if the data type changes on encoding.</li>
+</ul>
+</li>
+<li><code>encoded_fill_value()</code> (provided) Defaults to the input fill value.</li>
+<li><code>encoded_shape()</code> (provided) Defaults to the input shape.</li>
+<li><code>decoded_shape()</code> (provided) Defaults to the input shape.</li>
+<li><code>encoded_representation()</code> (provided) Creates a <code>ChunkRepresentation</code> from the output of <code>encoded_{data_type,fill_value,shape}()</code></li>
+</ul>
+<p>Default implementations are provided for <code>[async_]partial_{encoder,decoder}</code> which encode/decode the entire chunk.</p>
+<h3 id="arraytobytescodectraits"><a class="header" href="#arraytobytescodectraits"><code>ArrayToBytesCodecTraits</code></a></h3>
+<p>This trait has a required <code>encoded_representation()</code> method that returns a a <code>BytesRepresentation</code> based on <code>ChunkRepresentation</code> parameter.
+The <code>decode()</code> and <code>encode()</code> methods transform between <a href="https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html"><code>ArrayBytes</code></a> and <a href="https://docs.rs/zarrs/latest/zarrs/array/type.RawBytes.html"><code>RawBytes</code></a>.</p>
+<h2 id="custom-data-type-interaction"><a class="header" href="#custom-data-type-interaction">Custom Data Type Interaction</a></h2>
+<p>The next page deals with custom data types, however it is worth highlighting that third party codecs are expected to handle custom data types internally.</p>
+<p>A first party codec may extend <code>DataTypeExtension</code> with a new <code>codec_&lt;CODEC_NAME&gt;</code> method and a new <code>DataTypeExtension&lt;CodecName&gt;</code> trait to enable a codec to be used with custom data types.
+Currently <code>zarrs</code> has data type extension traits for the <code>bytes</code> and <code>packbits</code> codecs.
+All other codecs are either data type agnostic (e.g. <code>transpose</code>, compression codecs, etc.) or operate on a specific set of data types (e.g. <code>zfp</code>).</p>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>If the need arises, <code>DataTypeExtension</code> may be changed in the future to better support interaction between custom data types and custom codecs.</p>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><style>
 .mdbook-alerts {
   padding: 8px 16px;
