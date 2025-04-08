@@ -11,7 +11,7 @@ create-missing = false
 
 [output.html]
 mathjax-support = true
-git-repository-url = "https://github.com/LDeakin/zarrs_book"
+git-repository-url = "https://github.com/zarrs/zarrs_book"
 additional-js = ["mermaid.min.js", "mermaid-init.js", "theme/pagetoc.js"]
 additional-css = ["theme/custom.css", "theme/pagetoc.css"]
 cname = "https://book.zarrs.dev"
