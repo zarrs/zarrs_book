@@ -1,6 +1,6 @@
 # The `zarrs` Book
 
-The source to [The `zarrs` Book](https://ldeakin.github.io/zarrs_book/).
+The source to [The `zarrs` Book](https://book.zarrs.dev/).
 
 ## Licence
 `zarrs_book` is licensed under either of
