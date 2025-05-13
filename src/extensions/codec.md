@@ -5,7 +5,7 @@
 
 Among the most impactful and frequently utilised extension points are **codecs**. At their core, codecs define the transformations applied to array chunk data as it moves between its logical, in-memory representation and its serialized, stored representation as a sequence of bytes.
 
-Codecs are the workhorses behind essential Zarr features like **compression** (reducing storage size and transfer time) and **filtering** (rearranging or modifying data to improve compression effectiveness). The Zarr v3 specification allows for a **pipeline of codecs** to be defined for each array, where the output of one codec becomes the input for the next during encoding, and the process is reversed during decoding. This composability allows for sophisticated data processing workflows to be embedded directly into the storage layer.
+Codecs are the workhorses behind essential Zarr features like **compression** (reducing storage size and transfer time) and **filtering** (rearranging or modifying data to improve compression effectiveness). The Zarr v3 specification allows for a **pipeline of codecs** to be defined for each array, where the output of one codec becomes the input for the next during encoding, and the process is reversed during decoding.
 
 ## Types of Codecs
 
