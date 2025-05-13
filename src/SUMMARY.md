@@ -13,7 +13,7 @@
 - [Converting Zarr V2 to V3](v2_to_v3.md)
 - [Extension Points](extensions.md)
   - [Codecs](./extensions/codec.md)
-  <!-- - [Data Types](./extensions/data_type.md) -->
+  - [Data Types](./extensions/data_type.md)
   <!-- - [Chunk Grids] -->
   <!-- - [Chunk Key Encodings] -->
   <!-- - [Storage Transformers] -->
