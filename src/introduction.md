@@ -27,11 +27,11 @@ There is no need to learn a new API and it is supported by downstream libraries 
 
 ## 🚀 `zarrs` is Fast
 
-The [![zarr_benchmarks](https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github)](https://github.com/LDeakin/zarr_benchmarks) repository includes benchmarks of `zarrs` against other Zarr V3 implementations.
+The [![zarr_benchmarks](https://img.shields.io/badge/zarrs/zarr__benchmarks-GitHub-blue?logo=github)](https://github.com/zarrs/zarr_benchmarks) repository includes benchmarks of `zarrs` against other Zarr V3 implementations.
 Check out the benchmarks below that measure the time to round trip a \\(1024x2048x2048\\) `uint16` array encoded in various ways:
 
 ![benchmark standalone](./zarr_benchmarks/plots/benchmark_roundtrip.svg)
 
 ![benchmark dask](./zarr_benchmarks/plots/benchmark_roundtrip_dask.svg)
 
-More information on these benchmarks can be found in the [![zarr_benchmarks](https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github)](https://github.com/LDeakin/zarr_benchmarks) repository.
+More information on these benchmarks can be found in the [![zarr_benchmarks](https://img.shields.io/badge/zarrs/zarr__benchmarks-GitHub-blue?logo=github)](https://github.com/zarrs/zarr_benchmarks) repository.

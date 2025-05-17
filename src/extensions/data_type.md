@@ -261,17 +261,17 @@ impl DataTypeUint4 {
 
 ## More Examples
 The `zarrs` repository includes multiple custom data type examples:
-- [custom_data_type_uint12.rs](https://github.com/LDeakin/zarrs/blob/main/zarrs/examples/custom_data_type_uint12.rs)
-- [custom_data_type_uint4.rs](https://github.com/LDeakin/zarrs/blob/main/zarrs/examples/custom_data_type_uint4.rs)
-- [custom_data_type_float8_e3m4.rs](https://github.com/LDeakin/zarrs/blob/main/zarrs/examples/custom_data_type_float8_e3m4.rs)
-- [custom_data_type_fixed_size.rs](https://github.com/LDeakin/zarrs/blob/main/zarrs/examples/custom_data_type_fixed_size.rs)
-- [custom_data_type_variable_size.rs](https://github.com/LDeakin/zarrs/blob/main/zarrs/examples/custom_data_type_variable_size.rs)
+- [custom_data_type_uint12.rs](https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_uint12.rs)
+- [custom_data_type_uint4.rs](https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_uint4.rs)
+- [custom_data_type_float8_e3m4.rs](https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_float8_e3m4.rs)
+- [custom_data_type_fixed_size.rs](https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_fixed_size.rs)
+- [custom_data_type_variable_size.rs](https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_variable_size.rs)
 
 ## Contributing New Data Types to `zarrs`
 
 The [`zarr-extensions`] repository is always growing with new Zarr extensions.
 The conformance of `zarrs` to [`zarr-extensions`] is tracked in this issue:
-- <https://github.com/LDeakin/zarrs/issues/191>
+- <https://github.com/zarrs/zarrs/issues/191>
 
 Contributions are welcomed to support additional data types.
 With a little bit of polish, the `uint4` example above could be included in `zarrs` itself (if it isn't already)!

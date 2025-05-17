@@ -59,7 +59,7 @@ array.store_encoded_chunk(&chunks, encoded_chunk_bytes.into())?;
 
 > [!TIP]
 > Currently, the most performant path for uncompressed writing on Linux is to reuse page aligned buffers via `store_encoded_chunk` with direct IO enabled for the `FilesystemStore`.
-> See [zarrs GitHub issue #58](https://github.com/LDeakin/zarrs/pull/58) for a discussion of this method.
+> See [zarrs GitHub issue #58](https://github.com/zarrs/zarrs/pull/58) for a discussion of this method.
 
 ## Read-Write Methods
 
