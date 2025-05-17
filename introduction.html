@@ -230,14 +230,6 @@
 
 </style>
 <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
-<div class="mdbook-alerts mdbook-alerts-note">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  note
-</p>
-<p>🚧 This book is under construction!</p>
-</div>
-<h2 id="zarrs---a-rust-library-for-the-zarr-storage-format"><a class="header" href="#zarrs---a-rust-library-for-the-zarr-storage-format"><code>zarrs</code> - A Rust Library for the Zarr Storage Format</a></h2>
 <p><code>zarrs</code> is a Rust library for the Zarr V2 and Zarr V3 array storage formats.
 If you don't know what Zarr is, check out:</p>
 <ul>
@@ -245,25 +237,124 @@ If you don't know what Zarr is, check out:</p>
 <li>the <a href="https://zarr-specs.readthedocs.io/en/latest/v3/core/v3.0.html">Zarr V3 specification</a>.</li>
 </ul>
 <p><code>zarrs</code> was originally designed exclusively as a Rust library for Zarr V3.
-However, it now supports a V3 compatible subset of Zarr V2, and has Python and C/C++ bindings.</p>
-<p>This book focuses mostly on the Rust implementation.</p>
-<h2 id="using-zarrs-with-zarr-python"><a class="header" href="#using-zarrs-with-zarr-python">Using <code>zarrs</code> with <code>zarr-python</code></a></h2>
-<p><a href="https://github.com/zarr-developers/zarr-python"><img src="https://img.shields.io/badge/zarr--developers/zarr--python-GitHub-blue?logo=github" alt="zarr-python" /></a> is the reference Python Zarr implementation.</p>
-<p>The <code>zarrs</code> Python bindings <a href="https://github.com/ilan-gold/zarrs-python"><img src="https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github" alt="zarr-python" /></a> expose a high-performance codec pipeline to <code>zarr-python</code> that uses <code>zarrs</code> under the hood.
-There is no need to learn a new API and it is supported by downstream libraries like <code>dask</code>.</p>
-<div class="mdbook-alerts mdbook-alerts-tip">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  tip
-</p>
-<p>Skip to the <a href="./zarrs_python.html">Python Bindings Chapter</a> if you are not interested in the Rust library.</p>
-</div>
-<h2 id="-zarrs-is-fast"><a class="header" href="#-zarrs-is-fast">🚀 <code>zarrs</code> is Fast</a></h2>
-<p>The <a href="https://github.com/LDeakin/zarr_benchmarks"><img src="https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks" /></a> repository includes benchmarks of <code>zarrs</code> against other Zarr V3 implementations.
-Check out the benchmarks below that measure the time to round trip a \(1024x2048x2048\) <code>uint16</code> array encoded in various ways:</p>
+However, it now supports a V3 compatible subset of Zarr V2, and has Python and C/C++ bindings.
+This book details the Rust implementation.</p>
+<h2 id="-zarrs-is-fast-"><a class="header" href="#-zarrs-is-fast-">🚀 <code>zarrs</code> is Fast 🚀</a></h2>
+<p>The <a href="https://github.com/zarrs/zarr_benchmarks"><img src="https://img.shields.io/badge/zarrs/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks" /></a> repository includes benchmarks of <code>zarrs</code> against other Zarr V3 implementations.
+Check out the benchmarks below that measure the time to round trip a \(1024x2048x2048\) <code>uint16</code> array encoded in various ways.
+The <code>zarr_benchmarks</code> repository includes additional benchmarks.</p>
 <p><img src="./zarr_benchmarks/plots/benchmark_roundtrip.svg" alt="benchmark standalone" /></p>
-<p><img src="./zarr_benchmarks/plots/benchmark_roundtrip_dask.svg" alt="benchmark dask" /></p>
-<p>More information on these benchmarks can be found in the <a href="https://github.com/LDeakin/zarr_benchmarks"><img src="https://img.shields.io/badge/LDeakin/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks" /></a> repository.</p>
+<!-- ![benchmark dask](./zarr_benchmarks/plots/benchmark_roundtrip_dask.svg) -->
+<h2 id="python-bindings-zarrs-python"><a class="header" href="#python-bindings-zarrs-python">Python Bindings: <code>zarrs-python</code> <a href="https://pypi.org/project/zarrs/"><img src="https://img.shields.io/pypi/v/zarrs" alt="zarrs_python_ver" /></a> <a href="https://zarrs-python.readthedocs.io/en/latest/"><img src="https://img.shields.io/readthedocs/zarrs-python" alt="zarrs_python_doc" /></a> <a href="https://github.com/zarrs/zarrs-python"><img src="https://img.shields.io/badge/zarrs/zarrs--python-GitHub-blue?logo=github" alt="zarrs_python_repo" /></a></a></h2>
+<p><code>zarrs-python</code> exposes a high-performance <code>zarrs</code>-backed codec pipeline to the reference <a href="https://github.com/zarr-developers/zarr-python"><img src="https://img.shields.io/badge/zarr--developers/zarr--python-GitHub-blue?logo=github" alt="zarr-python" /></a> Python package. It is enabled as follows:</p>
+<pre><code class="language-python">from zarr import config
+import zarrs # noqa: F401
+
+config.set({"codec_pipeline.path": "zarrs.ZarrsCodecPipeline"})
+</code></pre>
+<p>That's it!
+There is no need to learn a new API and it is supported by downstream libraries like <code>dask</code>.
+However, <code>zarrs-python</code> has some limitations.
+Consult the <a href="https://github.com/zarrs/zarrs-python"><code>zarrs-python</code> README</a> or <a href="https://pypi.org/project/zarrs/"><code>PyPi</code> docs</a> for more details.</p>
+<h2 id="rust-crates"><a class="header" href="#rust-crates">Rust Crates</a></h2>
+<p>The Zarr specification is inherently unstable.
+It is under active development and new extensions are regularly being introduced.</p>
+<p>The <code>zarrs</code> crate has been split into multiple crates to:</p>
+<ul>
+<li>allow external implementations of stores and extensions points to target a relatively stable API compatible with a range of <code>zarrs</code> versions,</li>
+<li>enable automatic backporting of metadata compatibility fixes and changes due to standardisation,</li>
+<li>stay up-to-date with unstable public dependencies (e.g. <code>opendal</code>, <code>object_store</code>, <code>icechunk</code>, etc) without impacting the release cycle of <code>zarrs</code>, and</li>
+<li>improve compilation times.</li>
+</ul>
+<p>Below is a slightly simplified overview of the crate structure:</p>
+<pre class="mermaid">graph LR
+    subgraph tools[CLI Tools]
+        zarrs_tools
+    end
+    subgraph metadata_conventions[Zarr Metadata Conventions]
+        ome_zarr_metadata
+    end
+    subgraph Stores
+        direction LR
+        zarrs_filesystem[zarrs_filesystem &lt;br&gt; zarrs::filesystem]
+        zarrs_object_store
+        zarrs_opendal
+        zarrs_http
+        zarrs_icechunk
+    end
+    subgraph Core
+        zarrs_storage[zarrs_storage &lt;br&gt; zarrs::storage]
+        zarrs_metadata_ext[zarrs_metadata_ext &lt;br&gt; zarrs::metadata_ext]
+        zarrs_metadata[zarrs_metadata &lt;br&gt; zarrs::metadata]
+        zarrs_registry[zarrs_registry &lt;br&gt; zarrs::registry]
+        zarrs_plugin[zarrs_plugin &lt;br&gt; zarrs::plugin]
+        subgraph Extensions
+            direction LR
+            zarrs_data_type[zarrs_data_type &lt;br&gt; zarrs::array:data_type]
+            %% zarrs_codec TODO
+            %% zarrs_chunk_grid TODO
+        end
+        zarrs
+    end
+    subgraph storage_adapters[Storage Adapters]
+        zarrs_zip
+    end
+    subgraph Bindings
+        %% direction LR
+        zarrs_ffi[zarrs_ffi &lt;br&gt; C/C++]
+        zarrs-python[zarrs-python &lt;br&gt; Python]
+    end
+    zarrs_storage --&gt; zarrs
+    %% zarrs_registry --&gt; zarrs
+    zarrs_metadata_ext --&gt; zarrs
+    zarrs_metadata --&gt; zarrs_metadata_ext
+    zarrs_registry --&gt; zarrs_metadata_ext
+    %% zarrs_metadata --&gt; zarrs
+    %% zarrs_metadata --&gt; Extensions
+    zarrs_metadata_ext --&gt; Extensions
+    zarrs_plugin --&gt; Extensions
+    Extensions --&gt; zarrs
+    %% zarrs_plugin ---&gt; zarrs
+    ome_zarr_metadata --&gt; zarrs_tools
+    Stores --&gt; storage_adapters
+    storage_adapters --&gt; zarrs_storage
+    Stores --&gt; zarrs_storage
+    Core --&gt; tools
+    Core --&gt; Bindings
+</pre>
+<p>The core crate is:</p>
+<ul>
+<li><code>zarrs</code> <a href="https://crates.io/crates/zarrs"><img src="https://img.shields.io/crates/v/zarrs" alt="zarrs_ver" /></a> <a href="https://docs.rs/zarrs"><img src="https://docs.rs/zarrs/badge.svg" alt="zarrs_doc" /></a> <a href="https://github.com/zarrs/zarrs"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs-GitHub-blue?logo=github" alt="zarrs_repo" /></a></li>
+</ul>
+<p>For local filesystem stores (referred to as <em>native Zarr</em>), this is the only crate you need to depend on.
+<code>zarrs</code> has quite a few supplementary crates that are typically just used as transitive dependencies:</p>
+<ul>
+<li><code>zarrs_metadata</code> <a href="https://crates.io/crates/zarrs_metadata"><img src="https://img.shields.io/crates/v/zarrs_metadata" alt="zarrs_metadata_ver" /></a> <a href="https://docs.rs/zarrs_metadata"><img src="https://docs.rs/zarrs_metadata/badge.svg" alt="zarrs_metadata_doc" /></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_metadata"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__metadata-GitHub-blue?logo=github" alt="zarrs_metadata_repo" /></a></li>
+<li><code>zarrs_metadata_ext</code> <a href="https://crates.io/crates/zarrs_metadata_ext"><img src="https://img.shields.io/crates/v/zarrs_metadata_ext" alt="zarrs_metadata_ext_ver" /></a> <a href="https://docs.rs/zarrs_metadata_ext"><img src="https://docs.rs/zarrs_metadata_ext/badge.svg" alt="zarrs_metadata_ext_doc" /></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_metadata_ext"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__metadata_ext-GitHub-blue?logo=github" alt="zarrs_metadata_ext_repo" /></a></li>
+<li><code>zarrs_storage</code> <a href="https://crates.io/crates/zarrs_storage"><img src="https://img.shields.io/crates/v/zarrs_storage" alt="zarrs_storage_ver" /></a> <a href="https://docs.rs/zarrs_storage"><img src="https://docs.rs/zarrs_storage/badge.svg" alt="zarrs_storage_doc" /></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_storage"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__storage-GitHub-blue?logo=github" alt="zarrs_storage_repo" /></a></li>
+<li><code>zarrs_plugin</code> <a href="https://crates.io/crates/zarrs_plugin"><img src="https://img.shields.io/crates/v/zarrs_plugin" alt="zarrs_plugin_ver" /></a> <a href="https://docs.rs/zarrs_plugin"><img src="https://docs.rs/zarrs_plugin/badge.svg" alt="zarrs_plugin_doc" /></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_plugin"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__plugin-GitHub-blue?logo=github" alt="zarrs_plugin_repo" /></a></li>
+<li><code>zarrs_data_type</code> <a href="https://crates.io/crates/zarrs_data_type"><img src="https://img.shields.io/crates/v/zarrs_data_type" alt="zarrs_data_type_ver" /></a> <a href="https://docs.rs/zarrs_data_type"><img src="https://docs.rs/zarrs_data_type/badge.svg" alt="zarrs_data_type_doc" /></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_data_type"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__data_type-GitHub-blue?logo=github" alt="zarrs_data_type_repo" /></a></li>
+<li><code>zarrs_registry</code> <a href="https://crates.io/crates/zarrs_registry"><img src="https://img.shields.io/crates/v/zarrs_registry" alt="zarrs_registry_ver" /></a> <a href="https://docs.rs/zarrs_registry"><img src="https://docs.rs/zarrs_registry/badge.svg" alt="zarrs_registry_doc" /></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_registry"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__registry-GitHub-blue?logo=github" alt="zarrs_registry_repo" /></a></li>
+</ul>
+<p>Additional crates need to be added as dependencies in order to use:</p>
+<ul>
+<li>remote stores (e.g. HTTP, S3, GCP, etc.),</li>
+<li><code>zip</code> stores, or</li>
+<li><code>icechunk</code> transactional storage.</li>
+</ul>
+<p>The <a href="./stores.html">Stores</a> chapter details the various types of stores and their associated crates.</p>
+<h2 id="cc-bindings-zarrs_ffi"><a class="header" href="#cc-bindings-zarrs_ffi">C/C++ Bindings: <code>zarrs_ffi</code> <a href="https://crates.io/crates/zarrs_ffi"><img src="https://img.shields.io/crates/v/zarrs_ffi" alt="zarrs_ffi_ver" /></a> <a href="https://docs.rs/zarrs_ffi"><img src="https://docs.rs/zarrs_ffi/badge.svg" alt="zarrs_ffi_doc" /></a> <a href="https://github.com/zarrs/zarrs_ffi"><img src="https://img.shields.io/badge/zarrs/zarrs__ffi-GitHub-blue?logo=github" alt="zarrs_ffi_repo" /></a></a></h2>
+<p>A subset of <code>zarrs</code> exposed as a C/C++ API.
+<code>zarrs_ffi</code> is a single header library: <code>zarrs.h</code>.
+Consult the <a href="https://github.com/zarrs/zarrs_ffi"><code>zarrs_ffi</code> README</a> and <a href="https://zarrs.github.io/zarrs_ffi/zarrs_8h.html">API docs</a> for more information.</p>
+<h2 id="cli-tools-zarrs_tools"><a class="header" href="#cli-tools-zarrs_tools">CLI Tools: <code>zarrs_tools</code> <a href="https://crates.io/crates/zarrs_tools"><img src="https://img.shields.io/crates/v/zarrs_tools" alt="zarrs_tools_ver" /></a> <a href="https://docs.rs/zarrs_tools"><img src="https://docs.rs/zarrs_tools/badge.svg" alt="zarrs_tools_doc" /></a> <a href="https://github.com/zarrs/zarrs_tools"><img src="https://img.shields.io/badge/zarrs/zarrs__tools-GitHub-blue?logo=github" alt="zarrs_tools_repo" /></a></a></h2>
+<p>Various tools for creating and manipulating Zarr v3 data with the <code>zarrs</code> rust crate.
+This crate is detailed in the <a href="./zarrs_tools.html">zarrs_tools</a> chapter.</p>
+<h2 id="zarr-metadata-conventions"><a class="header" href="#zarr-metadata-conventions">Zarr Metadata Conventions</a></h2>
+<h3 id="ome_zarr_metadata"><a class="header" href="#ome_zarr_metadata"><code>ome_zarr_metadata</code> <a href="https://crates.io/crates/ome_zarr_metadata"><img src="https://img.shields.io/crates/v/ome_zarr_metadata" alt="ome_zarr_metadata_ver" /></a> <a href="https://docs.rs/ome_zarr_metadata"><img src="https://docs.rs/ome_zarr_metadata/badge.svg" alt="ome_zarr_metadata_doc" /></a> <a href="https://github.com/zarrs/rust_ome_zarr_metadata"><img src="https://img.shields.io/badge/zarrs/rust__ome__zarr__metadata-GitHub-blue?logo=github" alt="ome_zarr_metadata_repo" /></a></a></h3>
+<p>A Rust library for <a href="https://ngff.openmicroscopy.org/latest/">OME-Zarr</a> (previously OME-NGFF) metadata.</p>
+<p>OME-Zarr, formerly known as OME-NGFF (Open Microscopy Environment Next Generation File Format), is a specification designed to support modern scientific imaging needs.
+It is widely used in microscopy, bioimaging, and other scientific fields requiring high-dimensional data management, visualisation, and analysis.</p>
 
                     </main>
 

@@ -291,7 +291,7 @@ array.store_encoded_chunk(&amp;chunks, encoded_chunk_bytes.into())?;
   tip
 </p>
 <p>Currently, the most performant path for uncompressed writing on Linux is to reuse page aligned buffers via <code>store_encoded_chunk</code> with direct IO enabled for the <code>FilesystemStore</code>.
-See <a href="https://github.com/LDeakin/zarrs/pull/58">zarrs GitHub issue #58</a> for a discussion of this method.</p>
+See <a href="https://github.com/zarrs/zarrs/pull/58">zarrs GitHub issue #58</a> for a discussion of this method.</p>
 </div>
 <h2 id="read-write-methods"><a class="header" href="#read-write-methods">Read-Write Methods</a></h2>
 <p>The <a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/trait.ReadableWritableStorageTraits.html"><code>[Async]ReadableWritableStorageTraits</code></a> grouped methods perform write operations and <em>may perform read operations</em>:</p>

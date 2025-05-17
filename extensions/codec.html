@@ -230,13 +230,6 @@
 
 </style>
 <h1 id="codec-extensions"><a class="header" href="#codec-extensions">Codec Extensions</a></h1>
-<div class="mdbook-alerts mdbook-alerts-note">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  note
-</p>
-<p>This page is written against <code>zarrs</code> 0.20, which is unreleased at the time of writing.</p>
-</div>
 <p>Among the most impactful and frequently utilised extension points are <strong>codecs</strong>. At their core, codecs define the transformations applied to array chunk data as it moves between its logical, in-memory representation and its serialized, stored representation as a sequence of bytes.</p>
 <p>Codecs are the workhorses behind essential Zarr features like <strong>compression</strong> (reducing storage size and transfer time) and <strong>filtering</strong> (rearranging or modifying data to improve compression effectiveness). The Zarr v3 specification allows for a <strong>pipeline of codecs</strong> to be defined for each array, where the output of one codec becomes the input for the next during encoding, and the process is reversed during decoding.</p>
 <h2 id="types-of-codecs"><a class="header" href="#types-of-codecs">Types of Codecs</a></h2>
@@ -296,10 +289,10 @@ pub struct Lz4CodecConfiguration {
 }
 <span class="boring">}</span></code></pre></pre>
 <p>Note that codec configurations in <a href="https://docs.rs/zarrs_metadata/latest/zarrs_metadata/"><code>zarrs_metadata</code></a> are versioned so that they can adapt to potential codec specification revisions.</p>
-<p><code>Lz4CodecConfiguration</code> is JSON serialisable, so implement the <code>MetadataConfigurationSerialize</code> trait:</p>
+<p><code>Lz4CodecConfiguration</code> is JSON serialisable, so implement the <code>ConfigurationSerialize</code> trait:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>impl MetadataConfigurationSerialize for Lz4CodecConfiguration {}
+</span>impl ConfigurationSerialize for Lz4CodecConfiguration {}
 <span class="boring">}</span></code></pre></pre>
 <p>This trait requires <code>Serialize + DeserializeOwned</code>, and enables any implementing struct to be infallibly converted from a JSON object or anything convertible to a JSON object.
 A codec configuration must not be able to hold unrepresentable JSON state, otherwise such a conversion could panic at runtime.</p>
@@ -348,8 +341,8 @@ impl CodecTraits for Lz4Codec {
         &amp;self,
         _name: &amp;str,
         _options: &amp;CodecMetadataOptions,
-    ) -&gt; Option&lt;MetadataConfiguration&gt; {
-        // The into comes from the auto implementation of From&lt;T: MetadataConfigurationSerialize&gt; for MetadataConfiguration
+    ) -&gt; Option&lt;Configuration&gt; {
+        // The into comes from the auto implementation of From&lt;T: ConfigurationSerialize&gt; for Configuration
         Some(Lz4CodecConfiguration::new(self.acceleration).into())
     }
 

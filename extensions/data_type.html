@@ -230,13 +230,6 @@
 
 </style>
 <h1 id="data-type-extensions"><a class="header" href="#data-type-extensions">Data Type Extensions</a></h1>
-<div class="mdbook-alerts mdbook-alerts-note">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  note
-</p>
-<p>This page is written against <code>zarrs</code> 0.20, which is unreleased at the time of writing.</p>
-</div>
 <p>According to the Zarr V3 specification:</p>
 <blockquote>
 <p>A data type defines the set of possible values that an array may contain.
@@ -275,8 +268,8 @@ impl DataTypeExtension for DataTypeUint4 {
         UINT4.to_string()
     }
 
-    fn configuration(&amp;self) -&gt; MetadataConfiguration {
-        MetadataConfiguration::default()
+    fn configuration(&amp;self) -&gt; Configuration {
+        Configuration::default()
     }
 
     fn fill_value(
@@ -483,17 +476,17 @@ impl ElementOwned for DataTypeUint4 {
 <h2 id="more-examples"><a class="header" href="#more-examples">More Examples</a></h2>
 <p>The <code>zarrs</code> repository includes multiple custom data type examples:</p>
 <ul>
-<li><a href="https://github.com/LDeakin/zarrs/blob/main/zarrs/examples/custom_data_type_uint12.rs">custom_data_type_uint12.rs</a></li>
-<li><a href="https://github.com/LDeakin/zarrs/blob/main/zarrs/examples/custom_data_type_uint4.rs">custom_data_type_uint4.rs</a></li>
-<li><a href="https://github.com/LDeakin/zarrs/blob/main/zarrs/examples/custom_data_type_float8_e3m4.rs">custom_data_type_float8_e3m4.rs</a></li>
-<li><a href="https://github.com/LDeakin/zarrs/blob/main/zarrs/examples/custom_data_type_fixed_size.rs">custom_data_type_fixed_size.rs</a></li>
-<li><a href="https://github.com/LDeakin/zarrs/blob/main/zarrs/examples/custom_data_type_variable_size.rs">custom_data_type_variable_size.rs</a></li>
+<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_uint12.rs">custom_data_type_uint12.rs</a></li>
+<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_uint4.rs">custom_data_type_uint4.rs</a></li>
+<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_float8_e3m4.rs">custom_data_type_float8_e3m4.rs</a></li>
+<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_fixed_size.rs">custom_data_type_fixed_size.rs</a></li>
+<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_variable_size.rs">custom_data_type_variable_size.rs</a></li>
 </ul>
 <h2 id="contributing-new-data-types-to-zarrs"><a class="header" href="#contributing-new-data-types-to-zarrs">Contributing New Data Types to <code>zarrs</code></a></h2>
 <p>The <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> repository is always growing with new Zarr extensions.
 The conformance of <code>zarrs</code> to <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> is tracked in this issue:</p>
 <ul>
-<li><a href="https://github.com/LDeakin/zarrs/issues/191">https://github.com/LDeakin/zarrs/issues/191</a></li>
+<li><a href="https://github.com/zarrs/zarrs/issues/191">https://github.com/zarrs/zarrs/issues/191</a></li>
 </ul>
 <p>Contributions are welcomed to support additional data types.
 With a little bit of polish, the <code>uint4</code> example above could be included in <code>zarrs</code> itself (if it isn't already)!</p>
@@ -506,7 +499,7 @@ With a little bit of polish, the <code>uint4</code> example above could be inclu
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../zarrs_python.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../zarrs_tools.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -520,7 +513,7 @@ With a little bit of polish, the <code>uint4</code> example above could be inclu
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../zarrs_python.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../zarrs_tools.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

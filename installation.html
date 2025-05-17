@@ -250,11 +250,6 @@ zarrs = "18.0" # Replace with the latest version
 </code></pre>
 <p>The latest version is <a href="https://crates.io/crates/zarrs"><img src="https://img.shields.io/crates/v/zarrs.svg" alt="Latest Version" /></a>.
 See <a href="https://crates.io/crates/zarrs/versions">crates.io</a> for a full list of versions.</p>
-<p>To use the latest development release:</p>
-<pre><code class="language-toml">[dependencies]
-zarrs = { git = "https://github.com/LDeakin/zarrs.git" }
-</code></pre>
-<p>The <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories">Cargo reference</a> has more information on <code>git</code> repository dependencies.</p>
 <h2 id="crate-features"><a class="header" href="#crate-features">Crate Features</a></h2>
 <p><code>zarrs</code> has a number of features for stores, codecs, or APIs, many of which are enabled by default.
 The below example demonstrates how to disable default features and explicitly enable required features:</p>
@@ -264,77 +259,9 @@ default-features = false
 features = ["filesystem", "blosc"]
 </code></pre>
 <p>See <a href="https://docs.rs/zarrs/latest/zarrs/index.html#crate-features">zarrs (docs.rs) - Crate Features</a> for an up-to-date list of all available features.</p>
-<h2 id="zarrs-crates"><a class="header" href="#zarrs-crates"><code>zarrs</code> Crates</a></h2>
-<p>Some <code>zarrs</code> functionality (e.g. additional stores, bindings, etc.) are in separate crates.</p>
-<pre class="mermaid">graph LR
-    subgraph Core
-        zarrs_metadata[zarrs_metadata &lt;br&gt; zarrs::metadata] --&gt; zarrs
-        zarrs_storage[zarrs_storage &lt;br&gt; zarrs::storage] --&gt; zarrs
-    end
-    subgraph Stores
-        direction LR
-        zarrs_filesystem[zarrs_filesystem &lt;br&gt; zarrs::filesystem]
-        zarrs_object_store
-        zarrs_opendal
-        zarrs_http
-        zarrs_icechunk
-        zarrs_zip
-    end
-    Stores --&gt; zarrs_storage
-    subgraph Bindings
-        direction LR
-        zarrs_ffi
-        zarrs-python
-    end
-    zarrs --&gt; Bindings
-    subgraph CLI Tools
-    zarrs --&gt; zarrs_tools
-    end
-    subgraph metadata_conventions[Zarr Metadata Conventions]
-    ome_zarr_metadata --&gt; zarrs_tools
-    end
-</pre>
-<h3 id="core-crates"><a class="header" href="#core-crates">Core Crates</a></h3>
-<h4 id="zarrs"><a class="header" href="#zarrs"><code>zarrs</code> <a href="https://crates.io/crates/zarrs"><img src="https://img.shields.io/crates/v/zarrs" alt="zarrs_ver" /></a> <a href="https://docs.rs/zarrs"><img src="https://docs.rs/zarrs/badge.svg" alt="zarrs_doc" /></a> <a href="https://github.com/LDeakin/zarrs"><img src="https://img.shields.io/badge/LDeakin/zarrs/zarrs-GitHub-blue?logo=github" alt="zarrs_repo" /></a></a></h4>
-<p>The core library for manipulating Zarr hierarchies.</p>
-<h4 id="zarrs_metadata"><a class="header" href="#zarrs_metadata"><code>zarrs_metadata</code> <a href="https://crates.io/crates/zarrs_metadata"><img src="https://img.shields.io/crates/v/zarrs_metadata" alt="zarrs_metadata_ver" /></a> <a href="https://docs.rs/zarrs_metadata"><img src="https://docs.rs/zarrs_metadata/badge.svg" alt="zarrs_metadata_doc" /></a> <a href="https://github.com/LDeakin/zarrs/tree/main/zarrs_metadata"><img src="https://img.shields.io/badge/LDeakin/zarrs/zarrs__metadata-GitHub-blue?logo=github" alt="zarrs_metadata_repo" /></a></a></h4>
-<p>Provides Zarr V2 and V3 metadata serialisation and deserialisation.</p>
-<p>If you are just interested in manipulating <code>Zarr</code> metadata, this crate may be relevant.</p>
-<div class="mdbook-alerts mdbook-alerts-note">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  note
-</p>
-<p>This crate is re-exported in <code>zarrs</code> as <code>zarrs::metadata</code>.</p>
-</div>
-<h4 id="zarrs_storage"><a class="header" href="#zarrs_storage"><code>zarrs_storage</code> <a href="https://crates.io/crates/zarrs_storage"><img src="https://img.shields.io/crates/v/zarrs_storage" alt="zarrs_storage_ver" /></a> <a href="https://docs.rs/zarrs_storage"><img src="https://docs.rs/zarrs_storage/badge.svg" alt="zarrs_storage_doc" /></a> <a href="https://github.com/LDeakin/zarrs/tree/main/zarrs_storage"><img src="https://img.shields.io/badge/LDeakin/zarrs/zarrs__storage-GitHub-blue?logo=github" alt="zarrs_storage_repo" /></a></a></h4>
-<p>The storage API for <code>zarrs</code>.</p>
-<p>Custom store implementations only need to depend on <code>zarrs_storage</code>.</p>
-<div class="mdbook-alerts mdbook-alerts-note">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  note
-</p>
-<p>This crate is re-exported in <code>zarrs</code> as <code>zarrs::storage</code>.</p>
-</div>
-<h3 id="store-crates"><a class="header" href="#store-crates">Store Crates</a></h3>
-<p>The <a href="./stores.html">Stores</a> chapter details the various types of stores and their associated crates.</p>
-<h3 id="bindings"><a class="header" href="#bindings">Bindings</a></h3>
-<h4 id="zarrs_ffi"><a class="header" href="#zarrs_ffi"><code>zarrs_ffi</code> <a href="https://crates.io/crates/zarrs_ffi"><img src="https://img.shields.io/crates/v/zarrs_ffi" alt="zarrs_ffi_ver" /></a> <a href="https://docs.rs/zarrs_ffi"><img src="https://docs.rs/zarrs_ffi/badge.svg" alt="zarrs_ffi_doc" /></a> <a href="https://github.com/LDeakin/zarrs_ffi"><img src="https://img.shields.io/badge/LDeakin/zarrs__ffi-GitHub-blue?logo=github" alt="zarrs_ffi_repo" /></a></a></h4>
-<p>A subset of <code>zarrs</code> exposed as a C/C++ API.</p>
-<p>This crate is detailed in the <a href="./zarrs_ffi.html">C/C++ Bindings</a> chapter.</p>
-<h4 id="zarrs-python"><a class="header" href="#zarrs-python"><code>zarrs-python</code> <a href="https://pypi.org/project/zarrs/"><img src="https://img.shields.io/pypi/v/zarrs" alt="zarrs_python_ver" /></a> <a href="https://zarrs-python.readthedocs.io/en/latest/"><img src="https://img.shields.io/readthedocs/zarrs-python" alt="zarrs_python_doc" /></a> <a href="https://github.com/ilan-gold/zarrs-python"><img src="https://img.shields.io/badge/ilan--gold/zarrs--python-GitHub-blue?logo=github" alt="zarrs_python_repo" /></a></a></h4>
-<p>A <code>CodecPipeline</code> for the <code>zarr</code> Python reference implementation that uses <code>zarrs</code>.</p>
-<p>This crate is detailed in the <a href="./zarrs_python.html">Python Bindings</a> chapter.</p>
-<h3 id="cli-tools"><a class="header" href="#cli-tools">CLI Tools</a></h3>
-<h4 id="zarrs_tools"><a class="header" href="#zarrs_tools"><code>zarrs_tools</code> <a href="https://crates.io/crates/zarrs_tools"><img src="https://img.shields.io/crates/v/zarrs_tools" alt="zarrs_tools_ver" /></a> <a href="https://docs.rs/zarrs_tools"><img src="https://docs.rs/zarrs_tools/badge.svg" alt="zarrs_tools_doc" /></a> <a href="https://github.com/LDeakin/zarrs_tools"><img src="https://img.shields.io/badge/LDeakin/zarrs__tools-GitHub-blue?logo=github" alt="zarrs_tools_repo" /></a></a></h4>
-<p>Various tools for creating and manipulating Zarr v3 data with the <code>zarrs</code> rust crate.</p>
-<p>This crate is detailed in the <a href="./zarrs_tools.html">zarrs_tools</a> chapter.</p>
-<h3 id="zarr-metadata-conventions"><a class="header" href="#zarr-metadata-conventions">Zarr Metadata Conventions</a></h3>
-<h4 id="ome_zarr_metadata"><a class="header" href="#ome_zarr_metadata"><code>ome_zarr_metadata</code> <a href="https://crates.io/crates/ome_zarr_metadata"><img src="https://img.shields.io/crates/v/ome_zarr_metadata" alt="ome_zarr_metadata_ver" /></a> <a href="https://docs.rs/ome_zarr_metadata"><img src="https://docs.rs/ome_zarr_metadata/badge.svg" alt="ome_zarr_metadata_doc" /></a> <a href="https://github.com/LDeakin/rust_ome_zarr_metadata"><img src="https://img.shields.io/badge/LDeakin/rust__ome__zarr__metadata-GitHub-blue?logo=github" alt="ome_zarr_metadata_repo" /></a></a></h4>
-<p>A Rust library for <a href="https://ngff.openmicroscopy.org/latest/">OME-Zarr</a> (previously OME-NGFF) metadata.</p>
-<p>OME-Zarr, formerly known as OME-NGFF (Open Microscopy Environment Next Generation File Format), is a specification designed to support modern scientific imaging needs.
-It is widely used in microscopy, bioimaging, and other scientific fields requiring high-dimensional data management, visualisation, and analysis.</p>
+<h2 id="supplementary-crates"><a class="header" href="#supplementary-crates">Supplementary Crates</a></h2>
+<p>Remote store support and other capabilities are provided by supplementary crates.
+See the <a href="./introduction.html#rust-crates">Rust Crates</a> section and <a href="./stores.html">Stores</a> chapter for an overview of the crates available.</p>
 
                     </main>
 
