@@ -18,14 +18,6 @@
   <!-- - [Chunk Key Encodings] -->
   <!-- - [Storage Transformers] -->
   <!-- - [Custom Stores] -->
-
-# Bindings
-
-- [Python (zarrs_python)](zarrs_python.md)
-- [C/C++ (zarrs_ffi)](zarrs_ffi.md)
-
-# CLI Tools
-
 - [zarrs_tools](zarrs_tools.md)
   - [zarrs_reencode: reencode/rechunk Zarr arrays](zarrs_tools/docs/zarrs_reencode.md)
   - [zarrs_ome: convert to OME-Zarr multiscales](zarrs_tools/docs/zarrs_ome.md)

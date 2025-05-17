@@ -1,8 +1,5 @@
 # Data Type Extensions
 
-> [!NOTE]
-> This page is written against `zarrs` 0.20, which is unreleased at the time of writing.
-
 According to the Zarr V3 specification:
 > A data type defines the set of possible values that an array may contain.
 > For example, the 32-bit signed integer data type defines binary representations for all integers in the range −2,147,483,648 to 2,147,483,647.
@@ -45,8 +42,8 @@ impl DataTypeExtension for DataTypeUint4 {
         UINT4.to_string()
     }
 
-    fn configuration(&self) -> MetadataConfiguration {
-        MetadataConfiguration::default()
+    fn configuration(&self) -> Configuration {
+        Configuration::default()
     }
 
     fn fill_value(

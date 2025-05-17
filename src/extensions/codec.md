@@ -1,8 +1,5 @@
 # Codec Extensions
 
-> [!NOTE]
-> This page is written against `zarrs` 0.20, which is unreleased at the time of writing.
-
 Among the most impactful and frequently utilised extension points are **codecs**. At their core, codecs define the transformations applied to array chunk data as it moves between its logical, in-memory representation and its serialized, stored representation as a sequence of bytes.
 
 Codecs are the workhorses behind essential Zarr features like **compression** (reducing storage size and transfer time) and **filtering** (rearranging or modifying data to improve compression effectiveness). The Zarr v3 specification allows for a **pipeline of codecs** to be defined for each array, where the output of one codec becomes the input for the next during encoding, and the process is reversed during decoding.
@@ -70,9 +67,9 @@ pub struct Lz4CodecConfiguration {
 ```
 Note that codec configurations in [`zarrs_metadata`](https://docs.rs/zarrs_metadata/latest/zarrs_metadata/) are versioned so that they can adapt to potential codec specification revisions.
 
-`Lz4CodecConfiguration` is JSON serialisable, so implement the `MetadataConfigurationSerialize` trait:
+`Lz4CodecConfiguration` is JSON serialisable, so implement the `ConfigurationSerialize` trait:
 ```rust
-impl MetadataConfigurationSerialize for Lz4CodecConfiguration {}
+impl ConfigurationSerialize for Lz4CodecConfiguration {}
 ```
 
 This trait requires `Serialize + DeserializeOwned`, and enables any implementing struct to be infallibly converted from a JSON object or anything convertible to a JSON object.
@@ -126,8 +123,8 @@ impl CodecTraits for Lz4Codec {
         &self,
         _name: &str,
         _options: &CodecMetadataOptions,
-    ) -> Option<MetadataConfiguration> {
-        // The into comes from the auto implementation of From<T: MetadataConfigurationSerialize> for MetadataConfiguration
+    ) -> Option<Configuration> {
+        // The into comes from the auto implementation of From<T: ConfigurationSerialize> for Configuration
         Some(Lz4CodecConfiguration::new(self.acceleration).into())
     }
 
