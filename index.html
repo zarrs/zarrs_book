@@ -277,68 +277,14 @@ It is under active development and new extensions are regularly being introduced
 <li>stay up-to-date with unstable public dependencies (e.g. <code>opendal</code>, <code>object_store</code>, <code>icechunk</code>, etc) without impacting the release cycle of <code>zarrs</code>, and</li>
 <li>improve compilation times.</li>
 </ul>
-<p>Below is a slightly simplified overview of the crate structure:</p>
-<pre class="mermaid">graph LR
-    subgraph tools[CLI Tools]
-        zarrs_tools
-    end
-    subgraph metadata_conventions[Zarr Metadata Conventions]
-        ome_zarr_metadata
-    end
-    subgraph Stores
-        direction LR
-        zarrs_filesystem[zarrs_filesystem &lt;br&gt; zarrs::filesystem]
-        zarrs_object_store
-        zarrs_opendal
-        zarrs_http
-        zarrs_icechunk
-    end
-    subgraph Core
-        zarrs_storage[zarrs_storage &lt;br&gt; zarrs::storage]
-        zarrs_metadata_ext[zarrs_metadata_ext &lt;br&gt; zarrs::metadata_ext]
-        zarrs_metadata[zarrs_metadata &lt;br&gt; zarrs::metadata]
-        zarrs_registry[zarrs_registry &lt;br&gt; zarrs::registry]
-        zarrs_plugin[zarrs_plugin &lt;br&gt; zarrs::plugin]
-        subgraph Extensions
-            direction LR
-            zarrs_data_type[zarrs_data_type &lt;br&gt; zarrs::array:data_type]
-            %% zarrs_codec TODO
-            %% zarrs_chunk_grid TODO
-        end
-        zarrs
-    end
-    subgraph storage_adapters[Storage Adapters]
-        zarrs_zip
-    end
-    subgraph Bindings
-        %% direction LR
-        zarrs_ffi[zarrs_ffi &lt;br&gt; C/C++]
-        zarrs-python[zarrs-python &lt;br&gt; Python]
-    end
-    zarrs_storage --&gt; zarrs
-    %% zarrs_registry --&gt; zarrs
-    zarrs_metadata_ext --&gt; zarrs
-    zarrs_metadata --&gt; zarrs_metadata_ext
-    zarrs_registry --&gt; zarrs_metadata_ext
-    %% zarrs_metadata --&gt; zarrs
-    %% zarrs_metadata --&gt; Extensions
-    zarrs_metadata_ext --&gt; Extensions
-    zarrs_plugin --&gt; Extensions
-    Extensions --&gt; zarrs
-    %% zarrs_plugin ---&gt; zarrs
-    ome_zarr_metadata --&gt; zarrs_tools
-    Stores --&gt; storage_adapters
-    storage_adapters --&gt; zarrs_storage
-    Stores --&gt; zarrs_storage
-    Core --&gt; tools
-    Core --&gt; Bindings
-</pre>
+<p>Below is an overview of the crate structure:
+<object data="./crates.svg" type="image/svg+xml"></object></p>
 <p>The core crate is:</p>
 <ul>
 <li><code>zarrs</code> <a href="https://crates.io/crates/zarrs"><img src="https://img.shields.io/crates/v/zarrs" alt="zarrs_ver" /></a> <a href="https://docs.rs/zarrs"><img src="https://docs.rs/zarrs/badge.svg" alt="zarrs_doc" /></a> <a href="https://github.com/zarrs/zarrs"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs-GitHub-blue?logo=github" alt="zarrs_repo" /></a></li>
 </ul>
-<p>For local filesystem stores (referred to as <em>native Zarr</em>), this is the only crate you need to depend on.
-<code>zarrs</code> has quite a few supplementary crates that are typically just used as transitive dependencies:</p>
+<p>For local filesystem stores (referred to as <em>native Zarr</em>), this is the only crate you need to depend on.</p>
+<p><code>zarrs</code> has quite a few supplementary crates:</p>
 <ul>
 <li><code>zarrs_metadata</code> <a href="https://crates.io/crates/zarrs_metadata"><img src="https://img.shields.io/crates/v/zarrs_metadata" alt="zarrs_metadata_ver" /></a> <a href="https://docs.rs/zarrs_metadata"><img src="https://docs.rs/zarrs_metadata/badge.svg" alt="zarrs_metadata_doc" /></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_metadata"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__metadata-GitHub-blue?logo=github" alt="zarrs_metadata_repo" /></a></li>
 <li><code>zarrs_metadata_ext</code> <a href="https://crates.io/crates/zarrs_metadata_ext"><img src="https://img.shields.io/crates/v/zarrs_metadata_ext" alt="zarrs_metadata_ext_ver" /></a> <a href="https://docs.rs/zarrs_metadata_ext"><img src="https://docs.rs/zarrs_metadata_ext/badge.svg" alt="zarrs_metadata_ext_doc" /></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_metadata_ext"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__metadata_ext-GitHub-blue?logo=github" alt="zarrs_metadata_ext_repo" /></a></li>
@@ -347,6 +293,21 @@ It is under active development and new extensions are regularly being introduced
 <li><code>zarrs_data_type</code> <a href="https://crates.io/crates/zarrs_data_type"><img src="https://img.shields.io/crates/v/zarrs_data_type" alt="zarrs_data_type_ver" /></a> <a href="https://docs.rs/zarrs_data_type"><img src="https://docs.rs/zarrs_data_type/badge.svg" alt="zarrs_data_type_doc" /></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_data_type"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__data_type-GitHub-blue?logo=github" alt="zarrs_data_type_repo" /></a></li>
 <li><code>zarrs_registry</code> <a href="https://crates.io/crates/zarrs_registry"><img src="https://img.shields.io/crates/v/zarrs_registry" alt="zarrs_registry_ver" /></a> <a href="https://docs.rs/zarrs_registry"><img src="https://docs.rs/zarrs_registry/badge.svg" alt="zarrs_registry_doc" /></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_registry"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__registry-GitHub-blue?logo=github" alt="zarrs_registry_repo" /></a></li>
 </ul>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>The supplementary crates are transitive dependencies of <code>zarrs</code>, and are re-exported in the crate root.
+You do not need to add them as direct dependencies.</p>
+</div>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>The supplementary crates are separated from <code>zarrs</code> to enable development of Zarr extensions and stores targeting a more stable API than <code>zarrs</code> itself.</p>
+</div>
 <p>Additional crates need to be added as dependencies in order to use:</p>
 <ul>
 <li>remote stores (e.g. HTTP, S3, GCP, etc.),</li>
@@ -362,7 +323,7 @@ Consult the <a href="https://github.com/zarrs/zarrs_ffi"><code>zarrs_ffi</code> 
 <p>Various tools for creating and manipulating Zarr v3 data with the <code>zarrs</code> rust crate.
 This crate is detailed in the <a href="./zarrs_tools.html">zarrs_tools</a> chapter.</p>
 <h2 id="zarr-metadata-conventions"><a class="header" href="#zarr-metadata-conventions">Zarr Metadata Conventions</a></h2>
-<h3 id="ome_zarr_metadata"><a class="header" href="#ome_zarr_metadata"><code>ome_zarr_metadata</code> <a href="https://crates.io/crates/ome_zarr_metadata"><img src="https://img.shields.io/crates/v/ome_zarr_metadata" alt="ome_zarr_metadata_ver" /></a> <a href="https://docs.rs/ome_zarr_metadata"><img src="https://docs.rs/ome_zarr_metadata/badge.svg" alt="ome_zarr_metadata_doc" /></a> <a href="https://github.com/zarrs/rust_ome_zarr_metadata"><img src="https://img.shields.io/badge/zarrs/rust__ome__zarr__metadata-GitHub-blue?logo=github" alt="ome_zarr_metadata_repo" /></a></a></h3>
+<h3 id="ome_zarr_metadata"><a class="header" href="#ome_zarr_metadata"><code>ome_zarr_metadata</code> <a href="https://crates.io/crates/ome_zarr_metadata"><img src="https://img.shields.io/crates/v/ome_zarr_metadata" alt="ome_zarr_metadata_ver" /></a> <a href="https://docs.rs/ome_zarr_metadata"><img src="https://docs.rs/ome_zarr_metadata/badge.svg" alt="ome_zarr_metadata_doc" /></a> <a href="https://github.com/zarrs/ome_zarr_metadata"><img src="https://img.shields.io/badge/zarrs/rust__ome__zarr__metadata-GitHub-blue?logo=github" alt="ome_zarr_metadata_repo" /></a></a></h3>
 <p>A Rust library for <a href="https://ngff.openmicroscopy.org/latest/">OME-Zarr</a> (previously OME-NGFF) metadata.</p>
 <p>OME-Zarr, formerly known as OME-NGFF (Open Microscopy Environment Next Generation File Format), is a specification designed to support modern scientific imaging needs.
 It is widely used in microscopy, bioimaging, and other scientific fields requiring high-dimensional data management, visualisation, and analysis.</p>

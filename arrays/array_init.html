@@ -266,9 +266,9 @@ If you only want to open a specific Zarr version, see <a href="https://docs.rs/z
 <pre><code class="language-rs">let array_path = "/group/array";
 let array = ArrayBuilder::new(
     vec![8, 8], // array shape
+    vec![4, 4], // regular chunk shape
     DataType::Float32,
-    vec![4, 4].try_into()?, // regular chunk shape
-    FillValue::from(ZARR_NAN_F32),
+    f32::NAN,
 )
 // .bytes_to_bytes_codecs(vec![]) // uncompressed
 .bytes_to_bytes_codecs(vec![
@@ -281,6 +281,8 @@ let array = ArrayBuilder::new(
 array.store_metadata()?;
 // array.async_store_metadata().await?;
 </code></pre>
+<p><code>ArrayBuilder::new</code> supports more advanced initialisation from metadata, explicit extensions, etc.
+Consult the documentation.</p>
 <div class="mdbook-alerts mdbook-alerts-tip">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>

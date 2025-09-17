@@ -1,0 +1,138 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+    theme-id: 200
+    # theme-id: 300
+  }
+}
+
+style: {
+  fill: transparent
+}
+
+classes: {
+  grayDashed {
+    style: {
+      stroke-dash: 5
+    }
+  }
+}
+
+direction: up
+
+tools: CLI Tools {
+  zarrs_tools {
+    link: https://github.com/zarrs/zarrs_tools
+    tooltip: |md
+      Various tools for creating and manipulating Zarr V3 data with the zarrs rust crate
+        - A reencoder that can change codecs, chunk shape, convert Zarr V2 to V3, etc.
+        - Create an OME-Zarr hierarchy from a Zarr array.
+        - Transform arrays: crop, rescale, downsample, gradient magnitude, gaussian, noise filtering, etc.
+    |
+  }
+}
+
+metadata_conventions: Metadata Conventions {
+  ome_zarr_metadata {
+    link: https://github.com/zarrs/ome_zarr_metadata
+    tooltip: A library for OME-Zarr (previously OME-NGFF) metadata.
+  }
+}
+
+stores: Stores and Storage Adapters {
+  direction: right
+  grid-columns: 3
+  zarrs_filesystem: zarrs_filesystem\nzarrs::filesystem {
+    link: https://github.com/zarrs/zarrs/tree/main/zarrs_filesystem
+    tooltip: A filesystem store (re-exported as `zarrs::filesystem`).
+  }
+  zarrs_object_store {
+    link: https://github.com/zarrs/zarrs/tree/main/zarrs_object_store
+    tooltip: `object_store` store support.
+  }
+  zarrs_opendal {
+    link: https://github.com/zarrs/zarrs_opendal
+    tooltip: `opendal` store support.
+  }
+  zarrs_http {
+    link: https://github.com/zarrs/zarrs/tree/main/zarrs_http
+    tooltip: A synchronous http store.
+  }
+  zarrs_icechunk {
+    link: https://github.com/zarrs/zarrs_icechunk
+    tooltip: |md
+      `icechunk` store support.
+        - git-like version control for Zarr hierachies.
+        - Read "virtual Zarr datacubes" of archival formats (e.g., netCDF4, HDF5, etc.) created by `VirtualiZarr` and backed by `icechunk`.
+    |
+  }
+  zarrs_zip {
+    link: https://github.com/zarrs/zarrs/tree/main/zarrs_zip
+    tooltip: A storage adapter for zip files.
+  }
+}
+
+core: Core / Extension APIs {
+  zarrs_storage: zarrs_storage\nzarrs::storage {
+    link: https://github.com/zarrs/zarrs/tree/main/zarrs_storage
+    tooltip: The storage API for `zarrs` (re-exported as `zarrs::storage`).
+  }
+  zarrs_metadata_ext: zarrs_metadata_ext\nzarrs::metadata_ext {
+    link: https://github.com/zarrs/zarrs/tree/main/zarrs_metadata_ext
+    tooltip: Zarr extensions metadata support.
+  }
+  zarrs_metadata: zarrs_metadata\nzarrs::metadata {
+    link: https://github.com/zarrs/zarrs/tree/main/zarrs_metadata
+    tooltip: Zarr metadata support (re-exported as `zarrs::metadata`).
+  }
+  zarrs_registry: zarrs_registry\nzarrs::registry {
+    link: https://github.com/zarrs/zarrs/tree/main/zarrs_registry
+    tooltip: The Zarr extension point registry for `zarrs` (re-exported as `zarrs::registry`).
+  }
+  zarrs_plugin: zarrs_plugin\nzarrs::plugin {
+    link: https://github.com/zarrs/zarrs/tree/main/zarrs_plugin
+    tooltip: The plugin API for `zarrs` (re-exported as `zarrs::plugin`).
+  }
+
+  extensions: Zarr Extension Points {
+    direction: right
+    grid-columns: 1
+    zarrs_data_type: zarrs_data_type\nzarrs::array:data_type {
+        link: https://github.com/zarrs/zarrs/tree/main/zarrs_data_type
+        tooltip: The data type extension API for `zarrs` (re-exported in `zarrs::array::data_type`).
+    }
+    zarrs_chunk_grid: zarrs_chunk_grid\nzarrs::array:chunk_grid {
+        class: grayDashed
+    }
+    zarrs_codec: zarrs_codec\nzarrs::array:codec {
+        class: grayDashed
+    }
+  }
+  zarrs {
+    link: https://github.com/zarrs/zarrs/tree/main/zarrs
+    tooltip: The core library for manipulating Zarr hierarchies.
+  }
+}
+
+Bindings: {
+  zarrs_ffi: zarrs_ffi\nC/C++ {
+    link: https://github.com/zarrs/zarrs_ffi
+    tooltip: A subset of `zarrs` exposed as a C/C++ API.
+  }
+  zarrs_python: zarrs-python\nPython {
+    link: https://github.com/zarrs/zarrs-python
+    tooltip: A high-performance codec pipeline for `zarr-developers/zarr-python`.
+  }
+}
+
+core.zarrs_storage -> core.zarrs
+core.zarrs_metadata_ext -> core.zarrs
+core.zarrs_metadata -> core.zarrs_metadata_ext
+core.zarrs_registry -> core.zarrs_metadata_ext
+core.zarrs_metadata_ext -> core.extensions
+core.zarrs_plugin -> core.extensions
+core.extensions -> core.zarrs
+metadata_conventions -> tools
+stores -> core.zarrs_storage
+core -> tools
+core -> Bindings
