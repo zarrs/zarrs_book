@@ -22,9 +22,9 @@ let array = Array::open(store.clone(), array_path)?;
 let array_path = "/group/array";
 let array = ArrayBuilder::new(
     vec![8, 8], // array shape
+    vec![4, 4], // regular chunk shape
     DataType::Float32,
-    vec![4, 4].try_into()?, // regular chunk shape
-    FillValue::from(ZARR_NAN_F32),
+    f32::NAN,
 )
 // .bytes_to_bytes_codecs(vec![]) // uncompressed
 .bytes_to_bytes_codecs(vec![
@@ -37,6 +37,9 @@ let array = ArrayBuilder::new(
 array.store_metadata()?;
 // array.async_store_metadata().await?;
 ```
+
+`ArrayBuilder::new` supports more advanced initialisation from metadata, explicit extensions, etc.
+Consult the documentation.
 
 > [!TIP]
 > The [Group Initialisation Chapter](./group_init.md) has tips for creating attributes.
