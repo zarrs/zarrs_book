@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-d2-version="0.7.1" preserveAspectRatio="xMinYMin meet" viewBox="0 0 1438 1863"><svg class="d2-1899290529 d2-svg" width="1438" height="1863" viewBox="-89 -89 1438 1863"><rect x="-89.000000" y="-89.000000" width="1438.000000" height="1863.000000" rx="0.000000" fill="transparent" stroke-width="0" /><style type="text/css"><![CDATA[
+.d2-1899290529 .text {
+	font-family: "d2-1899290529-font-regular";
+}
+@font-face {
+	font-family: d2-1899290529-font-regular;
+	src: url("data:application/font-woff;base64,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");
+}
+.appendix-icon {
+	filter: drop-shadow(0px 0px 32px rgba(31, 36, 58, 0.1));
+}
+.d2-1899290529 .text-bold {
+	font-family: "d2-1899290529-font-bold";
+}
+@font-face {
+	font-family: d2-1899290529-font-bold;
+	src: url("data:application/font-woff;base64,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");
+}]]></style><style type="text/css"><![CDATA[.shape {
+  shape-rendering: geometricPrecision;
+  stroke-linejoin: round;
+}
+.connection {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.blend {
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+		.d2-1899290529 .fill-N1{fill:#CDD6F4;}
+		.d2-1899290529 .fill-N2{fill:#BAC2DE;}
+		.d2-1899290529 .fill-N3{fill:#A6ADC8;}
+		.d2-1899290529 .fill-N4{fill:#585B70;}
+		.d2-1899290529 .fill-N5{fill:#45475A;}
+		.d2-1899290529 .fill-N6{fill:#313244;}
+		.d2-1899290529 .fill-N7{fill:#1E1E2E;}
+		.d2-1899290529 .fill-B1{fill:#CBA6f7;}
+		.d2-1899290529 .fill-B2{fill:#CBA6f7;}
+		.d2-1899290529 .fill-B3{fill:#6C7086;}
+		.d2-1899290529 .fill-B4{fill:#585B70;}
+		.d2-1899290529 .fill-B5{fill:#45475A;}
+		.d2-1899290529 .fill-B6{fill:#313244;}
+		.d2-1899290529 .fill-AA2{fill:#f38BA8;}
+		.d2-1899290529 .fill-AA4{fill:#45475A;}
+		.d2-1899290529 .fill-AA5{fill:#313244;}
+		.d2-1899290529 .fill-AB4{fill:#45475A;}
+		.d2-1899290529 .fill-AB5{fill:#313244;}
+		.d2-1899290529 .stroke-N1{stroke:#CDD6F4;}
+		.d2-1899290529 .stroke-N2{stroke:#BAC2DE;}
+		.d2-1899290529 .stroke-N3{stroke:#A6ADC8;}
+		.d2-1899290529 .stroke-N4{stroke:#585B70;}
+		.d2-1899290529 .stroke-N5{stroke:#45475A;}
+		.d2-1899290529 .stroke-N6{stroke:#313244;}
+		.d2-1899290529 .stroke-N7{stroke:#1E1E2E;}
+		.d2-1899290529 .stroke-B1{stroke:#CBA6f7;}
+		.d2-1899290529 .stroke-B2{stroke:#CBA6f7;}
+		.d2-1899290529 .stroke-B3{stroke:#6C7086;}
+		.d2-1899290529 .stroke-B4{stroke:#585B70;}
+		.d2-1899290529 .stroke-B5{stroke:#45475A;}
+		.d2-1899290529 .stroke-B6{stroke:#313244;}
+		.d2-1899290529 .stroke-AA2{stroke:#f38BA8;}
+		.d2-1899290529 .stroke-AA4{stroke:#45475A;}
+		.d2-1899290529 .stroke-AA5{stroke:#313244;}
+		.d2-1899290529 .stroke-AB4{stroke:#45475A;}
+		.d2-1899290529 .stroke-AB5{stroke:#313244;}
+		.d2-1899290529 .background-color-N1{background-color:#CDD6F4;}
+		.d2-1899290529 .background-color-N2{background-color:#BAC2DE;}
+		.d2-1899290529 .background-color-N3{background-color:#A6ADC8;}
+		.d2-1899290529 .background-color-N4{background-color:#585B70;}
+		.d2-1899290529 .background-color-N5{background-color:#45475A;}
+		.d2-1899290529 .background-color-N6{background-color:#313244;}
+		.d2-1899290529 .background-color-N7{background-color:#1E1E2E;}
+		.d2-1899290529 .background-color-B1{background-color:#CBA6f7;}
+		.d2-1899290529 .background-color-B2{background-color:#CBA6f7;}
+		.d2-1899290529 .background-color-B3{background-color:#6C7086;}
+		.d2-1899290529 .background-color-B4{background-color:#585B70;}
+		.d2-1899290529 .background-color-B5{background-color:#45475A;}
+		.d2-1899290529 .background-color-B6{background-color:#313244;}
+		.d2-1899290529 .background-color-AA2{background-color:#f38BA8;}
+		.d2-1899290529 .background-color-AA4{background-color:#45475A;}
+		.d2-1899290529 .background-color-AA5{background-color:#313244;}
+		.d2-1899290529 .background-color-AB4{background-color:#45475A;}
+		.d2-1899290529 .background-color-AB5{background-color:#313244;}
+		.d2-1899290529 .color-N1{color:#CDD6F4;}
+		.d2-1899290529 .color-N2{color:#BAC2DE;}
+		.d2-1899290529 .color-N3{color:#A6ADC8;}
+		.d2-1899290529 .color-N4{color:#585B70;}
+		.d2-1899290529 .color-N5{color:#45475A;}
+		.d2-1899290529 .color-N6{color:#313244;}
+		.d2-1899290529 .color-N7{color:#1E1E2E;}
+		.d2-1899290529 .color-B1{color:#CBA6f7;}
+		.d2-1899290529 .color-B2{color:#CBA6f7;}
+		.d2-1899290529 .color-B3{color:#6C7086;}
+		.d2-1899290529 .color-B4{color:#585B70;}
+		.d2-1899290529 .color-B5{color:#45475A;}
+		.d2-1899290529 .color-B6{color:#313244;}
+		.d2-1899290529 .color-AA2{color:#f38BA8;}
+		.d2-1899290529 .color-AA4{color:#45475A;}
+		.d2-1899290529 .color-AA5{color:#313244;}
+		.d2-1899290529 .color-AB4{color:#45475A;}
+		.d2-1899290529 .color-AB5{color:#313244;}.appendix text.text{fill:#CDD6F4}.md{--color-fg-default:#CDD6F4;--color-fg-muted:#BAC2DE;--color-fg-subtle:#A6ADC8;--color-canvas-default:#1E1E2E;--color-canvas-subtle:#313244;--color-border-default:#CBA6f7;--color-border-muted:#CBA6f7;--color-neutral-muted:#313244;--color-accent-fg:#CBA6f7;--color-accent-emphasis:#CBA6f7;--color-attention-subtle:#BAC2DE;--color-danger-fg:red;}.sketch-overlay-B1{fill:url(#streaks-normal-d2-1899290529);mix-blend-mode:color-burn}.sketch-overlay-B2{fill:url(#streaks-normal-d2-1899290529);mix-blend-mode:color-burn}.sketch-overlay-B3{fill:url(#streaks-dark-d2-1899290529);mix-blend-mode:overlay}.sketch-overlay-B4{fill:url(#streaks-dark-d2-1899290529);mix-blend-mode:overlay}.sketch-overlay-B5{fill:url(#streaks-darker-d2-1899290529);mix-blend-mode:lighten}.sketch-overlay-B6{fill:url(#streaks-darker-d2-1899290529);mix-blend-mode:lighten}.sketch-overlay-AA2{fill:url(#streaks-normal-d2-1899290529);mix-blend-mode:color-burn}.sketch-overlay-AA4{fill:url(#streaks-darker-d2-1899290529);mix-blend-mode:lighten}.sketch-overlay-AA5{fill:url(#streaks-darker-d2-1899290529);mix-blend-mode:lighten}.sketch-overlay-AB4{fill:url(#streaks-darker-d2-1899290529);mix-blend-mode:lighten}.sketch-overlay-AB5{fill:url(#streaks-darker-d2-1899290529);mix-blend-mode:lighten}.sketch-overlay-N1{fill:url(#streaks-normal-d2-1899290529);mix-blend-mode:color-burn}.sketch-overlay-N2{fill:url(#streaks-normal-d2-1899290529);mix-blend-mode:color-burn}.sketch-overlay-N3{fill:url(#streaks-normal-d2-1899290529);mix-blend-mode:color-burn}.sketch-overlay-N4{fill:url(#streaks-dark-d2-1899290529);mix-blend-mode:overlay}.sketch-overlay-N5{fill:url(#streaks-darker-d2-1899290529);mix-blend-mode:lighten}.sketch-overlay-N6{fill:url(#streaks-darker-d2-1899290529);mix-blend-mode:lighten}.sketch-overlay-N7{fill:url(#streaks-darker-d2-1899290529);mix-blend-mode:lighten}.light-code{display: none}.dark-code{display: block}]]></style><g class="dG9vbHM="><g class="shape" ><rect x="92.000000" y="28.000000" width="289.000000" height="166.000000" stroke="#CBA6f7" fill="#585B70" class=" stroke-B1 fill-B4" style="stroke-width:2;" /></g><text x="236.500000" y="61.000000" fill="#CDD6F4" class="text fill-N1" style="text-anchor:middle;font-size:28px">CLI Tools</text></g><g class="bWV0YWRhdGFfY29udmVudGlvbnM="><g class="shape" ><rect x="12.000000" y="274.000000" width="353.000000" height="166.000000" stroke="#CBA6f7" fill="#585B70" class=" stroke-B1 fill-B4" style="stroke-width:2;" /></g><text x="188.500000" y="307.000000" fill="#CDD6F4" class="text fill-N1" style="text-anchor:middle;font-size:28px">Metadata Conventions</text></g><g class="c3RvcmVz"><g class="shape" ><rect x="104.000000" y="1365.000000" width="870.000000" height="308.000000" stroke="#CBA6f7" fill="#585B70" class=" stroke-B1 fill-B4" style="stroke-width:2;" /></g><text x="539.000000" y="1398.000000" fill="#CDD6F4" class="text fill-N1" style="text-anchor:middle;font-size:28px">Stores and Storage Adapters</text></g><g class="Y29yZQ=="><g class="shape" ><rect x="385.000000" y="274.000000" width="863.000000" height="1016.000000" stroke="#CBA6f7" fill="#585B70" class=" stroke-B1 fill-B4" style="stroke-width:2;" /></g><text x="816.500000" y="307.000000" fill="#CDD6F4" class="text fill-N1" style="text-anchor:middle;font-size:28px">Core / Extension APIs</text></g><g class="QmluZGluZ3M="><g class="shape" ><rect x="420.000000" y="12.000000" width="489.000000" height="182.000000" stroke="#CBA6f7" fill="#585B70" class=" stroke-B1 fill-B4" style="stroke-width:2;" /></g><text x="664.500000" y="45.000000" fill="#CDD6F4" class="text fill-N1" style="text-anchor:middle;font-size:28px">Bindings</text></g><a href="https://github.com/zarrs/zarrs_tools" xlink:href="https://github.com/zarrs/zarrs_tools"><g class="dG9vbHMuemFycnNfdG9vbHM="><g class="shape" ><rect x="142.000000" y="78.000000" width="189.000000" height="66.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="236.500000" y="116.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px">zarrs_tools</text><title>Various tools for creating and manipulating Zarr V3 data with the zarrs rust crate&#xA;  - A reencoder that can change codecs, chunk shape, convert Zarr V2 to V3, etc.&#xA;  - Create an OME-Zarr hierarchy from a Zarr array.&#xA;  - Transform arrays: crop, rescale, downsample, gradient magnitude, gaussian, noise filtering, etc.</title></g></a><a href="https://github.com/zarrs/ome_zarr_metadata" xlink:href="https://github.com/zarrs/ome_zarr_metadata"><g class="bWV0YWRhdGFfY29udmVudGlvbnMub21lX3phcnJfbWV0YWRhdGE="><g class="shape" ><rect x="62.000000" y="324.000000" width="253.000000" height="66.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="188.500000" y="362.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px">ome_zarr_metadata</text><title>A library for OME-Zarr (previously OME-NGFF) metadata.</title></g></a><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_filesystem" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs_filesystem"><g class="c3RvcmVzLnphcnJzX2ZpbGVzeXN0ZW0="><g class="shape" ><rect x="164.000000" y="1425.000000" width="242.000000" height="82.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="285.000000" y="1463.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="285.000000" dy="0.000000">zarrs_filesystem</tspan><tspan x="285.000000" dy="18.500000">zarrs::filesystem</tspan></text><title>A filesystem store (re-exported as `zarrs::filesystem`).</title></g></a><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_object_store" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs_object_store"><g class="c3RvcmVzLnphcnJzX29iamVjdF9zdG9yZQ=="><g class="shape" ><rect x="164.000000" y="1547.000000" width="242.000000" height="66.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="285.000000" y="1585.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px">zarrs_object_store</text><title>`object_store` store support.</title></g></a><a href="https://github.com/zarrs/zarrs_opendal" xlink:href="https://github.com/zarrs/zarrs_opendal"><g class="c3RvcmVzLnphcnJzX29wZW5kYWw="><g class="shape" ><rect x="446.000000" y="1425.000000" width="211.000000" height="74.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="551.500000" y="1467.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px">zarrs_opendal</text><title>`opendal` store support.</title></g></a><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_http" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs_http"><g class="c3RvcmVzLnphcnJzX2h0dHA="><g class="shape" ><rect x="446.000000" y="1539.000000" width="211.000000" height="74.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="551.500000" y="1581.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px">zarrs_http</text><title>A synchronous http store.</title></g></a><a href="https://github.com/zarrs/zarrs_icechunk" xlink:href="https://github.com/zarrs/zarrs_icechunk"><g class="c3RvcmVzLnphcnJzX2ljZWNodW5r"><g class="shape" ><rect x="697.000000" y="1425.000000" width="217.000000" height="74.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="805.500000" y="1467.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px">zarrs_icechunk</text><title>`icechunk` store support.&#xA;  - git-like version control for Zarr hierachies.&#xA;  - Read &#34;virtual Zarr datacubes&#34; of archival formats (e.g., netCDF4, HDF5, etc.) created by `VirtualiZarr` and backed by `icechunk`.</title></g></a><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_zip" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs_zip"><g class="c3RvcmVzLnphcnJzX3ppcA=="><g class="shape" ><rect x="697.000000" y="1539.000000" width="217.000000" height="74.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="805.500000" y="1581.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px">zarrs_zip</text><title>A storage adapter for zip files.</title></g></a><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_storage" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs_storage"><g class="Y29yZS56YXJyc19zdG9yYWdl"><g class="shape" ><rect x="435.000000" y="652.000000" width="208.000000" height="82.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="539.000000" y="690.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="539.000000" dy="0.000000">zarrs_storage</tspan><tspan x="539.000000" dy="18.500000">zarrs::storage</tspan></text><title>The storage API for `zarrs` (re-exported as `zarrs::storage`).</title></g></a><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_metadata_ext" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs_metadata_ext"><g class="Y29yZS56YXJyc19tZXRhZGF0YV9leHQ="><g class="shape" ><rect x="683.000000" y="996.000000" width="254.000000" height="82.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="810.000000" y="1034.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="810.000000" dy="0.000000">zarrs_metadata_ext</tspan><tspan x="810.000000" dy="18.500000">zarrs::metadata_ext</tspan></text><title>Zarr extensions metadata support.</title></g></a><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_metadata" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs_metadata"><g class="Y29yZS56YXJyc19tZXRhZGF0YQ=="><g class="shape" ><rect x="580.000000" y="1158.000000" width="223.000000" height="82.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="691.500000" y="1196.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="691.500000" dy="0.000000">zarrs_metadata</tspan><tspan x="691.500000" dy="18.500000">zarrs::metadata</tspan></text><title>Zarr metadata support (re-exported as `zarrs::metadata`).</title></g></a><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_registry" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs_registry"><g class="Y29yZS56YXJyc19yZWdpc3RyeQ=="><g class="shape" ><rect x="823.000000" y="1158.000000" width="211.000000" height="82.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="928.500000" y="1196.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="928.500000" dy="0.000000">zarrs_registry</tspan><tspan x="928.500000" dy="18.500000">zarrs::registry</tspan></text><title>The Zarr extension point registry for `zarrs` (re-exported as `zarrs::registry`).</title></g></a><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_plugin" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs_plugin"><g class="Y29yZS56YXJyc19wbHVnaW4="><g class="shape" ><rect x="968.000000" y="996.000000" width="200.000000" height="82.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="1068.000000" y="1034.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="1068.000000" dy="0.000000">zarrs_plugin</tspan><tspan x="1068.000000" dy="18.500000">zarrs::plugin</tspan></text><title>The plugin API for `zarrs` (re-exported as `zarrs::plugin`).</title></g></a><g class="Y29yZS5leHRlbnNpb25z"><g class="shape" ><rect x="808.000000" y="470.000000" width="389.000000" height="446.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="1002.500000" y="499.000000" fill="#CDD6F4" class="text fill-N1" style="text-anchor:middle;font-size:24px">Zarr Extension Points</text></g><a href="https://github.com/zarrs/zarrs/tree/main/zarrs" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs"><g class="Y29yZS56YXJycw=="><g class="shape" ><rect x="695.000000" y="324.000000" width="145.000000" height="66.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="767.500000" y="362.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px">zarrs</text><title>The core library for manipulating Zarr hierarchies.</title></g></a><a href="https://github.com/zarrs/zarrs_ffi" xlink:href="https://github.com/zarrs/zarrs_ffi"><g class="QmluZGluZ3MuemFycnNfZmZp"><g class="shape" ><rect x="470.000000" y="62.000000" width="168.000000" height="82.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="554.000000" y="100.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="554.000000" dy="0.000000">zarrs_ffi</tspan><tspan x="554.000000" dy="18.500000">C/C++</tspan></text><title>A subset of `zarrs` exposed as a C/C++ API.</title></g></a><a href="https://github.com/zarrs/zarrs-python" xlink:href="https://github.com/zarrs/zarrs-python"><g class="QmluZGluZ3MuemFycnNfcHl0aG9u"><g class="shape" ><rect x="658.000000" y="62.000000" width="201.000000" height="82.000000" stroke="#CBA6f7" fill="#45475A" class=" stroke-B1 fill-B5" style="stroke-width:2;" /></g><text x="758.500000" y="100.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="758.500000" dy="0.000000">zarrs-python</tspan><tspan x="758.500000" dy="18.500000">Python</tspan></text><title>A high-performance codec pipeline for `zarr-developers/zarr-python`.</title></g></a><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_data_type" xlink:href="https://github.com/zarrs/zarrs/tree/main/zarrs_data_type"><g class="Y29yZS5leHRlbnNpb25zLnphcnJzX2RhdGFfdHlwZQ=="><g class="shape" ><rect x="868.000000" y="530.000000" width="269.000000" height="82.000000" stroke="#CBA6f7" fill="#313244" class=" stroke-B1 fill-B6" style="stroke-width:2;" /></g><text x="1002.500000" y="568.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="1002.500000" dy="0.000000">zarrs_data_type</tspan><tspan x="1002.500000" dy="18.500000">zarrs::array:data_type</tspan></text><title>The data type extension API for `zarrs` (re-exported in `zarrs::array::data_type`).</title></g></a><g class="Y29yZS5leHRlbnNpb25zLnphcnJzX2NodW5rX2dyaWQ= grayDashed"><g class="shape" ><rect x="868.000000" y="652.000000" width="269.000000" height="82.000000" stroke="#CBA6f7" fill="#313244" class=" stroke-B2 fill-B6" style="stroke-width:2;stroke-dasharray:10.000000,9.865639;" /></g><text x="1002.500000" y="690.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="1002.500000" dy="0.000000">zarrs_chunk_grid</tspan><tspan x="1002.500000" dy="18.500000">zarrs::array:chunk_grid</tspan></text></g><g class="Y29yZS5leHRlbnNpb25zLnphcnJzX2NvZGVj grayDashed"><g class="shape" ><rect x="868.000000" y="774.000000" width="269.000000" height="82.000000" stroke="#CBA6f7" fill="#313244" class=" stroke-B2 fill-B6" style="stroke-width:2;stroke-dasharray:10.000000,9.865639;" /></g><text x="1002.500000" y="812.500000" fill="#CDD6F4" class="text-bold fill-N1" style="text-anchor:middle;font-size:16px"><tspan x="1002.500000" dy="0.000000">zarrs_codec</tspan><tspan x="1002.500000" dy="18.500000">zarrs::array:codec</tspan></text></g><g class="Y29yZS4oemFycnNfc3RvcmFnZSAtJmd0OyB6YXJycylbMF0="><marker id="mk-d2-1899290529-3488378134" markerWidth="10.000000" markerHeight="12.000000" refX="7.000000" refY="6.000000" viewBox="0.000000 0.000000 10.000000 12.000000" orient="auto" markerUnits="userSpaceOnUse"> <polygon points="0.000000,0.000000 10.000000,6.000000 0.000000,12.000000" fill="#CBA6f7" class="connection fill-B1" stroke-width="2" /> </marker><path d="M 539.000000 650.000000 L 539.000000 440.000000 S 539.000000 430.000000 549.000000 430.000000 L 721.416016 430.000000 S 731.416016 430.000000 731.416016 420.000000 L 731.416016 394.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g class="Y29yZS4oemFycnNfbWV0YWRhdGFfZXh0IC0mZ3Q7IHphcnJzKVswXQ=="><path d="M 767.666016 994.000000 L 767.666016 394.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g class="Y29yZS4oemFycnNfbWV0YWRhdGEgLSZndDsgemFycnNfbWV0YWRhdGFfZXh0KVswXQ=="><path d="M 767.666016 1156.000000 L 767.666016 1082.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g class="Y29yZS4oemFycnNfcmVnaXN0cnkgLSZndDsgemFycnNfbWV0YWRhdGFfZXh0KVswXQ=="><path d="M 852.333008 1156.000000 L 852.333008 1082.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g class="Y29yZS4oemFycnNfbWV0YWRhdGFfZXh0IC0mZ3Q7IGV4dGVuc2lvbnMpWzBd"><path d="M 852.333008 994.000000 L 852.333008 920.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g class="Y29yZS4oemFycnNfcGx1Z2luIC0mZ3Q7IGV4dGVuc2lvbnMpWzBd"><path d="M 1068.000000 994.000000 L 1068.000000 920.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g class="Y29yZS4oZXh0ZW5zaW9ucyAtJmd0OyB6YXJycylbMF0="><path d="M 1003.166016 468.000000 L 1003.166016 440.000000 S 1003.166016 430.000000 993.166016 430.000000 L 813.916016 430.000000 S 803.916016 430.000000 803.916016 420.000000 L 803.916016 394.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g class="KG1ldGFkYXRhX2NvbnZlbnRpb25zIC0mZ3Q7IHRvb2xzKVswXQ=="><path d="M 188.500000 272.000000 L 188.500000 198.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g class="KHN0b3JlcyAtJmd0OyBjb3JlLnphcnJzX3N0b3JhZ2UpWzBd"><path d="M 539.000000 1363.000000 L 539.000000 738.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g class="KGNvcmUgLSZndDsgdG9vbHMpWzBd"><path d="M 654.916016 272.000000 L 654.916016 244.000000 S 654.916016 234.000000 644.916016 234.000000 L 294.833008 234.000000 S 284.833008 234.000000 284.833008 224.000000 L 284.833008 198.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g class="KGNvcmUgLSZndDsgQmluZGluZ3MpWzBd"><path d="M 664.916016 272.000000 L 664.916016 198.000000" stroke="#CBA6f7" fill="none" class="connection stroke-B1" style="stroke-width:2;" marker-end="url(#mk-d2-1899290529-3488378134)" mask="url(#d2-1899290529)" /></g><g transform="translate(315 62)" class="appendix-icon"><title>Various tools for creating and manipulating Zarr V3 data with the zarrs rust crate&#xA;  - A reencoder that can change codecs, chunk shape, convert Zarr V2 to V3, etc.&#xA;  - Create an OME-Zarr hierarchy from a Zarr array.&#xA;  - Transform arrays: crop, rescale, downsample, gradient magnitude, gaussian, noise filtering, etc.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-ORXW63DTFZ5GC4TSONPXI33PNRZQ)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-ORXW63DTFZ5GC4TSONPXI33PNRZQ">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(283 62)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-ORXW63DTFZ5GC4TSONPXI33PNRZQ)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-ORXW63DTFZ5GC4TSONPXI33PNRZQ">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(299 308)" class="appendix-icon"><title>A library for OME-Zarr (previously OME-NGFF) metadata.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-NVSXIYLEMF2GCX3DN5XHMZLOORUW63TTFZXW2ZK7PJQXE4S7NVSXIYLEMF2GC)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-NVSXIYLEMF2GCX3DN5XHMZLOORUW63TTFZXW2ZK7PJQXE4S7NVSXIYLEMF2GC">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(267 308)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-NVSXIYLEMF2GCX3DN5XHMZLOORUW63TTFZXW2ZK7PJQXE4S7NVSXIYLEMF2GC)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-NVSXIYLEMF2GCX3DN5XHMZLOORUW63TTFZXW2ZK7PJQXE4S7NVSXIYLEMF2GC">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(390 1409)" class="appendix-icon"><title>A filesystem store (re-exported as `zarrs::filesystem`).</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV6ZTJNRSXG6LTORSW2)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV6ZTJNRSXG6LTORSW2">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(358 1409)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV6ZTJNRSXG6LTORSW2)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV6ZTJNRSXG6LTORSW2">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(390 1531)" class="appendix-icon"><title>`object_store` store support.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV633CNJSWG5C7ON2G64TF)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV633CNJSWG5C7ON2G64TF">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(358 1531)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV633CNJSWG5C7ON2G64TF)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV633CNJSWG5C7ON2G64TF">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(641 1409)" class="appendix-icon"><title>`opendal` store support.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV633QMVXGIYLM)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV633QMVXGIYLM">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(609 1409)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV633QMVXGIYLM)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV633QMVXGIYLM">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(641 1523)" class="appendix-icon"><title>A synchronous http store.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV62DUORYA)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV62DUORYA">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(609 1523)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV62DUORYA)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV62DUORYA">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(898 1409)" class="appendix-icon"><title>`icechunk` store support.&#xA;  - git-like version control for Zarr hierachies.&#xA;  - Read &#34;virtual Zarr datacubes&#34; of archival formats (e.g., netCDF4, HDF5, etc.) created by `VirtualiZarr` and backed by `icechunk`.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV62LDMVRWQ5LONM)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV62LDMVRWQ5LONM">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(866 1409)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV62LDMVRWQ5LONM)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV62LDMVRWQ5LONM">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(898 1523)" class="appendix-icon"><title>A storage adapter for zip files.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV66TJOA)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-ON2G64TFOMXHUYLSOJZV66TJOA">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(866 1523)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV66TJOA)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-ON2G64TFOMXHUYLSOJZV66TJOA">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(627 636)" class="appendix-icon"><title>The storage API for `zarrs` (re-exported as `zarrs::storage`).</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TTL5ZXI33SMFTWK)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TTL5ZXI33SMFTWK">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(595 636)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TTL5ZXI33SMFTWK)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TTL5ZXI33SMFTWK">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(921 980)" class="appendix-icon"><title>Zarr extensions metadata support.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TTL5WWK5DBMRQXIYK7MV4HI)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TTL5WWK5DBMRQXIYK7MV4HI">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(889 980)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TTL5WWK5DBMRQXIYK7MV4HI)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TTL5WWK5DBMRQXIYK7MV4HI">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(787 1142)" class="appendix-icon"><title>Zarr metadata support (re-exported as `zarrs::metadata`).</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TTL5WWK5DBMRQXIYI)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TTL5WWK5DBMRQXIYI">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(755 1142)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TTL5WWK5DBMRQXIYI)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TTL5WWK5DBMRQXIYI">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(1018 1142)" class="appendix-icon"><title>The Zarr extension point registry for `zarrs` (re-exported as `zarrs::registry`).</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TTL5ZGKZ3JON2HE6I)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TTL5ZGKZ3JON2HE6I">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(986 1142)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TTL5ZGKZ3JON2HE6I)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TTL5ZGKZ3JON2HE6I">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(1152 980)" class="appendix-icon"><title>The plugin API for `zarrs` (re-exported as `zarrs::plugin`).</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TTL5YGY5LHNFXA)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TTL5YGY5LHNFXA">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(1120 980)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TTL5YGY5LHNFXA)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TTL5YGY5LHNFXA">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(824 308)" class="appendix-icon"><title>The core library for manipulating Zarr hierarchies.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TT)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-MNXXEZJOPJQXE4TT">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(792 308)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TT)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-MNXXEZJOPJQXE4TT">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(622 46)" class="appendix-icon"><title>A subset of `zarrs` exposed as a C/C++ API.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-IJUW4ZDJNZTXGLT2MFZHE427MZTGS)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-IJUW4ZDJNZTXGLT2MFZHE427MZTGS">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(590 46)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-IJUW4ZDJNZTXGLT2MFZHE427MZTGS)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-IJUW4ZDJNZTXGLT2MFZHE427MZTGS">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(843 46)" class="appendix-icon"><title>A high-performance codec pipeline for `zarr-developers/zarr-python`.</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-IJUW4ZDJNZTXGLT2MFZHE427OB4XI2DPNY)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-IJUW4ZDJNZTXGLT2MFZHE427OB4XI2DPNY">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(811 46)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-IJUW4ZDJNZTXGLT2MFZHE427OB4XI2DPNY)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-IJUW4ZDJNZTXGLT2MFZHE427OB4XI2DPNY">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(1121 514)" class="appendix-icon"><title>The data type extension API for `zarrs` (re-exported in `zarrs::array::data_type`).</title><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3427_35082111-d2-1899290529-MNXXEZJOMV4HIZLOONUW63TTFZ5GC4TSONPWIYLUMFPXI6LQMU)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M16 26C21.5228 26 26 21.5228 26 16C26 10.4772 21.5228 6 16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26Z" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 19.998V15.998" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 12H16.0098" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3427_35082111-d2-1899290529-MNXXEZJOMV4HIZLOONUW63TTFZ5GC4TSONPWIYLUMFPXI6LQMU">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><g transform="translate(1089 514)" class="appendix-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3440_35088111-d2-1899290529-MNXXEZJOMV4HIZLOONUW63TTFZ5GC4TSONPWIYLUMFPXI6LQMU)">
+<path d="M16 31.1109C24.3456 31.1109 31.1111 24.3454 31.1111 15.9998C31.1111 7.65415 24.3456 0.888672 16 0.888672C7.65436 0.888672 0.888885 7.65415 0.888885 15.9998C0.888885 24.3454 7.65436 31.1109 16 31.1109Z" fill="white" stroke="#DEE1EB"/>
+<path d="M14.3909 16.7965C14.7364 17.2584 15.1772 17.6406 15.6834 17.9171C16.1896 18.1938 16.7494 18.3582 17.3248 18.3993C17.9001 18.4405 18.4777 18.3575 19.0181 18.1559C19.5586 17.9543 20.0492 17.6389 20.4571 17.2309L22.8708 14.8173C23.6036 14.0586 24.0089 13.0425 23.9998 11.9877C23.9906 10.933 23.5676 9.92404 22.8217 9.17821C22.0759 8.43237 21.067 8.00931 20.0123 8.00015C18.9575 7.99098 17.9413 8.39644 17.1827 9.1292L15.7988 10.505" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.609 15.1874C17.2635 14.7255 16.8227 14.3433 16.3165 14.0667C15.8103 13.7902 15.2505 13.6257 14.6752 13.5845C14.0998 13.5433 13.5223 13.6263 12.9819 13.8279C12.4414 14.0295 11.9506 14.345 11.5428 14.753L9.1292 17.1666C8.39644 17.9252 7.99098 18.9414 8.00015 19.9962C8.00931 21.0509 8.43237 22.0598 9.17821 22.8056C9.92405 23.5515 10.933 23.9745 11.9877 23.9837C13.0425 23.9928 14.0586 23.5875 14.8173 22.8547L16.193 21.4788" stroke="#2E3346" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_3440_35088111-d2-1899290529-MNXXEZJOMV4HIZLOONUW63TTFZ5GC4TSONPWIYLUMFPXI6LQMU">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+</g><mask id="d2-1899290529" maskUnits="userSpaceOnUse" x="-89" y="-89" width="1438" height="1863">
+<rect x="-89" y="-89" width="1438" height="1863" fill="white"></rect>
+
+</mask></svg></svg>

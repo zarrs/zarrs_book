@@ -49,63 +49,8 @@ The `zarrs` crate has been split into multiple crates to:
 - stay up-to-date with unstable public dependencies (e.g. `opendal`, `object_store`, `icechunk`, etc) without impacting the release cycle of `zarrs`, and
 - improve compilation times.
 
-Below is a slightly simplified overview of the crate structure:
-```mermaid
-graph LR
-    subgraph tools[CLI Tools]
-        zarrs_tools
-    end
-    subgraph metadata_conventions[Zarr Metadata Conventions]
-        ome_zarr_metadata
-    end
-    subgraph Stores
-        direction LR
-        zarrs_filesystem[zarrs_filesystem <br> zarrs::filesystem]
-        zarrs_object_store
-        zarrs_opendal
-        zarrs_http
-        zarrs_icechunk
-    end
-    subgraph Core
-        zarrs_storage[zarrs_storage <br> zarrs::storage]
-        zarrs_metadata_ext[zarrs_metadata_ext <br> zarrs::metadata_ext]
-        zarrs_metadata[zarrs_metadata <br> zarrs::metadata]
-        zarrs_registry[zarrs_registry <br> zarrs::registry]
-        zarrs_plugin[zarrs_plugin <br> zarrs::plugin]
-        subgraph Extensions
-            direction LR
-            zarrs_data_type[zarrs_data_type <br> zarrs::array:data_type]
-            %% zarrs_codec TODO
-            %% zarrs_chunk_grid TODO
-        end
-        zarrs
-    end
-    subgraph storage_adapters[Storage Adapters]
-        zarrs_zip
-    end
-    subgraph Bindings
-        %% direction LR
-        zarrs_ffi[zarrs_ffi <br> C/C++]
-        zarrs-python[zarrs-python <br> Python]
-    end
-    zarrs_storage --> zarrs
-    %% zarrs_registry --> zarrs
-    zarrs_metadata_ext --> zarrs
-    zarrs_metadata --> zarrs_metadata_ext
-    zarrs_registry --> zarrs_metadata_ext
-    %% zarrs_metadata --> zarrs
-    %% zarrs_metadata --> Extensions
-    zarrs_metadata_ext --> Extensions
-    zarrs_plugin --> Extensions
-    Extensions --> zarrs
-    %% zarrs_plugin ---> zarrs
-    ome_zarr_metadata --> zarrs_tools
-    Stores --> storage_adapters
-    storage_adapters --> zarrs_storage
-    Stores --> zarrs_storage
-    Core --> tools
-    Core --> Bindings
-```
+Below is an overview of the crate structure:
+<object data="./crates.svg" type="image/svg+xml"></object>
 
 The core crate is:
 - `zarrs` [![zarrs_ver]](https://crates.io/crates/zarrs) [![zarrs_doc]](https://docs.rs/zarrs) [![zarrs_repo]](https://github.com/zarrs/zarrs)
@@ -115,13 +60,21 @@ The core crate is:
 [zarrs_repo]: https://img.shields.io/badge/zarrs/zarrs/zarrs-GitHub-blue?logo=github
 
 For local filesystem stores (referred to as *native Zarr*), this is the only crate you need to depend on.
-`zarrs` has quite a few supplementary crates that are typically just used as transitive dependencies:
+
+`zarrs` has quite a few supplementary crates:
 - `zarrs_metadata` [![zarrs_metadata_ver]](https://crates.io/crates/zarrs_metadata) [![zarrs_metadata_doc]](https://docs.rs/zarrs_metadata) [![zarrs_metadata_repo]](https://github.com/zarrs/zarrs/tree/main/zarrs_metadata)
 - `zarrs_metadata_ext` [![zarrs_metadata_ext_ver]](https://crates.io/crates/zarrs_metadata_ext) [![zarrs_metadata_ext_doc]](https://docs.rs/zarrs_metadata_ext) [![zarrs_metadata_ext_repo]](https://github.com/zarrs/zarrs/tree/main/zarrs_metadata_ext)
 - `zarrs_storage` [![zarrs_storage_ver]](https://crates.io/crates/zarrs_storage) [![zarrs_storage_doc]](https://docs.rs/zarrs_storage) [![zarrs_storage_repo]](https://github.com/zarrs/zarrs/tree/main/zarrs_storage)
 - `zarrs_plugin` [![zarrs_plugin_ver]](https://crates.io/crates/zarrs_plugin) [![zarrs_plugin_doc]](https://docs.rs/zarrs_plugin) [![zarrs_plugin_repo]](https://github.com/zarrs/zarrs/tree/main/zarrs_plugin)
 - `zarrs_data_type` [![zarrs_data_type_ver]](https://crates.io/crates/zarrs_data_type) [![zarrs_data_type_doc]](https://docs.rs/zarrs_data_type) [![zarrs_data_type_repo]](https://github.com/zarrs/zarrs/tree/main/zarrs_data_type)
 - `zarrs_registry` [![zarrs_registry_ver]](https://crates.io/crates/zarrs_registry) [![zarrs_registry_doc]](https://docs.rs/zarrs_registry) [![zarrs_registry_repo]](https://github.com/zarrs/zarrs/tree/main/zarrs_registry)
+
+> [!TIP]
+> The supplementary crates are transitive dependencies of `zarrs`, and are re-exported in the crate root.
+> You do not need to add them as direct dependencies.
+
+> [!NOTE]
+> The supplementary crates are separated from `zarrs` to enable development of Zarr extensions and stores targeting a more stable API than `zarrs` itself.
 
 [zarrs_metadata_ver]: https://img.shields.io/crates/v/zarrs_metadata
 [zarrs_metadata_doc]: https://docs.rs/zarrs_metadata/badge.svg
@@ -173,7 +126,7 @@ This crate is detailed in the [zarrs_tools](./zarrs_tools.md) chapter.
 
 ## Zarr Metadata Conventions
 
-### `ome_zarr_metadata` [![ome_zarr_metadata_ver]](https://crates.io/crates/ome_zarr_metadata) [![ome_zarr_metadata_doc]](https://docs.rs/ome_zarr_metadata) [![ome_zarr_metadata_repo]](https://github.com/zarrs/rust_ome_zarr_metadata)
+### `ome_zarr_metadata` [![ome_zarr_metadata_ver]](https://crates.io/crates/ome_zarr_metadata) [![ome_zarr_metadata_doc]](https://docs.rs/ome_zarr_metadata) [![ome_zarr_metadata_repo]](https://github.com/zarrs/ome_zarr_metadata)
 [ome_zarr_metadata_ver]: https://img.shields.io/crates/v/ome_zarr_metadata
 [ome_zarr_metadata_doc]: https://docs.rs/ome_zarr_metadata/badge.svg
 [ome_zarr_metadata_repo]: https://img.shields.io/badge/zarrs/rust__ome__zarr__metadata-GitHub-blue?logo=github
