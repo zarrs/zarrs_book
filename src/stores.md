@@ -163,7 +163,7 @@ Storage adapters can be layered on top of stores to change their functionality.
 
 ### Zip
 
-[![zarrs_zip_repo]](https://github.com/zarrs/zarrs/tree/main/zarrs_zip) [![zarrs_zip_ver]](https://crates.io/crates/zarrs_zip) [![zarrs_zip_doc]](https://docs.rs/zarrs_zip)
+[![zarrs_zip_repo]](https://github.com/zarrs/zarrs_zip) [![zarrs_zip_ver]](https://crates.io/crates/zarrs_zip) [![zarrs_zip_doc]](https://docs.rs/zarrs_zip)
 
 [zarrs_zip_repo]: https://img.shields.io/badge/zarrs/zarrs/zarrs__zip-GitHub-blue?logo=github
 [zarrs_zip_ver]: https://img.shields.io/crates/v/zarrs_zip
