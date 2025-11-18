@@ -22,13 +22,8 @@ jobs:
       - name: Setup mdBook
         uses: peaceiris/actions-mdbook@v2
         with:
-          mdbook-version: '0.4.50'
+          mdbook-version: '0.5.0'
           # mdbook-version: 'latest'
-
-      - uses: cargo-bins/cargo-binstall@main
-
-      - name: Install mermaid extensions
-        run: cargo binstall mdbook-mermaid mdbook-alerts mdbook-pagetoc # mdbook-linkcheck
 
       - run: mdbook build
 

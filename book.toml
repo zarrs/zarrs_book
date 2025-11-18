@@ -1,7 +1,6 @@
 [book]
 authors = ["Lachlan Deakin"]
 language = "en"
-multilingual = false
 src = "src"
 title = "The zarrs Book"
 description = "This book covers the zarrs Rust crate (and associated tools) for the Zarr storage format for multidimensional arrays and metadata"
@@ -12,19 +11,12 @@ create-missing = false
 [output.html]
 mathjax-support = true
 git-repository-url = "https://github.com/zarrs/zarrs_book"
-additional-js = ["mermaid.min.js", "mermaid-init.js", "theme/pagetoc.js"]
-additional-css = ["theme/custom.css", "theme/pagetoc.css"]
+additional-js = []
+additional-css = ["theme/custom.css"]
 cname = "https://book.zarrs.dev"
 # site-url = "/"
 
 [preprocessor]
-
-[preprocessor.mermaid]
-command = "mdbook-mermaid"
-
-[preprocessor.alerts]
-
-[preprocessor.pagetoc]
 
 # [output.linkcheck]
 # warning-policy = "warn"
