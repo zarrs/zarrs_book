@@ -6,7 +6,7 @@ use serde::Serialize;
 use serde_json::Number;
 use zarrs::{
     array::{Array, ArrayMetadataOptions, DimensionName, FillValueMetadataV3},
-    filesystem::FilesystemStore,
+    filesystem::{FilesystemStore, FilesystemStoreOptions},
     group::{Group, GroupMetadataOptions},
     metadata::v3::MetadataV3,
     node::{Node, NodeMetadata},
@@ -27,6 +27,12 @@ struct Cli {
 
     /// Path to the Zarr input array or group.
     path: std::path::PathBuf,
+
+    /// Enable direct I/O for filesystem operations.
+    ///
+    /// If set, filesystem operations will use direct I/O bypassing the page cache.
+    #[arg(long, default_value_t = false)]
+    direct_io: bool,
 
     #[command(subcommand)]
     command: InfoCommand,
@@ -63,7 +69,7 @@ enum InfoCommand {
 
 fn main() -> std::process::ExitCode {
     if let Err(err) = run() {
-        println!("{}", err);
+        println!("{err}");
         std::process::ExitCode::FAILURE
     } else {
         std::process::ExitCode::SUCCESS
@@ -86,7 +92,9 @@ fn array_metadata_options_v3() -> ArrayMetadataOptions {
 fn run() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
 
-    let storage = Arc::new(FilesystemStore::new(&cli.path)?);
+    let mut options = FilesystemStoreOptions::default();
+    options.direct_io(cli.direct_io);
+    let storage = Arc::new(FilesystemStore::new_with_options(&cli.path, options)?);
 
     let node = Node::open(&storage, "/")?;
     if let NodeMetadata::Group(_) = node.metadata() {

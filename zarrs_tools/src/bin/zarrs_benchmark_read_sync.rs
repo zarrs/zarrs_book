@@ -11,7 +11,7 @@ use zarrs::{
         ArrayShardedReadableExtCache, ChunkRepresentation,
     },
     array_subset::ArraySubset,
-    filesystem::FilesystemStore,
+    filesystem::{FilesystemStore, FilesystemStoreOptions},
     storage::ReadableStorage,
 };
 use zarrs_tools::calculate_chunk_and_codec_concurrency;
@@ -44,6 +44,12 @@ struct Args {
     /// If set, checksum validation in codecs (e.g. crc32c) is skipped.
     #[arg(long, default_value_t = false)]
     ignore_checksums: bool,
+
+    /// Enable direct I/O for filesystem operations.
+    ///
+    /// If set, filesystem operations will use direct I/O bypassing the page cache.
+    #[arg(long, default_value_t = false)]
+    direct_io: bool,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -56,7 +62,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let storage: ReadableStorage = Arc::new(store::OpendalStore::new(operator));
 
     // Default filesystem store
-    let storage: ReadableStorage = Arc::new(FilesystemStore::new(args.path.clone())?);
+    let mut options = FilesystemStoreOptions::default();
+    options.direct_io(args.direct_io);
+    let storage: ReadableStorage = Arc::new(FilesystemStore::new_with_options(
+        args.path.clone(),
+        options,
+    )?);
 
     let array = zarrs::array::Array::open(storage.clone(), "/")?;
     // println!("{:#?}", array.metadata());
@@ -72,7 +83,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else if let (Some(inner_chunk_shape), true) =
         (array.effective_inner_chunk_shape(), args.inner_chunks)
     {
-        let inner_chunks = ArraySubset::new_with_shape(array.inner_chunk_grid_shape().unwrap());
+        let inner_chunks = ArraySubset::new_with_shape(array.inner_chunk_grid_shape().clone());
         let inner_chunk_indices = inner_chunks.indices();
         let inner_chunk_representation = ChunkRepresentation::new(
             inner_chunk_shape.to_vec(),
@@ -83,7 +94,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             calculate_chunk_and_codec_concurrency(
                 concurrent_target,
                 args.concurrent_chunks,
-                array.codecs(),
+                &array.codecs(),
                 inner_chunks.num_elements_usize(),
                 &inner_chunk_representation,
             );
@@ -109,7 +120,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         );
     } else {
-        let chunks = ArraySubset::new_with_shape(array.chunk_grid_shape().unwrap());
+        let chunks = ArraySubset::new_with_shape(array.chunk_grid_shape().clone());
         let chunk_indices = chunks.indices();
         let chunk_representation =
             array.chunk_array_representation(&vec![0; array.chunk_grid().dimensionality()])?;
@@ -117,7 +128,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             calculate_chunk_and_codec_concurrency(
                 concurrent_target,
                 args.concurrent_chunks,
-                array.codecs(),
+                &array.codecs(),
                 chunks.num_elements_usize(),
                 &chunk_representation,
             );

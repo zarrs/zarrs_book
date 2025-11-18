@@ -1,10 +1,10 @@
 use std::{
-    error::Error,
     hash::Hash,
     num::NonZeroU64,
     path::{Path, PathBuf},
 };
 
+use anyhow::anyhow;
 use clap::Parser;
 use half::{bf16, f16};
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
@@ -18,7 +18,7 @@ use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use zarrs::{
     array::{Array, ArrayCodecTraits, ArrayMetadata, ChunkRepresentation, Element, ElementOwned},
     array_subset::ArraySubset,
-    filesystem::FilesystemStore,
+    filesystem::{FilesystemStore, FilesystemStoreOptions},
     group::{Group, GroupMetadata, GroupMetadataV3},
     storage::{StorePrefix, WritableStorageTraits},
 };
@@ -139,6 +139,18 @@ struct Cli {
     /// Consider reducing this for images with large chunk sizes or on systems with low memory availability.
     #[arg(long)]
     chunk_limit: Option<usize>,
+
+    /// Enable direct I/O for filesystem operations.
+    ///
+    /// If set, filesystem operations will use direct I/O bypassing the page cache.
+    #[arg(long, default_value_t = false)]
+    direct_io: bool,
+}
+
+fn create_filesystem_store(path: &Path, direct_io: bool) -> anyhow::Result<FilesystemStore> {
+    let mut options = FilesystemStoreOptions::default();
+    options.direct_io(direct_io);
+    FilesystemStore::new_with_options(path, options).map_err(Into::into)
 }
 
 fn bar_style_run() -> ProgressStyle {
@@ -281,7 +293,7 @@ fn progress_callback(stats: ProgressStats, bar: &ProgressBar) {
     ));
 }
 
-fn run() -> Result<(), Box<dyn Error>> {
+fn run() -> Result<(), anyhow::Error> {
     // Parse command line arguments
     let cli = Cli::parse();
 
@@ -289,7 +301,7 @@ fn run() -> Result<(), Box<dyn Error>> {
 
     let start = std::time::Instant::now();
 
-    let store_in = FilesystemStore::new(&cli.input)?;
+    let store_in = create_filesystem_store(&cli.input, cli.direct_io)?;
     let array_in = Array::open(store_in.into(), "/")?;
 
     let multi_progress = MultiProgress::new();
@@ -300,7 +312,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             if level == 0 {
                 bar.set_prefix(format!("0 {:?}", array_in.shape()));
             } else {
-                bar.set_prefix(format!("{}", level));
+                bar.set_prefix(format!("{level}"));
             }
             bar
         })
@@ -313,7 +325,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     };
 
     // Create group
-    let store = std::sync::Arc::new(FilesystemStore::new(&cli.output)?);
+    let store = std::sync::Arc::new(create_filesystem_store(&cli.output, cli.direct_io)?);
     let mut group = Group::new_with_metadata(
         store.clone(),
         "/",
@@ -355,7 +367,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         } else {
             // Reencode the input
             let reencode = zarrs_tools::filter::filters::reencode::Reencode::new(cli.chunk_limit);
-            let store_out = FilesystemStore::new(&cli.output)?;
+            let store_out = create_filesystem_store(&cli.output, cli.direct_io)?;
             let mut array_out = reencode
                 .output_array_builder(&array_in, &cli.reencoding)?
                 .build(store_out.into(), "/0")?;
@@ -366,7 +378,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
 
     // Setup attributes
-    let store = std::sync::Arc::new(FilesystemStore::new(&cli.output)?);
+    let store = std::sync::Arc::new(create_filesystem_store(&cli.output, cli.direct_io)?);
     // store.erase_prefix(&StorePrefix::root()).unwrap();
     let mut array0 = Array::open(store.clone(), "/0")?;
     {
@@ -374,6 +386,48 @@ fn run() -> Result<(), Box<dyn Error>> {
         group.attributes_mut().append(array0.attributes_mut()); // this clears array0 attributes
         group.attributes_mut().remove_entry("_zarrs");
         array0.store_metadata()?;
+    }
+
+    // Check inputs
+    if let Some(downsample_factor) = &cli.downsample_factor {
+        if downsample_factor.len() != array0.dimensionality() {
+            return Err(anyhow!(
+                "downsample factor {downsample_factor:?} length does not match the array dimensionality {}",
+                array0.dimensionality()
+            ));
+        }
+    }
+    if let Some(physical_size) = &cli.physical_size {
+        if physical_size.len() != array0.dimensionality() {
+            return Err(anyhow!(
+                "physical size {physical_size:?} length does not match the array dimensionality {}",
+                array0.dimensionality()
+            ));
+        }
+    }
+    if let Some(physical_units) = &cli.physical_units {
+        if physical_units.len() != array0.dimensionality() {
+            return Err(anyhow!(
+                "physical units {physical_units:?} length does not match the array dimensionality {}",
+                array0.dimensionality()
+            ));
+        }
+    }
+    if let Some(gaussian_sigma) = &cli.gaussian_sigma {
+        if gaussian_sigma.len() != array0.dimensionality() {
+            return Err(anyhow!(
+                "gaussian sigma {gaussian_sigma:?} length does not match the array dimensionality {}",
+                array0.dimensionality()
+            ));
+        }
+    }
+    if let Some(gaussian_kernel_half_size) = &cli.gaussian_kernel_half_size {
+        if gaussian_kernel_half_size.len() != array0.dimensionality() {
+            return Err(anyhow!(
+                "gaussian kernel half size {gaussian_kernel_half_size:?} length does not match the array dimensionality {}",
+                array0.dimensionality()
+            ));
+        }
     }
 
     // Initialise multiscales metadata
@@ -520,7 +574,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         let progress_callback = ProgressCallback::new(&progress_callback);
 
         // Input
-        let store = FilesystemStore::new(&cli.output)?;
+        let store = create_filesystem_store(&cli.output, cli.direct_io)?;
         let array_input = Array::open(store.into(), &format!("/{}", i - 1))?;
 
         // Filters
@@ -563,15 +617,12 @@ fn run() -> Result<(), Box<dyn Error>> {
 
         // Output
         let output_path = cli.output.join(i.to_string());
-        let output_store = FilesystemStore::new(&cli.output)?;
-        let array_output = output_builder.build(output_store.into(), &format!("/{}", i))?;
+        let output_store = create_filesystem_store(&cli.output, cli.direct_io)?;
+        let array_output = output_builder.build(output_store.into(), &format!("/{i}"))?;
         bar.set_prefix(format!("{i} {:?}", array_output.shape()));
 
-        // Scale factor (inverse of downsample factor, accounting for actual changes)
-        let real_downsample_factor = std::iter::zip(array_input.shape(), array_output.shape())
-            .map(|(i, o)| i / o)
-            .collect_vec();
-        std::iter::zip(&mut relative_scale, &real_downsample_factor).for_each(
+        // Scale factor (inverse of downsample factor)
+        std::iter::zip(&mut relative_scale, &downsample_factor).for_each(
             |(scale, downsample_factor)| {
                 *scale *= *downsample_factor as f32;
             },
@@ -579,7 +630,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         // println!("{downsample_factor:?} -> {scale:?}");
 
         // Chunks
-        let chunks = ArraySubset::new_with_shape(array_output.chunk_grid_shape().unwrap());
+        let chunks = ArraySubset::new_with_shape(array_output.chunk_grid_shape().clone());
         let progress = Progress::new(chunks.num_elements_usize(), &progress_callback);
 
         let chunk_limit = if let Some(chunk_limit) = cli.chunk_limit {
@@ -768,7 +819,7 @@ fn run() -> Result<(), Box<dyn Error>> {
 
 fn main() -> std::process::ExitCode {
     if let Err(err) = run() {
-        println!("{}", err);
+        println!("{err}");
         std::process::ExitCode::FAILURE
     } else {
         std::process::ExitCode::SUCCESS
