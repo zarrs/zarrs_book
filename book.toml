@@ -9,7 +9,8 @@ description = "This book covers the zarrs Rust crate (and associated tools) for 
 create-missing = false
 
 [rust]
-manifest = "./Cargo.toml"
+# manifest = "./Cargo.toml"
+edition = "2024"
 
 [output.html]
 mathjax-support = true
