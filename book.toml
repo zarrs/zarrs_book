@@ -10,7 +10,7 @@ create-missing = false
 
 [rust]
 # manifest = "./Cargo.toml"
-edition = "2024"
+# edition = "2024"
 
 [output.html]
 mathjax-support = true

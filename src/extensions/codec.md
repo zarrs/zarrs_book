@@ -24,7 +24,7 @@ The `zarrs` library mirrors these conceptual types using a set of Rust **traits*
 
 The traits are:
 
-- `CodecTraits`: Defines the codec `configuration` creation method, the unique `zarrs` codec `identifier`, and some hints related to partial decoding.
+- `CodecTraits`: Defines the codec `configuration` creation method, the unique `zarrs` codec `identifier`, and capabilities related to partial decoding/encoding.
 - `ArrayCodecTraits`: defines the `recommended_concurrency` and `partial_decode_granularity`.
 - `ArrayToArrayCodecTraits` / `ArrayToBytesCodecTraits` / `BytesToBytesCodecTraits`: Defines the codec `encode` and `decode` methods (including partial encoding and decoding), as well as methods for querying the encoded representation.
 
@@ -58,50 +58,72 @@ The expected form of the codec in array metadata is:
 ```
 
 The configuration can be represented by a simple struct:
-```rust,ignore
+```rust
+# extern crate serde;
+# extern crate derive_more;
 /// `lz4` codec configuration parameters
-#[derive(Serialize, Deserialize, Clone, Eq, PartialEq, Debug, Display)]
+#[derive(serde::Serialize, serde::Deserialize, Clone, Eq, PartialEq, Debug, derive_more::Display)]
+#[display("{}", serde_json::to_string(self).unwrap_or_default())]
 pub struct Lz4CodecConfiguration {
     pub acceleration: i32
 }
 ```
 Note that codec configurations in [`zarrs_metadata`](https://docs.rs/zarrs_metadata/latest/zarrs_metadata/) are versioned so that they can adapt to potential codec specification revisions.
 
-`Lz4CodecConfiguration` is JSON serialisable, so implement the `ConfigurationSerialize` trait:
-```rust,ignore
-impl ConfigurationSerialize for Lz4CodecConfiguration {}
-```
-
-This trait requires `Serialize + DeserializeOwned`, and enables any implementing struct to be infallibly converted from a JSON object or anything convertible to a JSON object.
-A codec configuration must not be able to hold unrepresentable JSON state, otherwise such a conversion could panic at runtime.
-
 ### The `Lz4Codec` Struct
 
 Now create the codec struct.
 For encoding, the `acceleration` needs to be known, so this must be a field of the struct:
 
-```rust,ignore
+```rust
+# #[derive(serde::Serialize, serde::Deserialize, Clone, Eq, PartialEq, Debug, derive_more::Display)]
+# #[display("{}", serde_json::to_string(self).unwrap_or_default())]
+# pub struct Lz4CodecConfiguration { pub acceleration: i32 }
+/// An `lz4` codec implementation.
+#[derive(Clone, Debug)]
 pub struct Lz4Codec {
     acceleration: i32
 }
-```
 
-Next we define two constructors.
-These are not officially required for the codec to be used, but it is common practice in `zarrs` to include constructors based on the underlying codec parameters as well as a constructor from configuration.
-```rust,ignore
 impl Lz4Codec {
+    /// Create a new `lz4` codec.
     #[must_use]
     pub fn new(acceleration: i32) -> Self {
         Self { acceleration }
     }
 
+    /// Create a new `lz4` codec from configuration.
     #[must_use]
-    pub fn new_with_configuration(
-        configuration: &Lz4CodecConfiguration,
-    ) -> Self {
+    pub fn new_with_configuration(configuration: &Lz4CodecConfiguration) -> Self {
         Self { acceleration: configuration.acceleration }
     }
 }
+```
+
+### `ExtensionIdentifier` and `ExtensionAliases` Traits
+
+In zarrs 0.23.0, codec identity and aliasing are managed through the `ExtensionIdentifier` and `ExtensionAliases<V>` traits.
+The `impl_extension_aliases!` macro from `zarrs_plugin` (`zarrs::plugin`) provides a convenient way to implement these traits:
+
+```rust
+# extern crate zarrs;
+# pub struct Lz4Codec { acceleration: i32 }
+zarrs_plugin::impl_extension_aliases!(Lz4Codec, v3: "example.lz4");
+```
+
+This macro generates implementations for both `ExtensionIdentifier` (providing the `IDENTIFIER` constant) and `ExtensionAliases` for Zarr V2 and V3.
+The generated `ExtensionIdentifier::IDENTIFIER` constant can be used throughout your codec implementation.
+
+For more complex aliasing needs (e.g., different aliases for V2 vs V3, or regex patterns), the macro supports additional forms:
+```rust,ignore
+// V3 aliases only
+zarrs_plugin::impl_extension_aliases!(Lz4Codec, v3: "example.lz4", ["numcodecs.lz4"]);
+
+// V2 and V3 aliases
+zarrs_plugin::impl_extension_aliases!(Lz4Codec, "example.lz4",
+    v3: "example.lz4", ["numcodecs.lz4"],
+    v2: "example.lz4", ["lz4"]
+);
 ```
 
 ### `CodecTraits`
@@ -109,57 +131,66 @@ impl Lz4Codec {
 Now we implement the `CodecTraits`, which are required for every codec.
 
 ```rust,ignore
-/// Unique identifier for the LZ4 codec
-pub const LZ4: &str = "example.lz4";
+use std::any::Any;
+use zarrs::array::codec::{
+    CodecTraits, CodecMetadataOptions, PartialDecoderCapability, PartialEncoderCapability
+};
+use zarrs::metadata::Configuration;
+use zarrs_plugin::{ExtensionIdentifier, ZarrVersion};
 
 impl CodecTraits for Lz4Codec {
-    /// Unique identifier for the codec.
-    fn identifier(&self) -> &str {
-        LZ4
+    /// Returns self as `Any` for downcasting.
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 
     /// Create the codec configuration.
-    fn configuration_opt(
+    fn configuration(
         &self,
-        _name: &str,
+        _version: ZarrVersion,
         _options: &CodecMetadataOptions,
     ) -> Option<Configuration> {
-        // The into comes from the auto implementation of From<T: ConfigurationSerialize> for Configuration
-        Some(Lz4CodecConfiguration::new(self.acceleration).into())
+        Some(Lz4CodecConfiguration { acceleration: self.acceleration }.into())
     }
 
-    /// Indicates if the input to a codecs partial decoder should be cached for optimal performance.
-    /// If true, a cache may be inserted *before* it in a [`CodecChain`] partial decoder.
-    fn partial_decoder_should_cache_input(&self) -> bool {
-        false
+    /// Returns the partial decoder capability of the codec.
+    fn partial_decoder_capability(&self) -> PartialDecoderCapability {
+        PartialDecoderCapability {
+            partial_read: false,
+            partial_decode: false,
+        }
     }
 
-    /// Indicates if a partial decoder decodes all bytes from its input handle and its output should be cached for optimal performance.
-    /// If true, a cache will be inserted at some point *after* it in a [`CodecChain`] partial decoder.
-    fn partial_decoder_decodes_all(&self) -> bool {
-        true
+    /// Returns the partial encoder capability of the codec.
+    fn partial_encoder_capability(&self) -> PartialEncoderCapability {
+        PartialEncoderCapability {
+            partial_encode: false,
+        }
     }
 }
 ```
 
-A unique identifier is defined for the LZ4 codec, which is chosen as to not conflict with a potential future codec that may be implemented in `zarrs` itself (likely `lz4`).
-This is returned by the `identifier()` method.
-The identifier is used in codec registration, and enables features such as renaming of codecs for serialisation, and supporting multiple codec aliases.
+The `as_any()` method is required for downcasting the codec to its concrete type.
 
-The `configuration_opt` method creates the codec configuration.
-Note that this takes a `name` and `options` which are typically unneeded.
-However, there are cases where the configuration may be dependent on the codec `name`, or a runtime option could impact serialisation behaviour.
+The `configuration` method creates the codec configuration.
+It takes a `version` and `options` parameter that can impact serialisation behaviour.
 
-While the `lz4` codec may actually support partial decoding, this needs to be implemented by the wrapper (and it may not be efficient anyway, depending on the access pattern).
-For simplicity in this example, let us indicate that partial decoding is NOT supported and make `partial_decoder_decodes_all()` return `true`.
-This ensures that a cache is inserted at the appropriate location in a partial decoder codec chain.
+The `partial_decoder_capability` and `partial_encoder_capability` methods indicate the codec's support for partial operations.
+Since the `lz4` codec does not support partial decoding or encoding, both capabilities are set to `false`.
 
 ### `BytesToBytesCodecTraits`
 
 The `BytesToBytesCodecTraits` are where the encoding and decoding methods are implemented.
 
 ```rust,ignore
-impl BytesToBytesCodecTraits for BloscCodec {
+use std::borrow::Cow;
+use std::sync::Arc;
+use zarrs::array::{ArrayBytesRaw, BytesRepresentation};
+use zarrs::array::codec::{
+    BytesToBytesCodecTraits, CodecError, CodecOptions, RecommendedConcurrency
+};
+
+impl BytesToBytesCodecTraits for Lz4Codec {
     /// Return a dynamic version of the codec.
     fn into_dyn(self: Arc<Self>) -> Arc<dyn BytesToBytesCodecTraits> {
         self as Arc<dyn BytesToBytesCodecTraits>
@@ -178,24 +209,28 @@ impl BytesToBytesCodecTraits for BloscCodec {
         &self,
         decoded_representation: &BytesRepresentation,
     ) -> BytesRepresentation {
-        todo!()
+        // LZ4 has an upper bound on compressed size
+        // See: https://github.com/lz4/lz4/blob/dev/lib/lz4.h#L217-L226
+        todo!("Calculate LZ4_compressBound")
     }
 
     fn encode<'a>(
         &self,
-        decoded_value: RawBytes<'a>,
+        decoded_value: ArrayBytesRaw<'a>,
         _options: &CodecOptions,
-    ) -> Result<RawBytes<'a>, CodecError> {
-        todo!()
+    ) -> Result<ArrayBytesRaw<'a>, CodecError> {
+        // Use the lz4 crate to compress decoded_value
+        todo!("Implement LZ4 compression")
     }
 
     fn decode<'a>(
         &self,
-        encoded_value: RawBytes<'a>,
+        encoded_value: ArrayBytesRaw<'a>,
         _decoded_representation: &BytesRepresentation,
         _options: &CodecOptions,
-    ) -> Result<RawBytes<'a>, CodecError> {
-        todo!()
+    ) -> Result<ArrayBytesRaw<'a>, CodecError> {
+        // Use the lz4 crate to decompress encoded_value
+        todo!("Implement LZ4 decompression")
     }
 }
 ```
@@ -218,79 +253,62 @@ For example, the `blosc` codec in `zarrs` activates *codec parallelism* when the
 Note that the `[async_]partial_decoder` and `[async_]partial_encoder` methods of `BytesToBytesCodecTraits` are not implemented in the above example, and the default implementations encode/decode the entire chunk.
 Partial encoding is not applicable to the `lz4` codec, but it *could* support partial decoding.
 The `blosc` codec in `zarrs` is an example of partial decoding.
-The input is always fully decoded (and is cached because `partial_decoder_should_cache_input()` returns `true`), but only requested byte ranges are decompressed.
+The input is always fully decoded (and is cached), but only requested byte ranges are decompressed.
 
 ### Codec Registration
 
 `zarrs` uses [`inventory`](https://crates.io/crates/inventory) for compile time registration of codecs.
-Registration involves creating a method that is used to check if the identifier is a match, and a function that actually creates the codec from a configuration.
+Registration involves implementing `CodecTraitsV3` and submitting a `CodecPluginV3`.
 
 ```rust,ignore
+use std::sync::Arc;
+use zarrs::array::{Codec, CodecPluginV3, CodecTraitsV3};
+use zarrs::metadata::v3::MetadataV3;
+use zarrs_plugin::{ExtensionIdentifier, PluginCreateError, PluginMetadataInvalidError};
+
+impl CodecTraitsV3 for Lz4Codec {
+    fn create(metadata: &MetadataV3) -> Result<Codec, PluginCreateError> {
+        let configuration: Lz4CodecConfiguration = metadata
+            .to_configuration()
+            .map_err(|_| PluginMetadataInvalidError::new(
+                Lz4Codec::IDENTIFIER, "codec", metadata.to_string()
+            ))?;
+        let codec = Arc::new(Lz4Codec::new_with_configuration(&configuration));
+        Ok(Codec::BytesToBytes(codec))
+    }
+}
+
 // Register the codec.
 inventory::submit! {
-    CodecPlugin::new(LZ4, is_identifier_lz4, create_codec_lz4)
-}
-
-fn is_identifier_lz4(identifier: &str) -> bool {
-    identifier == LZ4
-}
-
-pub(crate) fn create_codec_lz4(metadata: &MetadataV3) -> Result<Codec, PluginCreateError> {
-    let configuration: Lz4Codec = metadata
-        .to_configuration()
-        .map_err(|_| PluginMetadataInvalidError::new(LZ4, "codec", metadata.clone()))?;
-    let codec = Arc::new(Lz4Codec::new_with_configuration(&configuration)?);
-    Ok(Codec::BytesToBytes(codec))
+    CodecPluginV3::new::<Lz4Codec>()
 }
 ```
 
-### Codec Aliasing
+The `matches_name` function is automatically provided by the `impl_extension_aliases!` macro.
 
-By default, the codec `name` will be the codec `identifier()`, however that may not be desirable (especially with `example.lz4`!).
-
-```rust,ignore
-assert_eq!(Lz4::new(1).default_name(), "example.lz4");
-```
-
-`zarrs` includes a mechanism for setting the serialised `name` of codecs, as well as supported `name` aliases for decoding.
-By default, `zarrs` will preserve the alias if an array is rewritten, but this can be changed (see the `zarrs` global config).
-
-If the codec is confirmed to be fully compatible with `numcodecs.lz4`, its default name could be changed with a runtime configuration:
-
-```rust,ignore
-global_config_mut()
-    .codec_aliases_v3_mut()
-    .default_names
-    .entry(LZ4.into())
-    .and_modify(|entry| {
-        *entry = "numcodecs.lz4".into();
-    });
-assert_eq!(Lz4::new(1).default_name(), "numcodecs.lz4");
-```
-Or the `identifier` could just be changed to `numcodecs.lz4`, for example.
+zarrs 0.23.0 also supports runtime extension registration, allowing extensions to be registered dynamically rather than only at compile time.
 
 ### Ready to Test
 
 At this point, the `lz4` is ready to go and could be tested for compatibility against `numcodecs.lz4` in `zarr-python`.
 
 This codec would be a great candidate for merging into `zarrs` itself.
-Using the `lz4` identifier would be recommended in this case and the default name would be set to `numcodecs.lz4` by default.
-If `lz4` were ever standardised without a `numcodecs.` prefix, then the default name could be `lz4` but an alias would remain for `numcodecs.lz4`.
+Using the `lz4` identifier would be recommended in this case, with `numcodecs.lz4` as an alias.
+If `lz4` were ever standardised without a `numcodecs.` prefix, then the identifier could be `lz4` but an alias would remain for `numcodecs.lz4`.
 
 ## Array-to-Array and Array-to-Bytes Codecs
 
-Implementing an **Array-to-Array** or **Array-to-Bytes** codec is similar, but the `ArrayCodecTraits` and `ArraytoArrayCodecTraits` or `ArrayToBytesCodecTraits` must be implemented too.
+Implementing an **Array-to-Array** or **Array-to-Bytes** codec is similar, but the `ArrayCodecTraits` and `ArrayToArrayCodecTraits` or `ArrayToBytesCodecTraits` must be implemented too.
 
 ### `ArrayCodecTraits`
 
-[`ArrayCodecTraits`](https://docs.rs/zarrs/latest/zarrs/array/codec/trait.ArrayCodecTraits.html) has two methods.
+[`ArrayCodecTraits`](https://docs.rs/zarrs_codec/latest/zarrs_codec/trait.ArrayCodecTraits.html) has two methods.
 
-**`recommended_concurrency()`** (Required)
+**`recommended_concurrency(shape, data_type)`** (Required)
 
-This method differs from that of `BytesToBytesCodecTraits` only in the type of the `decoded_representation` parameter.
-It takes a [`ChunkRepresentation`](https://docs.rs/zarrs/latest/zarrs/array/type.ChunkRepresentation.html) which holds a chunk shape, data type, and fill value.
+This method differs from that of `BytesToBytesCodecTraits` in that it takes a chunk `shape` and `data_type` instead of a `BytesRepresentation`.
 
-**`partial_decode_granularity()`** (Provided)
+**`partial_decode_granularity(shape)`** (Provided)
 
 Returns the shape of the smallest subset of a chunk that can be efficiently decoded if the chunk were subdivided into a regular grid.
 For most codecs, this is just the shape of the chunk.
@@ -302,27 +320,117 @@ The default implementation just returns the chunk shape.
 This trait is similar to `BytesToBytesCodecTraits` except the `encode` and `decode` methods input and return [`ArrayBytes`](https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html), which can represent arrays with fixed or variable sized elements.
 
 Key methods beyond `encode` and `decode` are:
-- `encoded_data_type()` (required).
-  - This is where a codec can put an input data type compatibility check and indicate if the data type changes on encoding.
-- `encoded_fill_value()` (provided) Defaults to the input fill value.
-- `encoded_shape()` (provided) Defaults to the input shape.
-- `decoded_shape()` (provided) Defaults to the input shape.
-- `encoded_representation()` (provided) Creates a `ChunkRepresentation` from the output of `encoded_{data_type,fill_value,shape}()`
+- `encoded_data_type(decoded_data_type)` (required) - validates input data type compatibility and returns the encoded data type.
+- `encoded_fill_value(decoded_data_type, decoded_fill_value)` (provided) - computes the encoded fill value. Defaults to encoding a single element.
+- `encoded_shape(decoded_shape)` (provided) - returns the encoded shape. Defaults to the input shape.
+- `decoded_shape(encoded_shape)` (provided) - returns the decoded shape. Defaults to the input shape.
+- `encoded_representation(shape, data_type, fill_value)` (provided) - creates an encoded representation from the above methods.
 
 Default implementations are provided for `[async_]partial_{encoder,decoder}` which encode/decode the entire chunk.
 
 ### `ArrayToBytesCodecTraits`
 
-This trait has a required `encoded_representation()` method that returns a a `BytesRepresentation` based on `ChunkRepresentation` parameter.
-The `decode()` and `encode()` methods transform between [`ArrayBytes`](https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html) and [`RawBytes`](https://docs.rs/zarrs/latest/zarrs/array/type.RawBytes.html).
+This trait has a required `encoded_representation(shape, data_type, fill_value)` method that returns a `BytesRepresentation`.
+The `encode()` and `decode()` methods transform between [`ArrayBytes`](https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html) and [`ArrayBytesRaw`](https://docs.rs/zarrs/latest/zarrs/array/type.ArrayBytesRaw.html), taking shape, data type, and fill value parameters.
 
 ## Custom Data Type Interaction
 
-The next page deals with custom data types, however it is worth highlighting that third party codecs are expected to handle custom data types internally.
+The previous page deals with custom data types, however it is worth highlighting that third party codecs are expected to handle custom data types internally.
 
-A first party codec may extend `DataTypeExtension` with a new `codec_<CODEC_NAME>` method and a new `DataTypeExtension<CodecName>` trait to enable a codec to be used with custom data types.
-Currently `zarrs` has data type extension traits for the `bytes` and `packbits` codecs.
-All other codecs are either data type agnostic (e.g. `transpose`, compression codecs, etc.) or operate on a specific set of data types (e.g. `zfp`).
+Some first party codecs define codec-specific data type traits to enable compatibility with custom data types.
+See the [`zarrs_data_type::codec_traits`](https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/index.html) module for the available codec data type traits:
+- `BytesDataTypeTraits` - for the `bytes` codec
+- `PackBitsDataTypeTraits` - for the `packbits` codec
+- `BitroundDataTypeTraits` - for the `bitround` codec
+- `FixedScaleOffsetDataTypeTraits` - for the `fixedscaleoffset` codec
+- `PcodecDataTypeTraits` - for the `pcodec` codec
+- `ZfpDataTypeTraits` - for the `zfp` codec
 
-> [!NOTE]
-> If the need arises, `DataTypeExtension` may be changed in the future to better support interaction between custom data types and custom codecs.
+All other codecs are either data type agnostic (e.g., `transpose`, compression codecs, etc.) or operate on a specific set of data types.
+
+### Creating a Custom Codec Data Type Trait
+
+If you are implementing a codec that requires data type-specific behaviour (e.g., endianness handling, bit manipulation), you can create a custom codec data type trait.
+This allows custom data types to register support for your codec.
+
+The process involves three components:
+
+1. **Define the trait** - Create a trait that defines the data type-specific operations your codec needs
+2. **Generate support infrastructure** - Use the `define_data_type_support!` macro to create the plugin and extension trait
+3. **Provide a registration macro** - Create a convenience macro for data types to implement and register support (if appropriate)
+
+Here's an example of how the `bytes` codec data type trait is structured:
+
+```rust,ignore
+use std::borrow::Cow;
+use zarrs_metadata::Endianness;
+
+/// Error type for the codec.
+#[derive(Debug, Clone, Copy, thiserror::Error)]
+#[error("endianness must be specified for multi-byte data types")]
+pub struct BytesCodecEndiannessMissingError;
+
+/// The codec data type trait.
+pub trait BytesDataTypeTraits {
+    /// Encode the bytes to a specified endianness.
+    fn encode<'a>(
+        &self,
+        bytes: Cow<'a, [u8]>,
+        endianness: Option<Endianness>,
+    ) -> Result<Cow<'a, [u8]>, BytesCodecEndiannessMissingError>;
+
+    /// Decode the bytes from a specified endianness.
+    fn decode<'a>(
+        &self,
+        bytes: Cow<'a, [u8]>,
+        endianness: Option<Endianness>,
+    ) -> Result<Cow<'a, [u8]>, BytesCodecEndiannessMissingError>;
+}
+
+// Generate the plugin and extension trait infrastructure
+zarrs_data_type::define_data_type_support!(Bytes);
+```
+
+The `define_data_type_support!(Bytes)` macro generates:
+- `BytesDataTypePlugin` - A struct for `inventory` registration
+- `BytesDataTypeExt` - An extension trait on `DataType` with a `codec_bytes()` method
+
+The codec can then use the extension trait to access the data type's implementation:
+
+```rust,ignore
+// In the codec's encode method:
+let bytes_encoded = data_type.codec_bytes()?.encode(bytes, self.endian)?;
+
+// In the codec's decode method:
+let bytes_decoded = data_type.codec_bytes()?.decode(bytes, self.endian)?;
+```
+
+Data types register support using the `register_data_type_extension_codec!` macro:
+
+```rust,ignore
+impl BytesDataTypeTraits for MyDataType {
+    fn encode<'a>(
+        &self,
+        bytes: Cow<'a, [u8]>,
+        endianness: Option<Endianness>,
+    ) -> Result<Cow<'a, [u8]>, BytesCodecEndiannessMissingError> {
+        // Implementation...
+    }
+
+    fn decode<'a>(
+        &self,
+        bytes: Cow<'a, [u8]>,
+        endianness: Option<Endianness>,
+    ) -> Result<Cow<'a, [u8]>, BytesCodecEndiannessMissingError> {
+        // Implementation...
+    }
+}
+
+zarrs_data_type::register_data_type_extension_codec!(
+    MyDataType,
+    BytesDataTypePlugin,
+    BytesDataTypeTraits
+);
+```
+
+First party codecs typically provide convenience macros (e.g., `impl_bytes_data_type_traits!`) that implement the trait and register support in one step.

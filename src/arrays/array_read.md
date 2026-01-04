@@ -19,12 +19,19 @@ Additional methods are offered by extension traits:
 ## Method Variants
 
 Many `retrieve` and `store` methods have multiple variants:
-  - Standard variants store or retrieve data represented as [`ArrayBytes`](https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html) (representing fixed or variable length bytes).
-  - `_elements` suffix variants can store or retrieve chunks with a known type.
-  - `_ndarray` suffix variants can store or retrieve an [`ndarray::Array`](https://docs.rs/ndarray/latest/ndarray/type.Array.html) (requires `ndarray` feature).
   - `_opt` suffix variants have a [`CodecOptions`](https://docs.rs/zarrs/latest/zarrs/array/codec/options/struct.CodecOptions.html) parameter for fine-grained concurrency control and more.
   - Variants without the `_opt` suffix use default `CodecOptions`.
   - `async_` prefix variants can be used with async stores (requires `async` feature).
+
+All `store_*` methods can store data implementing [`IntoArrayBytes`].
+All `retrieve_*` methods can retrieve data implementing [`FromArrayBytes`].
+
+## Array Subsets
+
+An [`ArraySubset`](https://docs.rs/zarrs/latest/zarrs/array_subset/struct.ArraySubset.html) represents a subset (region) of an array or chunk.
+It encodes a starting coordinate and a shape, and is foundational for many array operations.
+It implements [`ArraySubsetTraits`] alongside other types, such as `&[Range<u64>]`, `[Range<u64>; N]`, and `Vec<Range<u64>>`.
+All array operations that reference a region of an array or chunk accept any type implementing `ArraySubsetTraits`.
 
 ## Reading a Chunk
 
@@ -32,16 +39,14 @@ Many `retrieve` and `store` methods have multiple variants:
 ```rust
 # extern crate zarrs;
 # extern crate ndarray;
-# use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
+# use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
 let chunk_indices: Vec<u64> = vec![1, 2];
 let chunk_bytes: ArrayBytes = array.retrieve_chunk(&chunk_indices)?;
-let chunk_elements: Vec<f32> =
-    array.retrieve_chunk_elements(&chunk_indices)?;
-let chunk_array: ndarray::ArrayD<f32> =
-    array.retrieve_chunk_ndarray(&chunk_indices)?;
+let chunk_elements: Vec<f32> = array.retrieve_chunk(&chunk_indices)?;
+let chunk_array: ndarray::ArrayD<f32> = array.retrieve_chunk(&chunk_indices)?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
@@ -55,17 +60,19 @@ Use `retrieve_chunk_if_exists` to only retrieve a chunk if it exists (i.e. is no
 ```rust
 # extern crate zarrs;
 # extern crate ndarray;
-# use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
+# use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
 # let chunk_indices: Vec<u64> = vec![1, 2];
 let chunk_bytes: Option<ArrayBytes> =
     array.retrieve_chunk_if_exists(&chunk_indices)?;
 let chunk_elements: Option<Vec<f32>> =
-    array.retrieve_chunk_elements_if_exists(&chunk_indices)?;
+    array.retrieve_chunk_if_exists(&chunk_indices)?;
+let chunk_elements: Option<Vec<f32>> =
+    array.retrieve_chunk_if_exists(&chunk_indices)?;
 let chunk_array: Option<ndarray::ArrayD<f32>> =
-    array.retrieve_chunk_ndarray_if_exists(&chunk_indices)?;
+    array.retrieve_chunk_if_exists(&chunk_indices)?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
@@ -74,9 +81,9 @@ let chunk_array: Option<ndarray::ArrayD<f32>> =
 An encoded chunk can be retrieved without decoding with `retrieve_encoded_chunk`:
 ```rust
 # extern crate zarrs;
-# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use zarrs::array::{Array, ArrayBuilder, data_type};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
 # let chunk_indices: Vec<u64> = vec![1, 2];
 let chunk_bytes_encoded: Option<Vec<u8>> =
@@ -109,21 +116,18 @@ If executing many tasks concurrently, consider reducing the codec [`concurrent_t
 
 The `retrieve_chunks` methods perform chunk retrieval with chunk parallelism.
 
-Rather than taking a `&[u64]` parameter of the indices of a single chunk, these methods take an `ArraySubset` representing the chunks.
+Rather than taking a `&[u64]` parameter of the indices of a single chunk, these methods take an `&dyn ArraySubsetTraits` representing the chunks.
 Rather than returning a `Vec` for each chunk, the chunks are assembled into a single output for the entire region they cover:
 ```rust
 # extern crate zarrs;
 # extern crate ndarray;
-# use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
-let chunks = ArraySubset::new_with_ranges(&[0..2, 0..4]);
-let chunks_bytes: ArrayBytes = array.retrieve_chunks(&chunks)?;
-let chunks_elements: Vec<f32> = array.retrieve_chunks_elements(&chunks)?;
-let chunks_array: ndarray::ArrayD<f32> =
-    array.retrieve_chunks_ndarray(&chunks)?;
+let chunks_bytes: ArrayBytes = array.retrieve_chunks(&[0..2, 0..4])?;
+let chunks_elements: Vec<f32> = array.retrieve_chunks(&[0..2, 0..4])?;
+let chunks_array: ndarray::ArrayD<f32> = array.retrieve_chunks(&[0..2, 0..4])?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
@@ -131,27 +135,21 @@ let chunks_array: ndarray::ArrayD<f32> =
 Chunks returned are in order of the chunk indices returned by `chunks.indices().into_iter()`:
 ```rust
 # extern crate zarrs;
-# use zarrs::array::{Array, ArrayBuilder, DataType};
-# use zarrs::array::codec::CodecOptions;
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::{Array, ArrayBuilder, data_type};
+# use zarrs::array::CodecOptions;
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
-# let chunks = ArraySubset::new_with_ranges(&[0..2, 0..4]);
-let chunk_bytes_encoded: Vec<Option<Vec<u8>>> =
-    array.retrieve_encoded_chunks(&chunks, &CodecOptions::default())?;
+let chunk_bytes_encoded: Vec<Option<Vec<u8>>> = array.retrieve_encoded_chunks(&[0..2, 0..4], &CodecOptions::default())?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 ## Reading a Chunk Subset
 
-An [`ArraySubset`](https://docs.rs/zarrs/latest/zarrs/array_subset/struct.ArraySubset.html) represents a subset (region) of an array or chunk.
-It encodes a starting coordinate and a shape, and is foundational for many array operations.
-
 The below array subsets are all identical:
 ```rust
 # extern crate zarrs;
-# use zarrs::array_subset::ArraySubset;
+use zarrs::array::ArraySubset;
 let subset = ArraySubset::new_with_ranges(&[2..6, 3..5]);
 let subset = ArraySubset::new_with_start_shape(vec![2, 3], vec![4, 2])?;
 let subset = ArraySubset::new_with_start_end_exc(vec![2, 3], vec![6, 5])?;
@@ -163,19 +161,14 @@ The `retrieve_chunk_subset` methods can be used to retrieve a subset of a chunk:
 ```rust
 # extern crate zarrs;
 # extern crate ndarray;
-# use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
 # let chunk_indices: Vec<u64> = vec![1, 2];
-let chunk_subset = ArraySubset::new_with_ranges(&[0..2, 0..2]);
-let chunk_subset_bytes: ArrayBytes =
-    array.retrieve_chunk_subset(&chunk_indices, &chunk_subset)?;
-let chunk_subset_elements: Vec<f32> =
-    array.retrieve_chunk_subset_elements(&chunk_indices, &chunk_subset)?;
-let chunk_subset_array: ndarray::ArrayD<f32> =
-    array.retrieve_chunk_subset_ndarray(&chunk_indices, &chunk_subset)?;
+let chunk_subset_bytes: ArrayBytes = array.retrieve_chunk_subset(&chunk_indices, &[0..2, 0..2])?;
+let chunk_subset_elements: Vec<f32> = array.retrieve_chunk_subset(&chunk_indices, &[0..2, 0..2])?;
+let chunk_subset_array: ndarray::ArrayD<f32> = array.retrieve_chunk_subset(&chunk_indices, &[0..2, 0..2])?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
@@ -191,23 +184,16 @@ If multiple chunk subsets are needed from a chunk, prefer to create a partial de
 
 ```rust
 # extern crate zarrs;
-# use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
-# use zarrs::array::codec::CodecOptions;
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
+# use zarrs::array::CodecOptions;
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
 # let chunk_indices: Vec<u64> = vec![1, 2];
-# let chunk_subset_a = ArraySubset::new_with_ranges(&[0..2, 0..2]);
-# let chunk_subset_b = ArraySubset::new_with_ranges(&[2..4, 0..2]);
-# let chunk_subset_c = ArraySubset::new_with_ranges(&[0..2, 2..4]);
 let partial_decoder = array.partial_decoder(&chunk_indices)?;
-let chunk_subsets_bytes_a: ArrayBytes =
-    partial_decoder.partial_decode(&chunk_subset_a, &CodecOptions::default())?;
-let chunk_subsets_bytes_b: ArrayBytes =
-    partial_decoder.partial_decode(&chunk_subset_b, &CodecOptions::default())?;
-let chunk_subsets_bytes_c: ArrayBytes =
-    partial_decoder.partial_decode(&chunk_subset_c, &CodecOptions::default())?;
+let chunk_subsets_bytes_a: ArrayBytes = partial_decoder.partial_decode(&[0..2, 0..2], &CodecOptions::default())?;
+let chunk_subsets_bytes_b: ArrayBytes = partial_decoder.partial_decode(&[2..4, 0..2], &CodecOptions::default())?;
+let chunk_subsets_bytes_c: ArrayBytes = partial_decoder.partial_decode(&[0..2, 2..4], &CodecOptions::default())?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
@@ -216,22 +202,17 @@ For example, if a codec does not support partial decoding, its output (or an out
 
 ## Reading an Array Subset
 
-An arbitrary subset of an array can be read with the `retrieve_chunk` methods:
+An arbitrary subset of an array can be read with the `retrieve_array_subset` methods:
 ```rust
 # extern crate zarrs;
 # extern crate ndarray;
-# use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
-let array_subset = ArraySubset::new_with_ranges(&[2..6, 3..5]);
-let subset_bytes: ArrayBytes =
-    array.retrieve_array_subset(&array_subset)?;
-let subset_elements: Vec<f32> =
-    array.retrieve_array_subset_elements(&array_subset)?;
-let subset_array: ndarray::ArrayD<f32> =
-    array.retrieve_array_subset_ndarray(&array_subset)?;
+let subset_bytes: ArrayBytes = array.retrieve_array_subset(&[2..6, 3..5])?;
+let subset_elements: Vec<f32> = array.retrieve_array_subset(&[2..6, 3..5])?;
+let subset_array: ndarray::ArrayD<f32> = array.retrieve_array_subset(&[2..6, 3..5])?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
@@ -273,7 +254,7 @@ There are several approaches.
 ### Serial Chunk Iteration
 ```rust
 # extern crate zarrs;
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::ArraySubset;
 let chunks = ArraySubset::new_with_ranges(&[0..2, 0..4]);
 let indices = chunks.indices();
 for chunk_indices in indices {
@@ -285,7 +266,7 @@ for chunk_indices in indices {
 ```rust
 # extern crate zarrs;
 # extern crate rayon;
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::ArraySubset;
 # use rayon::iter::{IntoParallelIterator, ParallelIterator};
 let chunks = ArraySubset::new_with_ranges(&[0..2, 0..4]);
 let indices = chunks.indices();
@@ -306,7 +287,7 @@ For example:
 # extern crate zarrs;
 # extern crate rayon;
 # extern crate rayon_iter_concurrent_limit;
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::ArraySubset;
 # use rayon::iter::{IntoParallelIterator, ParallelIterator};
 let chunks = ArraySubset::new_with_ranges(&[0..2, 0..4]);
 let indices = chunks.indices();
@@ -352,19 +333,16 @@ A string array can be read as normal with any of the array retrieve methods.
 ```rust
 # extern crate zarrs;
 # extern crate ndarray;
-# use zarrs::array::{Array, ArrayBuilder, DataType, FillValue};
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::{Array, ArrayBuilder, data_type, FillValue};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 # let array = ArrayBuilder::new(
 #     vec![4, 4],
 #     vec![2, 2],
-#     DataType::String,
+#     data_type::string(),
 #     FillValue::from(""),
 # ).build(store.clone(), "/array")?;
-# let chunks = ArraySubset::new_with_ranges(&[0..2, 0..2]);
-let chunks_elements: Vec<String> = array.retrieve_chunks_elements(&chunks)?;
-let chunks_array: ndarray::ArrayD<String> =
-    array.retrieve_chunks_ndarray(&chunks)?;
+let chunks_elements: Vec<String> = array.retrieve_chunks(&[0..2, 0..2])?;
+let chunks_array: ndarray::ArrayD<String> = array.retrieve_chunks(&[0..2, 0..2])?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
@@ -375,27 +353,25 @@ For example:
 # extern crate zarrs;
 # extern crate ndarray;
 # extern crate itertools;
-# use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes, FillValue};
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes, FillValue};
 # use ndarray::ArrayD;
 # use itertools::Itertools;
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 # let array = ArrayBuilder::new(
 #     vec![4, 4],
 #     vec![2, 2],
-#     DataType::String,
+#     data_type::string(),
 #     FillValue::from(""),
 # ).build(store.clone(), "/array")?;
-# let chunks = ArraySubset::new_with_ranges(&[0..2, 0..2]);
-# let subset_all = array.subset_all();
-let chunks_bytes: ArrayBytes = array.retrieve_chunks(&chunks)?;
-let (bytes, offsets) = chunks_bytes.into_variable()?;
+let chunks_bytes: ArrayBytes = array.retrieve_chunks(&[0..2, 0..2])?;
+let (bytes, offsets) = chunks_bytes.into_variable()?.into_parts();
 let string = String::from_utf8(bytes.into_owned())?;
 let chunks_elements: Vec<&str> = offsets
     .iter()
     .tuple_windows()
     .map(|(&curr, &next)| &string[curr..next])
     .collect();
+let subset_all = array.subset_all();
 let chunks_array =
     ArrayD::<&str>::from_shape_vec(subset_all.shape_usize(), chunks_elements)?;
 # Ok::<_, Box<dyn std::error::Error>>(())

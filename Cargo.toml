@@ -5,14 +5,7 @@ edition = "2024"
 
 [dependencies]
 serde = "1.0"
-zarrs = { version = "0.22.10", features = ["async", "ndarray"] }
-ndarray = "0.16"
-zarrs_filesystem = "0.3"
-zarrs_http = "0.3"
-zarrs_storage = "0.4"
-zarrs_object_store = "0.6"
-zarrs_opendal = "0.10"
-zarrs_zip = "0.4"
+ndarray = "0.17.1"
 object_store = { version = "0.13", features = ["http"] }
 opendal = { version = "0.55", features = ["services-fs", "services-http"] }
 chrono = "0.4"
@@ -22,3 +15,26 @@ serde_json = "1.0.148"
 itertools = "0.14"
 rayon = "1.11.0"
 rayon_iter_concurrent_limit = "0.2.0"
+derive_more = "2.1.1"
+paste = "1.0.15"
+zarrs = { version = "0.23.0", features = ["async", "ndarray"] }
+zarrs_codec = "0.2.0"
+zarrs_data_type = "0.9.0"
+zarrs_filesystem = "0.3.9"
+zarrs_http = "0.3.1"
+zarrs_metadata = "0.7.2"
+zarrs_object_store = "0.6.1"
+zarrs_opendal = "0.10.0"
+zarrs_plugin = "0.4.1"
+zarrs_storage = "0.4.2"
+zarrs_zip = "0.5.1"
+
+# [patch.crates-io]
+# zarrs = { git = "https://github.com/zarrs/zarrs.git", branch = "0.23.0_release" }
+# zarrs_codec = { git = "https://github.com/zarrs/zarrs.git", branch = "0.23.0_release" }
+# zarrs_data_type = { git = "https://github.com/zarrs/zarrs.git", branch = "0.23.0_release" }
+# zarrs_filesystem = { git = "https://github.com/zarrs/zarrs.git", branch = "0.23.0_release" }
+# zarrs_metadata = { git = "https://github.com/zarrs/zarrs.git", branch = "0.23.0_release" }
+# zarrs_object_store = { git = "https://github.com/zarrs/zarrs.git", branch = "0.23.0_release" }
+# zarrs_plugin = { git = "https://github.com/zarrs/zarrs.git", branch = "0.23.0_release" }
+# zarrs_storage = { git = "https://github.com/zarrs/zarrs.git", branch = "0.23.0_release" }

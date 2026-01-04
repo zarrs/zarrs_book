@@ -5,13 +5,13 @@
 An existing array can be opened with [`Array::open`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open) (or [`async_open`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_open)):
 ```rust
 # extern crate zarrs;
-# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use zarrs::array::{Array, ArrayBuilder, data_type};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 let array_path = "/group/array";
 # let array = ArrayBuilder::new(
 #     vec![8, 8], // array shape
 #     vec![4, 4], // regular chunk shape
-#     DataType::Float32,
+#     data_type::float32(),
 #     f32::NAN,
 # ).build(store.clone(), array_path)?;
 # array.store_metadata()?;
@@ -32,13 +32,13 @@ let array = Array::open(store.clone(), array_path)?;
 ```rust
 # extern crate zarrs;
 # use std::sync::Arc;
-# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use zarrs::array::{Array, ArrayBuilder, data_type};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 let array_path = "/group/array";
 let array = ArrayBuilder::new(
     vec![8, 8], // array shape
     vec![4, 4], // regular chunk shape
-    DataType::Float32,
+    data_type::float32(),
     f32::NAN,
 )
 // .bytes_to_bytes_codecs(vec![]) // uncompressed
@@ -76,11 +76,12 @@ The [`ShardingCodecBuilder`](https://docs.rs/zarrs/latest/zarrs/array/codec/arra
 # extern crate zarrs;
 # use std::sync::Arc;
 # use std::num::NonZeroU64;
-# use zarrs::array::{Array, ArrayBuilder, DataType, codec::array_to_bytes::sharding::ShardingCodecBuilder};
+# use zarrs::array::{Array, ArrayBuilder, data_type, codec::array_to_bytes::sharding::ShardingCodecBuilder};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 # let array_path = "/group/array";
 let mut sharding_codec_builder = ShardingCodecBuilder::new(
-    vec![NonZeroU64::new(2).unwrap(); 2].into() // inner chunk shape
+    vec![NonZeroU64::new(2).unwrap(); 2].into(), // inner chunk shape
+    &data_type::float32(),
 );
 sharding_codec_builder.bytes_to_bytes_codecs(vec![
     Arc::new(zarrs::array::codec::GzipCodec::new(5)?),
@@ -89,7 +90,7 @@ sharding_codec_builder.bytes_to_bytes_codecs(vec![
 let array = ArrayBuilder::new(
     vec![8, 8], // array shape
     vec![4, 4], // regular chunk shape
-    DataType::Float32,
+    data_type::float32(),
     f32::NAN,
 )
 .array_to_bytes_codec(sharding_codec_builder.build_arc())
@@ -232,7 +233,7 @@ let array_metadata: ArrayMetadata = ArrayMetadataV2::new(
     vec![10, 10], // array shape
     vec![NonZeroU64::new(5).unwrap(); 2].into(), // regular chunk shape
     ">f4".into(), // big endian float32
-    FillValueMetadataV2::NaN, // fill value
+    FillValueMetadataV2::from(f32::NAN), // fill value
     None, // compressor
     None, // filters
 )

@@ -32,13 +32,13 @@ group.erase_metadata_opt(MetadataEraseVersion::V2)?;
 ### Convert an Array to V3
 ```rust
 # extern crate zarrs;
-# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use zarrs::array::{Array, ArrayBuilder, data_type};
 # use zarrs::config::MetadataEraseVersion;
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 # let array = ArrayBuilder::new(
 #     vec![8, 8], // array shape
 #     vec![4, 4], // regular chunk shape
-#     DataType::Float32,
+#     data_type::float32(),
 #     f32::NAN,
 # ).build(store.clone(), "/array")?;
 let array = array.to_v3()?;

@@ -24,21 +24,21 @@ The [`[Async]WritableStorageTraits`](https://docs.rs/zarrs_storage/latest/zarrs_
 ```rust
 # extern crate zarrs;
 # extern crate ndarray;
-# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use zarrs::array::{Array, ArrayBytes, ArrayBuilder, data_type};
 # use ndarray::ArrayD;
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
 let chunk_indices: Vec<u64> = vec![1, 2];
-let chunk_bytes: Vec<u8> = vec![0u8; 4 * 4 * 4]; // 4x4 chunk of f32
+let chunk_bytes: ArrayBytes = vec![0u8; 4 * 4 * 4].into(); // 4x4 chunk of f32
 array.store_chunk(&chunk_indices, chunk_bytes)?;
 let chunk_elements: Vec<f32> = vec![1.0; 4 * 4];
-array.store_chunk_elements(&chunk_indices, &chunk_elements)?;
+array.store_chunk(&chunk_indices, &chunk_elements)?;
 let chunk_array = ArrayD::<f32>::from_shape_vec(
     vec![4, 4], // chunk shape
     chunk_elements
 )?;
-array.store_chunk_ndarray(&chunk_indices, chunk_array)?;
+array.store_chunk(&chunk_indices, chunk_array)?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
@@ -51,14 +51,12 @@ array.store_chunk_ndarray(&chunk_indices, chunk_array)?;
 
 ```rust
 # extern crate zarrs;
-# use zarrs::array::{Array, ArrayBuilder, DataType};
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::{Array, ArrayBytes, ArrayBuilder, data_type};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
-let chunks = ArraySubset::new_with_ranges(&[0..2, 0..2]);
-let chunks_bytes: Vec<u8> = vec![0u8; 2 * 2 * 4 * 4 * 4]; // 2x2 chunks of 4x4 f32
-array.store_chunks(&chunks, chunks_bytes)?;
+let chunks_bytes: ArrayBytes = vec![0u8; 2 * 2 * 4 * 4 * 4].into(); // 2x2 chunks of 4x4 f32
+array.store_chunks(&[0..2, 0..2], chunks_bytes)?;
 // store_chunks_elements, store_chunks_ndarray...
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
@@ -69,9 +67,9 @@ An encoded chunk can be stored directly with [store_encoded_chunk](https://docs.
 
 ```rust
 # extern crate zarrs;
-# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use zarrs::array::{Array, ArrayBuilder, data_type};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 #     .build(store.clone(), "/array")?;
 # let chunk_indices: Vec<u64> = vec![1, 2];
 let encoded_chunk_bytes: Vec<u8> = vec![0u8; 4 * 4 * 4]; // pre-encoded bytes
@@ -105,18 +103,17 @@ Partial writes to a chunk may be lost if these rules are not respected.
 
 ```rust
 # extern crate zarrs;
-# use zarrs::array::{Array, ArrayBuilder, DataType};
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::{Array, ArrayBuilder, data_type};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![16, 8], vec![4, 4], DataType::Float32, 0.0f32)
-#     .build(store.clone(), "/array")?;
-array.store_chunk_subset_elements::<f32>(
+let array = ArrayBuilder::new(vec![16, 8], vec![4, 4], data_type::float32(), 0.0f32)
+    .build(store.clone(), "/array")?;
+array.store_chunk_subset(
     // chunk indices
     &[3, 1],
     // subset within chunk
-    &ArraySubset::new_with_ranges(&[1..2, 0..4]),
+    &[1..2, 0..4],
     // subset elements
-    &[-4.0; 4],
+    &[-4.0f32; 4],
 )?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
@@ -125,15 +122,11 @@ array.store_chunk_subset_elements::<f32>(
 
 ```rust
 # extern crate zarrs;
-# use zarrs::array::{Array, ArrayBuilder, DataType};
-# use zarrs::array_subset::ArraySubset;
+# use zarrs::array::{Array, ArrayBuilder, data_type};
 # let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
-#     .build(store.clone(), "/array")?;
-array.store_array_subset_elements::<f32>(
-    &ArraySubset::new_with_ranges(&[0..8, 6..7]),
-    &[123.0; 8],
-)?;
+let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
+    .build(store.clone(), "/array")?;
+array.store_array_subset(&[0..8, 6..7], &[123.0f32; 8])?;
 # Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
@@ -145,7 +138,7 @@ If disabled (default), chunks are always fully decoded and updated before being 
 To enable partial encoding:
 ```rust
 # extern crate zarrs;
-# use zarrs::array::codec::CodecOptions;
+# use zarrs::array::CodecOptions;
 // Set experimental_partial_encoding to true by default
 zarrs::config::global_config_mut().set_experimental_partial_encoding(true);
 
