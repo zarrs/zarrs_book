@@ -20,7 +20,7 @@ In summary, it defines a 4-bit unsigned integer in the range `[0, 15]` that is s
 ### The `DataTypeUint4` Struct
 
 The `uint4` data type has no configuration, so it can be represented by a unit struct:
-```rust
+```rust,ignore
 /// The `uint4` data type.
 #[derive(Debug)]
 struct DataTypeUint4;
@@ -33,7 +33,7 @@ The `DataTypeUint4Element` used in these definitions is defined later on this pa
 This defines properties of the data type such as the metadata (name and configuration), size, and conversion between to and from fill values and fill value metadata.
 It has additional codec related methods detailed shortly.
 
-```rust
+```rust,ignore
 /// A unique identifier for `uint4` data type.
 const UINT4: &'static str = "uint4";
 
@@ -74,7 +74,7 @@ impl DataTypeExtension for DataTypeUint4 {
     fn size(&self) -> zarrs::array::DataTypeSize {
         DataTypeSize::Fixed(1)
     }
-    
+
     ...
 }
 ```
@@ -84,7 +84,7 @@ impl DataTypeExtension for DataTypeUint4 {
 Supporting the `bytes` codec is absolutely trivial for the `uint4` data type.
 It simply passes through the in-memory data unmodified, since it is already a 1-byte value.
 
-```rust
+```rust,ignore
 impl DataTypeExtensionBytesCodec for DataTypeUint4 {
     fn encode<'a>(
         &self,
@@ -105,10 +105,10 @@ impl DataTypeExtensionBytesCodec for DataTypeUint4 {
 ```
 
 The default implementation of `DataTypeExtension::codec_bytes` must be overriden to return `Ok(self)`:
-```rust
+```rust,ignore
 impl DataTypeExtension for DataTypeUint4 {
     ...
-    
+
     fn codec_bytes(&self) -> Result<&dyn DataTypeExtensionBytesCodec, DataTypeExtensionError> {
         Ok(self)
     }
@@ -120,7 +120,7 @@ impl DataTypeExtension for DataTypeUint4 {
 The `uint4` data type supports the `packbits` codec as a 4-bit value.
 This can be supported by implementing the `DataTypeExtensionPackBitsCodec` trait.
 
-```rust
+```rust,ignore
 impl DataTypeExtensionPackBitsCodec for DataTypeUint4 {
     fn component_size_bits(&self) -> u64 {
         4
@@ -141,10 +141,10 @@ In this case, the trait methods signify that the data type:
 - it is unsigned and does not need sign extension.
 
 The default implementation of `DataTypeExtension::codec_packbits` must be overriden to return `Ok(self)`:
-```rust
+```rust,ignore
 impl DataTypeExtension for DataTypeUint4 {
     ...
-    
+
     fn codec_packbits(
         &self,
     ) -> Result<&dyn DataTypeExtensionPackBitsCodec, DataTypeExtensionError> {
@@ -156,8 +156,7 @@ impl DataTypeExtension for DataTypeUint4 {
 ### Registering the `uint4` Data Type
 A data type must be registered as a `DataTypePlugin` to be used in an `Array`.
 
-```rust
-
+```rust,ignore
 // Register the data type so that it can be recognised when opening arrays.
 inventory::submit! {
     DataTypePlugin::new(UINT4, is_uint4_dtype, create_uint4_dtype)
@@ -182,7 +181,7 @@ fn create_uint4_dtype(
 
 The most suitable in-memory representation of a `uint4` data type element is a `u8`.
 
-```rust
+```rust,ignore
 /// The in-memory representation of the `uint4` data type.
 #[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
 struct DataTypeUint4Element(u8);
@@ -190,11 +189,13 @@ struct DataTypeUint4Element(u8);
 
 A data type element must implement the `Element` trait to be used in `Array::store_*_as_elements` methods.
 
-```rust
-/// This defines how an in-memory DataTypeUint4 is converted into ArrayBytes before encoding via the codec pipeline.
-impl Element for DataTypeUint4 {
+```rust,ignore
+# #[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
+# struct DataTypeUint4Element(u8);
+/// This defines how an in-memory DataTypeUint4Element is converted into ArrayBytes before encoding via the codec pipeline.
+impl Element for DataTypeUint4Element {
     fn validate_data_type(data_type: &DataType) -> Result<(), ArrayError> {
-        (data_type == &DataType::Extension(Arc::new(DataTypeUint4)))
+        (data_type == &DataType::Extension(Arc::new(DataTypeUint4Element)))
             .then_some(())
             .ok_or(ArrayError::IncompatibleElementType)
     }
@@ -204,9 +205,9 @@ impl Element for DataTypeUint4 {
         elements: &'a [Self],
     ) -> Result<zarrs::array::ArrayBytes<'a>, ArrayError> {
         Self::validate_data_type(data_type)?;
-        // Maybe this could be a transmute instead &[DataTypeUint4(u8)] -> Cow::Borrowed(&[u8])
+        // Maybe this could be a transmute instead &[DataTypeUint4Element(u8)] -> Cow::Borrowed(&[u8])
         let mut bytes: Vec<u8> =
-            Vec::with_capacity(elements.len() * size_of::<DataTypeUint4>());
+            Vec::with_capacity(elements.len() * size_of::<DataTypeUint4Element>());
         for element in elements {
             bytes.push(element.0);
         }
@@ -217,21 +218,23 @@ impl Element for DataTypeUint4 {
 
 A data type element must implement the `ElementOwned` trait to be used in `Array::retrieve_*_as_elements` methods.
 
-```rust
-/// This defines how ArrayBytes are converted into a DataTypeUint4 after decoding via the codec pipeline.
-impl ElementOwned for DataTypeUint4 {
+```rust,ignore
+# #[derive(serde::Deserialize, Clone, Copy, Debug, PartialEq)]
+# struct DataTypeUint4Element(u8);
+/// This defines how ArrayBytes are converted into a DataTypeUint4Element after decoding via the codec pipeline.
+impl zarrs::array::ElementOwned for DataTypeUint4Element {
     fn from_array_bytes(
-        data_type: &DataType,
-        bytes: ArrayBytes<'_>,
-    ) -> Result<Vec<Self>, ArrayError> {
+        data_type: &zarrs::array::DataType,
+        bytes: zarrs::array::ArrayBytes<'_>,
+    ) -> Result<Vec<Self>, zarrs::array::ArrayError> {
         Self::validate_data_type(data_type)?;
         let bytes = bytes.into_fixed()?;
         let bytes_len = bytes.len();
-        let mut elements = Vec::with_capacity(bytes_len / size_of::<DataTypeUint4>());
+        let mut elements = Vec::with_capacity(bytes_len / size_of::<DataTypeUint4Element>());
         for byte in bytes.iter() {
-            // TODO: Should not construct DataTypeUint4 this way as it could represent a
+            // TODO: Should not construct DataTypeUint4Element this way as it could represent a
             // value outside of [0, 15]. Set upper bits in the byte to 0?
-            elements.push(DataTypeUint4(*byte))
+            elements.push(DataTypeUint4Element(*byte))
         }
         Ok(elements)
     }
@@ -240,7 +243,9 @@ impl ElementOwned for DataTypeUint4 {
 
 Some non-essential utility methods were defined for `DataTypeUint4` and used in the snippets above:
 ```rust
-impl DataTypeUint4 {
+# #[derive(serde::Deserialize, Clone, Copy, Debug, PartialEq)]
+# struct DataTypeUint4Element(u8);
+impl DataTypeUint4Element {
     fn to_ne_bytes(&self) -> [u8; 1] {
         [self.0]
     }

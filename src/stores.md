@@ -31,6 +31,8 @@ In subsequent chapters, async API method calls are shown commented out below the
 [`MemoryStore`](https://docs.rs/zarrs_storage/latest/zarrs_storage/store/struct.MemoryStore.html) is a synchronous in-memory store available in the [`zarrs_storage`](https://docs.rs/zarrs_storage/latest/zarrs_storage/) crate (re-exported as `zarrs::storage`).
 
 ```rust
+# extern crate zarrs;
+# use std::sync::Arc;
 use zarrs::storage::ReadableWritableListableStorage;
 use zarrs::storage::store::MemoryStore;
 
@@ -50,12 +52,15 @@ Note that in-memory stores do not persist data, and they are not suited to distr
 [`FilesystemStore`](https://docs.rs/zarrs_filesystem/latest/zarrs_filesystem/struct.FilesystemStore.html) is a synchronous filesystem store available in the [`zarrs_filesystem`](https://docs.rs/zarrs_filesystem/latest/zarrs_filesystem/) crate (re-exported as `zarrs::filesystem` with the `filesystem` feature).
 
 ```rust
+# extern crate zarrs;
+# use std::sync::Arc;
 use zarrs::storage::ReadableWritableListableStorage;
 use zarrs::filesystem::FilesystemStore;
 
 let base_path = "/";
 let store: ReadableWritableListableStorage =
-    Arc::new(FilesystemStore::new(base_path));
+    Arc::new(FilesystemStore::new(base_path)?);
+# Ok::<(), Box<dyn std::error::Error>>(())
 ```
 
 The base path is the root of the filesystem store.
@@ -75,10 +80,14 @@ Currently the only option available for filesystem stores is whether or not to e
 [`HTTPStore`](https://docs.rs/zarrs_http/latest/zarrs_http/struct.HTTPStore.html) is a read-only synchronous HTTP store available in the [`zarrs_http`](https://docs.rs/zarrs_http/latest/zarrs_http/) crate.
 
 ```rust
+# extern crate zarrs;
+# extern crate zarrs_http;
+# use std::sync::Arc;
 use zarrs::storage::ReadableStorage;
 use zarrs_http::HTTPStore;
 
 let http_store: ReadableStorage = Arc::new(HTTPStore::new("http://...")?);
+# Ok::<(), Box<dyn std::error::Error>>(())
 ```
 
 > [!NOTE]
@@ -107,7 +116,11 @@ Supported object stores include:
 [`zarrs_object_store::AsyncObjectStore`](https://docs.rs/zarrs_object_store/latest/zarrs_object_store/struct.AsyncObjectStore.html) wraps [`object_store::ObjectStore`](https://docs.rs/object_store/0.11.0/object_store/trait.ObjectStore.html) stores.
 
 ```rust
-use zarrs::storage::::AsyncReadableStorage;
+# extern crate zarrs;
+# extern crate zarrs_object_store;
+# extern crate object_store;
+# use std::sync::Arc;
+use zarrs::storage::AsyncReadableStorage;
 use zarrs_object_store::AsyncObjectStore;
 
 let options = object_store::ClientOptions::new().with_allow_http(true);
@@ -116,6 +129,7 @@ let store = object_store::http::HttpBuilder::new()
     .with_client_options(options)
     .build()?;
 let store: AsyncReadableStorage = Arc::new(AsyncObjectStore::new(store));
+# Ok::<(), Box<dyn std::error::Error>>(())
 ```
 
 ### OpenDAL
@@ -132,13 +146,18 @@ It supports a huge range of [services](https://docs.rs/opendal/latest/opendal/se
 [`zarrs_object_store::AsyncOpendalStore`](https://docs.rs/zarrs_opendal/latest/zarrs_opendal/struct.AsyncOpendalStore.html) wraps [`opendal::Operator`](https://docs.rs/opendal/0.50.2/opendal/struct.Operator.html).
 
 ```rust
-use zarrs::storage::::AsyncReadableStorage;
+# extern crate zarrs;
+# extern crate zarrs_opendal;
+# extern crate opendal;
+# use std::sync::Arc;
+use zarrs::storage::AsyncReadableStorage;
 use zarrs_opendal::AsyncOpendalStore;
 
 let builder = opendal::services::Http::default().endpoint("http://...");
 let operator = opendal::Operator::new(builder)?.finish();
 let store: AsyncReadableStorage =
     Arc::new(AsyncOpendalStore::new(operator));
+# Ok::<(), Box<dyn std::error::Error>>(())
 ```
 
 > [!NOTE]
@@ -171,7 +190,12 @@ Storage adapters can be layered on top of stores to change their functionality.
 
 A storage adapter for zip files.
 
-```rust
+```rust,no_run
+# extern crate zarrs_storage;
+# extern crate zarrs_filesystem;
+# extern crate zarrs_zip;
+# use std::sync::Arc;
+# use std::path::PathBuf;
 use zarrs_storage::StoreKey;
 use zarrs_filesystem::FilesystemStore;
 use zarrs_zip::ZipStorageAdapter;
@@ -181,6 +205,7 @@ let fs_store = Arc::new(FilesystemStore::new(&fs_root)?);
 let zip_key = StoreKey::new("zarr.zip")?;
 let zip_store = Arc::new(ZipStorageAdapter::new(fs_store, zip_key)?);
 // or ZipStorageAdapter::new_with_path
+# Ok::<(), Box<dyn std::error::Error>>(())
 ```
 
 ### Async to Sync
@@ -190,6 +215,7 @@ Asynchronous stores can be used in a synchronous context with the [`zarrs::stora
 The `AsyncToSyncBlockOn` trait must be implemented for a runtime or runtime handle in order to block on futures.
 See the below `tokio` example:
 ```rust
+# extern crate zarrs;
 use zarrs::storage::storage_adapter::async_to_sync::AsyncToSyncBlockOn;
 
 struct TokioBlockOn(tokio::runtime::Runtime); // or handle
@@ -202,18 +228,31 @@ impl AsyncToSyncBlockOn for TokioBlockOn {
 ```
 
 ```rust
-use zarrs::storage::::{AsyncReadableStorage, ReadableStorage};
+# extern crate zarrs;
+# extern crate zarrs_opendal;
+# struct TokioBlockOn(tokio::runtime::Runtime); // or handle
+# impl AsyncToSyncBlockOn for TokioBlockOn {
+#     fn block_on<F: core::future::Future>(&self, future: F) -> F::Output {
+#         self.0.block_on(future)
+#     }
+# }
+# use zarrs::storage::storage_adapter::async_to_sync::AsyncToSyncBlockOn;
+# use zarrs::storage::storage_adapter::async_to_sync::AsyncToSyncStorageAdapter;
+# use std::sync::Arc;
+use zarrs::storage::{AsyncReadableStorage, ReadableStorage};
 
 // Create an async store as normal
+let path = "http://...";
 let builder = opendal::services::Http::default().endpoint(path);
 let operator = opendal::Operator::new(builder)?.finish();
 let storage: AsyncReadableStorage =
-    Arc::new(AsyncOpendalStore::new(operator));
+    Arc::new(zarrs_opendal::AsyncOpendalStore::new(operator));
 
 // Create a tokio runtime and adapt the store to sync
 let block_on = TokioBlockOn(tokio::runtime::Runtime::new()?);
 let store: ReadableStorage =
-    Arc::new(AsyncToSyncStorageAdapter::new(storage, block_on))
+    Arc::new(AsyncToSyncStorageAdapter::new(storage, block_on));
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 > [!WARNING]
@@ -226,6 +265,12 @@ The [`zarrs::storage::UsageLogStorageAdapter`](https://docs.rs/zarrs_storage/0.2
 It is intended to aid in debugging and optimising performance by revealing storage access patterns.
 
 ```rust
+# extern crate zarrs;
+# extern crate chrono;
+# use std::sync::Arc;
+# use std::sync::Mutex;
+# use zarrs::storage::store::MemoryStore;
+# use zarrs::storage::storage_adapter::usage_log::UsageLogStorageAdapter;
 let store = Arc::new(MemoryStore::new());
 let log_writer = Arc::new(Mutex::new(
     // std::io::BufWriter::new(
@@ -244,8 +289,12 @@ The [`zarrs::storage::PerformanceMetricsStorageAdapter`](https://docs.rs/zarrs_s
 It is intended to aid in testing by allowing the application to validate that metrics (e.g., bytes read/written, total read/write operations) match expected values for specific operations.
 
 ```rust
+# extern crate zarrs;
+# use std::sync::Arc;
+# use zarrs::storage::store::MemoryStore;
+# use zarrs::storage::storage_adapter::performance_metrics::PerformanceMetricsStorageAdapter;
 let store = Arc::new(MemoryStore::new());
 let store = Arc::new(PerformanceMetricsStorageAdapter::new(store));
 
-assert_eq!(store.bytes_read(), ...);
+// assert_eq!(store.bytes_read(), ...);
 ```

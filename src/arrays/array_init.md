@@ -3,10 +3,21 @@
 ## Opening an Existing Array
 
 An existing array can be opened with [`Array::open`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open) (or [`async_open`](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_open)):
-```rs
+```rust
+# extern crate zarrs;
+# use zarrs::array::{Array, ArrayBuilder, DataType};
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 let array_path = "/group/array";
+# let array = ArrayBuilder::new(
+#     vec![8, 8], // array shape
+#     vec![4, 4], // regular chunk shape
+#     DataType::Float32,
+#     f32::NAN,
+# ).build(store.clone(), array_path)?;
+# array.store_metadata()?;
 let array = Array::open(store.clone(), array_path)?;
 // let array = Array::async_open(store.clone(), array_path).await?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 > [!NOTE]
@@ -18,7 +29,11 @@ let array = Array::open(store.clone(), array_path)?;
 > [!NOTE]
 > The `ArrayBuilder` only supports Zarr V3 groups.
 
-```rs
+```rust
+# extern crate zarrs;
+# use std::sync::Arc;
+# use zarrs::array::{Array, ArrayBuilder, DataType};
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 let array_path = "/group/array";
 let array = ArrayBuilder::new(
     vec![8, 8], // array shape
@@ -28,7 +43,7 @@ let array = ArrayBuilder::new(
 )
 // .bytes_to_bytes_codecs(vec![]) // uncompressed
 .bytes_to_bytes_codecs(vec![
-    Arc::new(GzipCodec::new(5)?),
+    Arc::new(zarrs::array::codec::GzipCodec::new(5)?),
 ])
 .dimension_names(["y", "x"].into())
 // .attributes(...)
@@ -36,6 +51,7 @@ let array = ArrayBuilder::new(
 .build(store.clone(), array_path)?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 `ArrayBuilder::new` supports more advanced initialisation from metadata, explicit extensions, etc.
@@ -56,21 +72,31 @@ Array metadata must **always** be stored explicitly, otherwise an array cannot b
 
 The [`ShardingCodecBuilder`](https://docs.rs/zarrs/latest/zarrs/array/codec/array_to_bytes/sharding/struct.ShardingCodecBuilder.html) is useful for creating an array that uses the `sharding_indexed` codec.
 
-```rs
+```rust
+# extern crate zarrs;
+# use std::sync::Arc;
+# use std::num::NonZeroU64;
+# use zarrs::array::{Array, ArrayBuilder, DataType, codec::array_to_bytes::sharding::ShardingCodecBuilder};
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let array_path = "/group/array";
 let mut sharding_codec_builder = ShardingCodecBuilder::new(
-    vec![4, 4].try_into()? // inner chunk shape
+    vec![NonZeroU64::new(2).unwrap(); 2].into() // inner chunk shape
 );
 sharding_codec_builder.bytes_to_bytes_codecs(vec![
-    Arc::new(codec::GzipCodec::new(5)?),
+    Arc::new(zarrs::array::codec::GzipCodec::new(5)?),
 ]);
 
 let array = ArrayBuilder::new(
-    ...
+    vec![8, 8], // array shape
+    vec![4, 4], // regular chunk shape
+    DataType::Float32,
+    f32::NAN,
 )
 .array_to_bytes_codec(sharding_codec_builder.build_arc())
 .build(store.clone(), array_path)?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 ## Creating a Zarr V3 Array from Metadata
@@ -78,74 +104,67 @@ array.store_metadata()?;
 An array can be created from `ArrayMetadata` instead of an `ArrayBuilder` if needed.
 
 
-```rs
+```rust
+# extern crate zarrs;
+# use std::sync::Arc;
+# use zarrs::array::Array;
+# use zarrs::metadata::ArrayMetadata;
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let array_path = "/group/array";
 let json: &str = r#"{
-    "zarr_format": 3,
-    "node_type": "array",
-    ...
-}#";
-```
-<details>
-  <summary>Full Zarr V3 array JSON example</summary>
-
-```rs
-let json: &str = r#"{
-    "zarr_format": 3,
-    "node_type": "array",
-    "shape": [
-        10000,
-        1000
-    ],
-    "data_type": "float64",
-    "chunk_grid": {
-        "name": "regular",
-        "configuration": {
-        "chunk_shape": [
-            1000,
-            100
-        ]
-        }
+  "zarr_format": 3,
+  "node_type": "array",
+  "shape": [
+    10000,
+    1000
+  ],
+  "data_type": "float64",
+  "chunk_grid": {
+    "name": "regular",
+    "configuration": {
+      "chunk_shape": [
+        1000,
+        100
+      ]
+    }
+  },
+  "chunk_key_encoding": {
+    "name": "default",
+    "configuration": {
+      "separator": "/"
+    }
+  },
+  "fill_value": "NaN",
+  "codecs": [
+    {
+      "name": "bytes",
+      "configuration": {
+        "endian": "little"
+      }
     },
-    "chunk_key_encoding": {
-        "name": "default",
-        "configuration": {
-        "separator": "/"
-        }
-    },
-    "fill_value": "NaN",
-    "codecs": [
-        {
-        "name": "bytes",
-        "configuration": {
-            "endian": "little"
-        }
-        },
-        {
+      {
         "name": "gzip",
         "configuration": {
             "level": 1
         }
-        }
-    ],
-    "attributes": {
-        "foo": 42,
-        "bar": "apples",
-        "baz": [
-        1,
-        2,
-        3,
-        4
-        ]
-    },
-    "dimension_names": [
-        "rows",
-        "columns"
+    }
+  ],
+  "attributes": {
+    "foo": 42,
+    "bar": "apples",
+    "baz": [
+      1,
+      2,
+      3,
+      4
     ]
+  },
+  "dimension_names": [
+    "rows",
+    "columns"
+  ]
 }"#;
-```
-</details>
 
-```rs
 /// Parse the JSON metadata
 let array_metadata: ArrayMetadata = serde_json::from_str(json)?;
 
@@ -157,25 +176,32 @@ let array = Array::new_with_metadata(
 )?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 Alternatively, `ArrayMetadataV3` can be constructed with `ArrayMetadataV3::new()` and subsequent `with_` methods:
 
-```rs
+```rust
+# extern crate zarrs;
+# use std::sync::Arc;
+# use zarrs::array::Array;
+# use zarrs::metadata::{ArrayMetadata, v3::ArrayMetadataV3};
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 /// Specify the array metadata
 let array_metadata: ArrayMetadata = ArrayMetadataV3::new(
-    serde_json::from_str("[10, 10]"),
+    serde_json::from_str("[10, 10]")?,
     serde_json::from_str(r#"{"name": "regular", "configuration":{"chunk_shape": [5, 5]}}"#)?,
     serde_json::from_str(r#""float32""#)?,
     serde_json::from_str("0.0")?,
-    serde_json::from_str(r#"[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]"#)?,
+    serde_json::from_str(r#"[ {"name": "bytes", "configuration": { "endian": "little" } }, { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]"#)?,
 ).with_chunk_key_encoding(
     serde_json::from_str(r#"{"name": "default", "configuration": {"separator": "/"}}"#)?,
 ).with_attributes(
     serde_json::from_str(r#"{"foo": 42, "bar": "apples", "baz": [1, 2, 3, 4]}"#)?,
-).with_dimension_names(
-    Some(serde_json::from_str(r#"["y", "x"]"#)?),
 )
+// .with_dimension_names(
+//     Some(serde_json::from_str(r#"["y", "x"]"#)?),
+// )
 .into();
 
 /// Create the array
@@ -186,6 +212,7 @@ let array = Array::new_with_metadata(
 )?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 ## Creating a Zarr V2 Array
@@ -193,11 +220,17 @@ array.store_metadata()?;
 The `ArrayBuilder` does not support Zarr V2 arrays.
 Instead, they must be built from `ArrayMetadataV2`.
 
-```rs
+```rust
+# extern crate zarrs;
+# use std::sync::Arc;
+# use std::num::NonZeroU64;
+# use zarrs::array::Array;
+# use zarrs::metadata::{ArrayMetadata, ChunkKeySeparator, v2::ArrayMetadataV2, v2::FillValueMetadataV2, v2::ArrayMetadataV2Order};
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 /// Specify the array metadata
 let array_metadata: ArrayMetadata = ArrayMetadataV2::new(
     vec![10, 10], // array shape
-    vec![5, 5].try_into()?, // regular chunk shape
+    vec![NonZeroU64::new(5).unwrap(); 2].into(), // regular chunk shape
     ">f4".into(), // big endian float32
     FillValueMetadataV2::NaN, // fill value
     None, // compressor
@@ -205,7 +238,6 @@ let array_metadata: ArrayMetadata = ArrayMetadataV2::new(
 )
 .with_dimension_separator(ChunkKeySeparator::Slash)
 .with_order(ArrayMetadataV2Order::F)
-.with_attributes(attributes.clone())
 .into();
 
 /// Create the array
@@ -216,6 +248,7 @@ let array = Array::new_with_metadata(
 )?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 > [!WARNING]

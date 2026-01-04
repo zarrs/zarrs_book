@@ -14,21 +14,39 @@ V2 metadata must be explicitly erased if needed (see below).
 > While `zarrs` fully supports manipulation of Zarr V2 and V3 hierarchies (with supported codecs, data types, etc.), it only supports **forward conversion** of metadata from Zarr V2 to V3.
 
 ### Convert a Group to V3
-```rs
-let group: Group = group.to_v3();
+```rust
+# extern crate zarrs;
+# use zarrs::group::Group;
+# use zarrs::metadata::{GroupMetadata, v3::GroupMetadataV3};
+# use zarrs::config::MetadataEraseVersion;
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let group = Group::new_with_metadata(store, "/group", GroupMetadataV3::new().into())?;
+let group = group.to_v3();
 group.store_metadata()?;
 // group.async_store_metadata().await?;
 group.erase_metadata_opt(MetadataEraseVersion::V2)?;
 // group.async_erase_metadata_opt(MetadataEraseVersion::V2).await?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 ### Convert an Array to V3
-```rs
-let array: Array = array.to_v3()?;
+```rust
+# extern crate zarrs;
+# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use zarrs::config::MetadataEraseVersion;
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let array = ArrayBuilder::new(
+#     vec![8, 8], // array shape
+#     vec![4, 4], // regular chunk shape
+#     DataType::Float32,
+#     f32::NAN,
+# ).build(store.clone(), "/array")?;
+let array = array.to_v3()?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
 array.erase_metadata_opt(MetadataEraseVersion::V2)?;
 // array.async_erase_metadata_opt(MetadataEraseVersion::V2).await?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 Note that `Array::to_v3()` is fallible because some V2 metadata is not V3 compatible.
@@ -42,12 +60,19 @@ For groups, the `store_metadata_opt` accepts a [`GroupMetadataOptions`](https://
 By default, `GroupMetadataOptions` keeps the current Zarr version.
 
 To write Zarr V3 metadata:
-```rs
+```rust
+# extern crate zarrs;
+# use zarrs::group::{Group, GroupMetadataOptions};
+# use zarrs::metadata::{GroupMetadata, v3::GroupMetadataV3};
+# use zarrs::config::MetadataConvertVersion;
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let group = Group::new_with_metadata(store, "/group", GroupMetadataV3::new().into())?;
 group.store_metadata_opt(&
     GroupMetadataOptions::default()
     .with_metadata_convert_version(MetadataConvertVersion::V3)
 )?;
 // group.async_store_metadata_opt(...).await?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 > [!WARNING]
@@ -56,9 +81,16 @@ group.store_metadata_opt(&
 Note that the original metadata is not automatically deleted.
 If you want to delete it:
 
-```rs
-group.erase_metadata()?;
-// group.async_erase_metadata().await?;
+```rust
+# extern crate zarrs;
+# use zarrs::group::Group;
+# use zarrs::metadata::v3::GroupMetadataV3;
+# use zarrs::config::MetadataEraseVersion;
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let group = Group::new_with_metadata(store, "/group", GroupMetadataV3::new().into())?;
+group.erase_metadata_opt(MetadataEraseVersion::V2)?;
+// group.async_erase_metadata_opt(MetadataEraseVersion::V2).await?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 > [!TIP]

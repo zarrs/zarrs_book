@@ -1,0 +1,24 @@
+[package]
+name = "zarrs_book"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde = "1.0"
+zarrs = { version = "0.22.10", features = ["async", "ndarray"] }
+ndarray = "0.16"
+zarrs_filesystem = "0.3"
+zarrs_http = "0.3"
+zarrs_storage = "0.4"
+zarrs_object_store = "0.6"
+zarrs_opendal = "0.10"
+zarrs_zip = "0.4"
+object_store = { version = "0.13", features = ["http"] }
+opendal = { version = "0.55", features = ["services-fs", "services-http"] }
+chrono = "0.4"
+tokio = { version = "1", features = ["rt"] }
+inventory = "0.3"
+serde_json = "1.0.148"
+itertools = "0.14"
+rayon = "1.11.0"
+rayon_iter_concurrent_limit = "0.2.0"

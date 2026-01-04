@@ -21,17 +21,25 @@ The [`[Async]WritableStorageTraits`](https://docs.rs/zarrs_storage/latest/zarrs_
 
 ### Store a Chunk
 
-```rs
+```rust
+# extern crate zarrs;
+# extern crate ndarray;
+# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use ndarray::ArrayD;
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+#     .build(store.clone(), "/array")?;
 let chunk_indices: Vec<u64> = vec![1, 2];
-let chunk_bytes: Vec<u8> = vec![...];
-array.store_chunk(&chunk_indices, chunk_bytes.into())?;
-let chunk_elements: Vec<f32> = vec![...];
+let chunk_bytes: Vec<u8> = vec![0u8; 4 * 4 * 4]; // 4x4 chunk of f32
+array.store_chunk(&chunk_indices, chunk_bytes)?;
+let chunk_elements: Vec<f32> = vec![1.0; 4 * 4];
 array.store_chunk_elements(&chunk_indices, &chunk_elements)?;
 let chunk_array = ArrayD::<f32>::from_shape_vec(
-    vec![2, 2], // chunk shape
+    vec![4, 4], // chunk shape
     chunk_elements
 )?;
-array.store_chunk_elements(&chunk_indices, chunk_array)?;
+array.store_chunk_ndarray(&chunk_indices, chunk_array)?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 > [!TIP]
@@ -41,20 +49,35 @@ array.store_chunk_elements(&chunk_indices, chunk_array)?;
 
 `store_chunks` (and variants) will dissasemble the input into chunks, and encode and store them in parallel.
 
-```rs
-let chunks = ArraySubset::new_with_ranges(&[0..2, 0..4]);
-let chunks_bytes: Vec<u8> = vec![...];
-array.store_chunks(&chunks, chunks_bytes.into())?;
+```rust
+# extern crate zarrs;
+# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use zarrs::array_subset::ArraySubset;
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+#     .build(store.clone(), "/array")?;
+let chunks = ArraySubset::new_with_ranges(&[0..2, 0..2]);
+let chunks_bytes: Vec<u8> = vec![0u8; 2 * 2 * 4 * 4 * 4]; // 2x2 chunks of 4x4 f32
+array.store_chunks(&chunks, chunks_bytes)?;
 // store_chunks_elements, store_chunks_ndarray...
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 ### Store an Encoded Chunk
 
 An encoded chunk can be stored directly with [store_encoded_chunk](https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_encoded_chunk), bypassing the `zarrs` codec pipeline.
 
-```rs
-let encoded_chunk_bytes: Vec<u8> = ...;
-array.store_encoded_chunk(&chunks, encoded_chunk_bytes.into())?;
+```rust
+# extern crate zarrs;
+# use zarrs::array::{Array, ArrayBuilder, DataType};
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+#     .build(store.clone(), "/array")?;
+# let chunk_indices: Vec<u64> = vec![1, 2];
+let encoded_chunk_bytes: Vec<u8> = vec![0u8; 4 * 4 * 4]; // pre-encoded bytes
+// SAFETY: the encoded bytes are valid for the chunk (bytes codec only defaulted to native endianness)
+unsafe { array.store_encoded_chunk(&chunk_indices, encoded_chunk_bytes.into())? };
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 > [!TIP]
@@ -80,7 +103,13 @@ Partial writes to a chunk may be lost if these rules are not respected.
 
 ### Store a Chunk Subset
 
-```rs
+```rust
+# extern crate zarrs;
+# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use zarrs::array_subset::ArraySubset;
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let array = ArrayBuilder::new(vec![16, 8], vec![4, 4], DataType::Float32, 0.0f32)
+#     .build(store.clone(), "/array")?;
 array.store_chunk_subset_elements::<f32>(
     // chunk indices
     &[3, 1],
@@ -89,15 +118,23 @@ array.store_chunk_subset_elements::<f32>(
     // subset elements
     &[-4.0; 4],
 )?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 ### Store an Array Subset
 
-```rs
+```rust
+# extern crate zarrs;
+# use zarrs::array::{Array, ArrayBuilder, DataType};
+# use zarrs::array_subset::ArraySubset;
+# let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+# let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+#     .build(store.clone(), "/array")?;
 array.store_array_subset_elements::<f32>(
     &ArraySubset::new_with_ranges(&[0..8, 6..7]),
     &[123.0; 8],
 )?;
+# Ok::<_, Box<dyn std::error::Error>>(())
 ```
 
 ### Partial Encoding with the Sharding Codec
@@ -106,7 +143,9 @@ In `zarrs`, the `sharding_indexed` codec is the only codec that supports real pa
 If disabled (default), chunks are always fully decoded and updated before being stored.
 
 To enable partial encoding:
-```rs
+```rust
+# extern crate zarrs;
+# use zarrs::array::codec::CodecOptions;
 // Set experimental_partial_encoding to true by default
 zarrs::config::global_config_mut().set_experimental_partial_encoding(true);
 

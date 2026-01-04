@@ -58,7 +58,7 @@ The expected form of the codec in array metadata is:
 ```
 
 The configuration can be represented by a simple struct:
-```rust
+```rust,ignore
 /// `lz4` codec configuration parameters
 #[derive(Serialize, Deserialize, Clone, Eq, PartialEq, Debug, Display)]
 pub struct Lz4CodecConfiguration {
@@ -68,7 +68,7 @@ pub struct Lz4CodecConfiguration {
 Note that codec configurations in [`zarrs_metadata`](https://docs.rs/zarrs_metadata/latest/zarrs_metadata/) are versioned so that they can adapt to potential codec specification revisions.
 
 `Lz4CodecConfiguration` is JSON serialisable, so implement the `ConfigurationSerialize` trait:
-```rust
+```rust,ignore
 impl ConfigurationSerialize for Lz4CodecConfiguration {}
 ```
 
@@ -80,7 +80,7 @@ A codec configuration must not be able to hold unrepresentable JSON state, other
 Now create the codec struct.
 For encoding, the `acceleration` needs to be known, so this must be a field of the struct:
 
-```rust
+```rust,ignore
 pub struct Lz4Codec {
     acceleration: i32
 }
@@ -88,7 +88,7 @@ pub struct Lz4Codec {
 
 Next we define two constructors.
 These are not officially required for the codec to be used, but it is common practice in `zarrs` to include constructors based on the underlying codec parameters as well as a constructor from configuration.
-```rust
+```rust,ignore
 impl Lz4Codec {
     #[must_use]
     pub fn new(acceleration: i32) -> Self {
@@ -108,7 +108,7 @@ impl Lz4Codec {
 
 Now we implement the `CodecTraits`, which are required for every codec.
 
-```rust
+```rust,ignore
 /// Unique identifier for the LZ4 codec
 pub const LZ4: &str = "example.lz4";
 
@@ -158,7 +158,7 @@ This ensures that a cache is inserted at the appropriate location in a partial d
 
 The `BytesToBytesCodecTraits` are where the encoding and decoding methods are implemented.
 
-```rust
+```rust,ignore
 impl BytesToBytesCodecTraits for BloscCodec {
     /// Return a dynamic version of the codec.
     fn into_dyn(self: Arc<Self>) -> Arc<dyn BytesToBytesCodecTraits> {
@@ -225,7 +225,7 @@ The input is always fully decoded (and is cached because `partial_decoder_should
 `zarrs` uses [`inventory`](https://crates.io/crates/inventory) for compile time registration of codecs.
 Registration involves creating a method that is used to check if the identifier is a match, and a function that actually creates the codec from a configuration.
 
-```rust
+```rust,ignore
 // Register the codec.
 inventory::submit! {
     CodecPlugin::new(LZ4, is_identifier_lz4, create_codec_lz4)
@@ -248,7 +248,7 @@ pub(crate) fn create_codec_lz4(metadata: &MetadataV3) -> Result<Codec, PluginCre
 
 By default, the codec `name` will be the codec `identifier()`, however that may not be desirable (especially with `example.lz4`!).
 
-```rust
+```rust,ignore
 assert_eq!(Lz4::new(1).default_name(), "example.lz4");
 ```
 
@@ -257,7 +257,7 @@ By default, `zarrs` will preserve the alias if an array is rewritten, but this c
 
 If the codec is confirmed to be fully compatible with `numcodecs.lz4`, its default name could be changed with a runtime configuration:
 
-```rust
+```rust,ignore
 global_config_mut()
     .codec_aliases_v3_mut()
     .default_names
