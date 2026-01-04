@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-04ad3218.js";
+            window.path_to_searchindex_js = "../searchindex-ce85899b.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4822247b.js"></script>
@@ -183,10 +183,23 @@
                         <h1 id="array-initialisation"><a class="header" href="#array-initialisation">Array Initialisation</a></h1>
 <h2 id="opening-an-existing-array"><a class="header" href="#opening-an-existing-array">Opening an Existing Array</a></h2>
 <p>An existing array can be opened with <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open"><code>Array::open</code></a> (or <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_open"><code>async_open</code></a>):</p>
-<pre><code class="language-rs">let array_path = "/group/array";
-let array = Array::open(store.clone(), array_path)?;
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span>let array_path = "/group/array";
+<span class="boring">let array = ArrayBuilder::new(
+</span><span class="boring">    vec![8, 8], // array shape
+</span><span class="boring">    vec![4, 4], // regular chunk shape
+</span><span class="boring">    DataType::Float32,
+</span><span class="boring">    f32::NAN,
+</span><span class="boring">).build(store.clone(), array_path)?;
+</span><span class="boring">array.store_metadata()?;
+</span>let array = Array::open(store.clone(), array_path)?;
 // let array = Array::async_open(store.clone(), array_path).await?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <blockquote class="blockquote-tag blockquote-tag-note">
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
 <p>These methods will open a Zarr V2 or Zarr V3 array.
@@ -197,7 +210,13 @@ If you only want to open a specific Zarr version, see <a href="https://docs.rs/z
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
 <p>The <code>ArrayBuilder</code> only supports Zarr V3 groups.</p>
 </blockquote>
-<pre><code class="language-rs">let array_path = "/group/array";
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use std::sync::Arc;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span>let array_path = "/group/array";
 let array = ArrayBuilder::new(
     vec![8, 8], // array shape
     vec![4, 4], // regular chunk shape
@@ -206,7 +225,7 @@ let array = ArrayBuilder::new(
 )
 // .bytes_to_bytes_codecs(vec![]) // uncompressed
 .bytes_to_bytes_codecs(vec![
-    Arc::new(GzipCodec::new(5)?),
+    Arc::new(zarrs::array::codec::GzipCodec::new(5)?),
 ])
 .dimension_names(["y", "x"].into())
 // .attributes(...)
@@ -214,7 +233,8 @@ let array = ArrayBuilder::new(
 .build(store.clone(), array_path)?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <p><code>ArrayBuilder::new</code> supports more advanced initialisation from metadata, explicit extensions, etc.
 Consult the documentation.</p>
 <blockquote class="blockquote-tag blockquote-tag-tip">
@@ -230,87 +250,98 @@ The presence of valid metadata can act as a signal that the data is ready.</p>
 </blockquote>
 <h2 id="creating-a-zarr-v3-sharded-array"><a class="header" href="#creating-a-zarr-v3-sharded-array">Creating a Zarr V3 Sharded Array</a></h2>
 <p>The <a href="https://docs.rs/zarrs/latest/zarrs/array/codec/array_to_bytes/sharding/struct.ShardingCodecBuilder.html"><code>ShardingCodecBuilder</code></a> is useful for creating an array that uses the <code>sharding_indexed</code> codec.</p>
-<pre><code class="language-rs">let mut sharding_codec_builder = ShardingCodecBuilder::new(
-    vec![4, 4].try_into()? // inner chunk shape
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use std::sync::Arc;
+</span><span class="boring">use std::num::NonZeroU64;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType, codec::array_to_bytes::sharding::ShardingCodecBuilder};
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let array_path = "/group/array";
+</span>let mut sharding_codec_builder = ShardingCodecBuilder::new(
+    vec![NonZeroU64::new(2).unwrap(); 2].into() // inner chunk shape
 );
 sharding_codec_builder.bytes_to_bytes_codecs(vec![
-    Arc::new(codec::GzipCodec::new(5)?),
+    Arc::new(zarrs::array::codec::GzipCodec::new(5)?),
 ]);
 
 let array = ArrayBuilder::new(
-    ...
+    vec![8, 8], // array shape
+    vec![4, 4], // regular chunk shape
+    DataType::Float32,
+    f32::NAN,
 )
 .array_to_bytes_codec(sharding_codec_builder.build_arc())
 .build(store.clone(), array_path)?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <h2 id="creating-a-zarr-v3-array-from-metadata"><a class="header" href="#creating-a-zarr-v3-array-from-metadata">Creating a Zarr V3 Array from Metadata</a></h2>
 <p>An array can be created from <code>ArrayMetadata</code> instead of an <code>ArrayBuilder</code> if needed.</p>
-<pre><code class="language-rs">let json: &amp;str = r#"{
-    "zarr_format": 3,
-    "node_type": "array",
-    ...
-}#";
-</code></pre>
-<details>
-  <summary>Full Zarr V3 array JSON example</summary>
-<pre><code class="language-rs">let json: &amp;str = r#"{
-    "zarr_format": 3,
-    "node_type": "array",
-    "shape": [
-        10000,
-        1000
-    ],
-    "data_type": "float64",
-    "chunk_grid": {
-        "name": "regular",
-        "configuration": {
-        "chunk_shape": [
-            1000,
-            100
-        ]
-        }
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use std::sync::Arc;
+</span><span class="boring">use zarrs::array::Array;
+</span><span class="boring">use zarrs::metadata::ArrayMetadata;
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let array_path = "/group/array";
+</span>let json: &amp;str = r#"{
+  "zarr_format": 3,
+  "node_type": "array",
+  "shape": [
+    10000,
+    1000
+  ],
+  "data_type": "float64",
+  "chunk_grid": {
+    "name": "regular",
+    "configuration": {
+      "chunk_shape": [
+        1000,
+        100
+      ]
+    }
+  },
+  "chunk_key_encoding": {
+    "name": "default",
+    "configuration": {
+      "separator": "/"
+    }
+  },
+  "fill_value": "NaN",
+  "codecs": [
+    {
+      "name": "bytes",
+      "configuration": {
+        "endian": "little"
+      }
     },
-    "chunk_key_encoding": {
-        "name": "default",
-        "configuration": {
-        "separator": "/"
-        }
-    },
-    "fill_value": "NaN",
-    "codecs": [
-        {
-        "name": "bytes",
-        "configuration": {
-            "endian": "little"
-        }
-        },
-        {
+      {
         "name": "gzip",
         "configuration": {
             "level": 1
         }
-        }
-    ],
-    "attributes": {
-        "foo": 42,
-        "bar": "apples",
-        "baz": [
-        1,
-        2,
-        3,
-        4
-        ]
-    },
-    "dimension_names": [
-        "rows",
-        "columns"
+    }
+  ],
+  "attributes": {
+    "foo": 42,
+    "bar": "apples",
+    "baz": [
+      1,
+      2,
+      3,
+      4
     ]
+  },
+  "dimension_names": [
+    "rows",
+    "columns"
+  ]
 }"#;
-</code></pre>
-</details>
-<pre><code class="language-rs">/// Parse the JSON metadata
+
+/// Parse the JSON metadata
 let array_metadata: ArrayMetadata = serde_json::from_str(json)?;
 
 /// Create the array
@@ -321,22 +352,31 @@ let array = Array::new_with_metadata(
 )?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <p>Alternatively, <code>ArrayMetadataV3</code> can be constructed with <code>ArrayMetadataV3::new()</code> and subsequent <code>with_</code> methods:</p>
-<pre><code class="language-rs">/// Specify the array metadata
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use std::sync::Arc;
+</span><span class="boring">use zarrs::array::Array;
+</span><span class="boring">use zarrs::metadata::{ArrayMetadata, v3::ArrayMetadataV3};
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span>/// Specify the array metadata
 let array_metadata: ArrayMetadata = ArrayMetadataV3::new(
-    serde_json::from_str("[10, 10]"),
+    serde_json::from_str("[10, 10]")?,
     serde_json::from_str(r#"{"name": "regular", "configuration":{"chunk_shape": [5, 5]}}"#)?,
     serde_json::from_str(r#""float32""#)?,
     serde_json::from_str("0.0")?,
-    serde_json::from_str(r#"[ { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]"#)?,
+    serde_json::from_str(r#"[ {"name": "bytes", "configuration": { "endian": "little" } }, { "name": "blosc", "configuration": { "cname": "blosclz", "clevel": 9, "shuffle": "bitshuffle", "typesize": 2, "blocksize": 0 } } ]"#)?,
 ).with_chunk_key_encoding(
     serde_json::from_str(r#"{"name": "default", "configuration": {"separator": "/"}}"#)?,
 ).with_attributes(
     serde_json::from_str(r#"{"foo": 42, "bar": "apples", "baz": [1, 2, 3, 4]}"#)?,
-).with_dimension_names(
-    Some(serde_json::from_str(r#"["y", "x"]"#)?),
 )
+// .with_dimension_names(
+//     Some(serde_json::from_str(r#"["y", "x"]"#)?),
+// )
 .into();
 
 /// Create the array
@@ -347,14 +387,23 @@ let array = Array::new_with_metadata(
 )?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <h2 id="creating-a-zarr-v2-array"><a class="header" href="#creating-a-zarr-v2-array">Creating a Zarr V2 Array</a></h2>
 <p>The <code>ArrayBuilder</code> does not support Zarr V2 arrays.
 Instead, they must be built from <code>ArrayMetadataV2</code>.</p>
-<pre><code class="language-rs">/// Specify the array metadata
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use std::sync::Arc;
+</span><span class="boring">use std::num::NonZeroU64;
+</span><span class="boring">use zarrs::array::Array;
+</span><span class="boring">use zarrs::metadata::{ArrayMetadata, ChunkKeySeparator, v2::ArrayMetadataV2, v2::FillValueMetadataV2, v2::ArrayMetadataV2Order};
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span>/// Specify the array metadata
 let array_metadata: ArrayMetadata = ArrayMetadataV2::new(
     vec![10, 10], // array shape
-    vec![5, 5].try_into()?, // regular chunk shape
+    vec![NonZeroU64::new(5).unwrap(); 2].into(), // regular chunk shape
     "&gt;f4".into(), // big endian float32
     FillValueMetadataV2::NaN, // fill value
     None, // compressor
@@ -362,7 +411,6 @@ let array_metadata: ArrayMetadata = ArrayMetadataV2::new(
 )
 .with_dimension_separator(ChunkKeySeparator::Slash)
 .with_order(ArrayMetadataV2Order::F)
-.with_attributes(attributes.clone())
 .into();
 
 /// Create the array
@@ -373,7 +421,8 @@ let array = Array::new_with_metadata(
 )?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <blockquote class="blockquote-tag blockquote-tag-warning">
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p>
 <p><code>Array::new_with_metadata</code> can fail if Zarr V2 metadata is unsupported by <code>zarrs</code>.</p>

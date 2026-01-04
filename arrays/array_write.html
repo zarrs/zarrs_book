@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-04ad3218.js";
+            window.path_to_searchindex_js = "../searchindex-ce85899b.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4822247b.js"></script>
@@ -203,33 +203,62 @@
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunks"><code>erase_chunks</code></a></li>
 </ul>
 <h3 id="store-a-chunk"><a class="header" href="#store-a-chunk">Store a Chunk</a></h3>
-<pre><code class="language-rs">let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
-let chunk_bytes: Vec&lt;u8&gt; = vec![...];
-array.store_chunk(&amp;chunk_indices, chunk_bytes.into())?;
-let chunk_elements: Vec&lt;f32&gt; = vec![...];
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">extern crate ndarray;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use ndarray::ArrayD;
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">    .build(store.clone(), "/array")?;
+</span>let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
+let chunk_bytes: Vec&lt;u8&gt; = vec![0u8; 4 * 4 * 4]; // 4x4 chunk of f32
+array.store_chunk(&amp;chunk_indices, chunk_bytes)?;
+let chunk_elements: Vec&lt;f32&gt; = vec![1.0; 4 * 4];
 array.store_chunk_elements(&amp;chunk_indices, &amp;chunk_elements)?;
 let chunk_array = ArrayD::&lt;f32&gt;::from_shape_vec(
-    vec![2, 2], // chunk shape
+    vec![4, 4], // chunk shape
     chunk_elements
 )?;
-array.store_chunk_elements(&amp;chunk_indices, chunk_array)?;
-</code></pre>
+array.store_chunk_ndarray(&amp;chunk_indices, chunk_array)?;
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <blockquote class="blockquote-tag blockquote-tag-tip">
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>If a chunk is written more than once, its element values depend on whichever operation wrote to the chunk last.</p>
 </blockquote>
 <h3 id="store-chunks"><a class="header" href="#store-chunks">Store Chunks</a></h3>
 <p><code>store_chunks</code> (and variants) will dissasemble the input into chunks, and encode and store them in parallel.</p>
-<pre><code class="language-rs">let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..4]);
-let chunks_bytes: Vec&lt;u8&gt; = vec![...];
-array.store_chunks(&amp;chunks, chunks_bytes.into())?;
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">    .build(store.clone(), "/array")?;
+</span>let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..2]);
+let chunks_bytes: Vec&lt;u8&gt; = vec![0u8; 2 * 2 * 4 * 4 * 4]; // 2x2 chunks of 4x4 f32
+array.store_chunks(&amp;chunks, chunks_bytes)?;
 // store_chunks_elements, store_chunks_ndarray...
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <h3 id="store-an-encoded-chunk"><a class="header" href="#store-an-encoded-chunk">Store an Encoded Chunk</a></h3>
 <p>An encoded chunk can be stored directly with <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_encoded_chunk">store_encoded_chunk</a>, bypassing the <code>zarrs</code> codec pipeline.</p>
-<pre><code class="language-rs">let encoded_chunk_bytes: Vec&lt;u8&gt; = ...;
-array.store_encoded_chunk(&amp;chunks, encoded_chunk_bytes.into())?;
-</code></pre>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">    .build(store.clone(), "/array")?;
+</span><span class="boring">let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
+</span>let encoded_chunk_bytes: Vec&lt;u8&gt; = vec![0u8; 4 * 4 * 4]; // pre-encoded bytes
+// SAFETY: the encoded bytes are valid for the chunk (bytes codec only defaulted to native endianness)
+unsafe { array.store_encoded_chunk(&amp;chunk_indices, encoded_chunk_bytes.into())? };
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <blockquote class="blockquote-tag blockquote-tag-tip">
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>Currently, the most performant path for uncompressed writing on Linux is to reuse page aligned buffers via <code>store_encoded_chunk</code> with direct IO enabled for the <code>FilesystemStore</code>.
@@ -251,7 +280,15 @@ Codecs that do not support true partial encoding will retrieve chunks in their e
 </ul>
 <p>Partial writes to a chunk may be lost if these rules are not respected.</p>
 <h3 id="store-a-chunk-subset"><a class="header" href="#store-a-chunk-subset">Store a Chunk Subset</a></h3>
-<pre><code class="language-rs">array.store_chunk_subset_elements::&lt;f32&gt;(
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let array = ArrayBuilder::new(vec![16, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">    .build(store.clone(), "/array")?;
+</span>array.store_chunk_subset_elements::&lt;f32&gt;(
     // chunk indices
     &amp;[3, 1],
     // subset within chunk
@@ -259,24 +296,38 @@ Codecs that do not support true partial encoding will retrieve chunks in their e
     // subset elements
     &amp;[-4.0; 4],
 )?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <h3 id="store-an-array-subset"><a class="header" href="#store-an-array-subset">Store an Array Subset</a></h3>
-<pre><code class="language-rs">array.store_array_subset_elements::&lt;f32&gt;(
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">    .build(store.clone(), "/array")?;
+</span>array.store_array_subset_elements::&lt;f32&gt;(
     &amp;ArraySubset::new_with_ranges(&amp;[0..8, 6..7]),
     &amp;[123.0; 8],
 )?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <h3 id="partial-encoding-with-the-sharding-codec"><a class="header" href="#partial-encoding-with-the-sharding-codec">Partial Encoding with the Sharding Codec</a></h3>
 <p>In <code>zarrs</code>, the <code>sharding_indexed</code> codec is the only codec that supports real partial encoding if the <a href="https://docs.rs/zarrs/latest/zarrs/config/struct.Config.html#experimental-partial-decoding"><code>Experimental Partial Encoding</code></a> option is enabled.
 If disabled (default), chunks are always fully decoded and updated before being stored.</p>
 <p>To enable partial encoding:</p>
-<pre><code class="language-rs">// Set experimental_partial_encoding to true by default
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use zarrs::array::codec::CodecOptions;
+</span>// Set experimental_partial_encoding to true by default
 zarrs::config::global_config_mut().set_experimental_partial_encoding(true);
 
 // Manually set experimental_partial_encoding to true for an operation
 let mut options = CodecOptions::default();
 options.set_experimental_partial_encoding(true);
-</code></pre>
+<span class="boring">}</span></code></pre>
 <blockquote class="blockquote-tag blockquote-tag-warning">
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p>
 <p>The asynchronous API does not yet support partial encoding.</p>

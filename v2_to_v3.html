@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-04ad3218.js";
+            window.path_to_searchindex_js = "searchindex-ce85899b.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4822247b.js"></script>
@@ -192,19 +192,41 @@ V2 metadata must be explicitly erased if needed (see below).</p>
 <p>While <code>zarrs</code> fully supports manipulation of Zarr V2 and V3 hierarchies (with supported codecs, data types, etc.), it only supports <strong>forward conversion</strong> of metadata from Zarr V2 to V3.</p>
 </blockquote>
 <h3 id="convert-a-group-to-v3"><a class="header" href="#convert-a-group-to-v3">Convert a Group to V3</a></h3>
-<pre><code class="language-rs">let group: Group = group.to_v3();
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use zarrs::group::Group;
+</span><span class="boring">use zarrs::metadata::{GroupMetadata, v3::GroupMetadataV3};
+</span><span class="boring">use zarrs::config::MetadataEraseVersion;
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let group = Group::new_with_metadata(store, "/group", GroupMetadataV3::new().into())?;
+</span>let group = group.to_v3();
 group.store_metadata()?;
 // group.async_store_metadata().await?;
 group.erase_metadata_opt(MetadataEraseVersion::V2)?;
 // group.async_erase_metadata_opt(MetadataEraseVersion::V2).await?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <h3 id="convert-an-array-to-v3"><a class="header" href="#convert-an-array-to-v3">Convert an Array to V3</a></h3>
-<pre><code class="language-rs">let array: Array = array.to_v3()?;
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::config::MetadataEraseVersion;
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let array = ArrayBuilder::new(
+</span><span class="boring">    vec![8, 8], // array shape
+</span><span class="boring">    vec![4, 4], // regular chunk shape
+</span><span class="boring">    DataType::Float32,
+</span><span class="boring">    f32::NAN,
+</span><span class="boring">).build(store.clone(), "/array")?;
+</span>let array = array.to_v3()?;
 array.store_metadata()?;
 // array.async_store_metadata().await?;
 array.erase_metadata_opt(MetadataEraseVersion::V2)?;
 // array.async_erase_metadata_opt(MetadataEraseVersion::V2).await?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <p>Note that <code>Array::to_v3()</code> is fallible because some V2 metadata is not V3 compatible.</p>
 <h2 id="writing-versioned-metadata-explicitly"><a class="header" href="#writing-versioned-metadata-explicitly">Writing Versioned Metadata Explicitly</a></h2>
 <p>Rather than changing the internal representation, an alternative is to just write metadata with a specified version.</p>
@@ -212,21 +234,39 @@ array.erase_metadata_opt(MetadataEraseVersion::V2)?;
 <code>GroupMetadataOptions</code> currently has only one option that impacts the Zarr version of the metadata.
 By default, <code>GroupMetadataOptions</code> keeps the current Zarr version.</p>
 <p>To write Zarr V3 metadata:</p>
-<pre><code class="language-rs">group.store_metadata_opt(&amp;
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use zarrs::group::{Group, GroupMetadataOptions};
+</span><span class="boring">use zarrs::metadata::{GroupMetadata, v3::GroupMetadataV3};
+</span><span class="boring">use zarrs::config::MetadataConvertVersion;
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let group = Group::new_with_metadata(store, "/group", GroupMetadataV3::new().into())?;
+</span>group.store_metadata_opt(&amp;
     GroupMetadataOptions::default()
     .with_metadata_convert_version(MetadataConvertVersion::V3)
 )?;
 // group.async_store_metadata_opt(...).await?;
-</code></pre>
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <blockquote class="blockquote-tag blockquote-tag-warning">
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p>
 <p><code>zarrs</code> does not support converting Zarr V3 metadata to Zarr V2.</p>
 </blockquote>
 <p>Note that the original metadata is not automatically deleted.
 If you want to delete it:</p>
-<pre><code class="language-rs">group.erase_metadata()?;
-// group.async_erase_metadata().await?;
-</code></pre>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">use zarrs::group::Group;
+</span><span class="boring">use zarrs::metadata::v3::GroupMetadataV3;
+</span><span class="boring">use zarrs::config::MetadataEraseVersion;
+</span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
+</span><span class="boring">let group = Group::new_with_metadata(store, "/group", GroupMetadataV3::new().into())?;
+</span>group.erase_metadata_opt(MetadataEraseVersion::V2)?;
+// group.async_erase_metadata_opt(MetadataEraseVersion::V2).await?;
+<span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+</span><span class="boring">}</span></code></pre>
 <blockquote class="blockquote-tag blockquote-tag-tip">
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>The <code>store_metadata</code> methods of <code>Array</code> and <code>Group</code> internally call <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.store_metadata_opt"><code>store_metadata_opt</code></a>.

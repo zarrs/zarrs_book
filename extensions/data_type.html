@@ -38,7 +38,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-04ad3218.js";
+            window.path_to_searchindex_js = "../searchindex-ce85899b.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4822247b.js"></script>
@@ -198,20 +198,15 @@ The specification can be read here:</p>
 <p>In summary, it defines a 4-bit unsigned integer in the range <code>[0, 15]</code> that is supported by the <code>bytes</code> and <code>packbits</code> codecs.</p>
 <h3 id="the-datatypeuint4-struct"><a class="header" href="#the-datatypeuint4-struct">The <code>DataTypeUint4</code> Struct</a></h3>
 <p>The <code>uint4</code> data type has no configuration, so it can be represented by a unit struct:</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>/// The `uint4` data type.
+<pre><code class="language-rust ignore">/// The `uint4` data type.
 #[derive(Debug)]
-struct DataTypeUint4;
-<span class="boring">}</span></code></pre>
+struct DataTypeUint4;</code></pre>
 <h3 id="implementing-datatypeextension"><a class="header" href="#implementing-datatypeextension">Implementing <code>DataTypeExtension</code></a></h3>
 <p>To be used as a data type extension, <code>DataTypeUint4</code> must implement the <code>DataTypeExtension</code> trait.
 The <code>DataTypeUint4Element</code> used in these definitions is defined later on this page.
 This defines properties of the data type such as the metadata (name and configuration), size, and conversion between to and from fill values and fill value metadata.
 It has additional codec related methods detailed shortly.</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>/// A unique identifier for `uint4` data type.
+<pre><code class="language-rust ignore">/// A unique identifier for `uint4` data type.
 const UINT4: &amp;'static str = "uint4";
 
 impl DataTypeExtension for DataTypeUint4 {
@@ -251,16 +246,13 @@ impl DataTypeExtension for DataTypeUint4 {
     fn size(&amp;self) -&gt; zarrs::array::DataTypeSize {
         DataTypeSize::Fixed(1)
     }
-    
+
     ...
-}
-<span class="boring">}</span></code></pre>
+}</code></pre>
 <h3 id="implementing-datatypeextensionbytescodec"><a class="header" href="#implementing-datatypeextensionbytescodec">Implementing <code>DataTypeExtensionBytesCodec</code></a></h3>
 <p>Supporting the <code>bytes</code> codec is absolutely trivial for the <code>uint4</code> data type.
 It simply passes through the in-memory data unmodified, since it is already a 1-byte value.</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>impl DataTypeExtensionBytesCodec for DataTypeUint4 {
+<pre><code class="language-rust ignore">impl DataTypeExtensionBytesCodec for DataTypeUint4 {
     fn encode&lt;'a&gt;(
         &amp;self,
         bytes: std::borrow::Cow&lt;'a, [u8]&gt;,
@@ -276,25 +268,19 @@ It simply passes through the in-memory data unmodified, since it is already a 1-
     ) -&gt; Result&lt;std::borrow::Cow&lt;'a, [u8]&gt;, DataTypeExtensionBytesCodecError&gt; {
         Ok(bytes)
     }
-}
-<span class="boring">}</span></code></pre>
+}</code></pre>
 <p>The default implementation of <code>DataTypeExtension::codec_bytes</code> must be overriden to return <code>Ok(self)</code>:</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>impl DataTypeExtension for DataTypeUint4 {
+<pre><code class="language-rust ignore">impl DataTypeExtension for DataTypeUint4 {
     ...
-    
+
     fn codec_bytes(&amp;self) -&gt; Result&lt;&amp;dyn DataTypeExtensionBytesCodec, DataTypeExtensionError&gt; {
         Ok(self)
     }
-}
-<span class="boring">}</span></code></pre>
+}</code></pre>
 <h3 id="implementing-datatypeextensionpackbitscodec"><a class="header" href="#implementing-datatypeextensionpackbitscodec">Implementing <code>DataTypeExtensionPackBitsCodec</code></a></h3>
 <p>The <code>uint4</code> data type supports the <code>packbits</code> codec as a 4-bit value.
 This can be supported by implementing the <code>DataTypeExtensionPackBitsCodec</code> trait.</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>impl DataTypeExtensionPackBitsCodec for DataTypeUint4 {
+<pre><code class="language-rust ignore">impl DataTypeExtensionPackBitsCodec for DataTypeUint4 {
     fn component_size_bits(&amp;self) -&gt; u64 {
         4
     }
@@ -306,8 +292,7 @@ This can be supported by implementing the <code>DataTypeExtensionPackBitsCodec</
     fn sign_extension(&amp;self) -&gt; bool {
         false
     }
-}
-<span class="boring">}</span></code></pre>
+}</code></pre>
 <p>In this case, the trait methods signify that the data type:</p>
 <ul>
 <li>has 1 component,</li>
@@ -315,24 +300,18 @@ This can be supported by implementing the <code>DataTypeExtensionPackBitsCodec</
 <li>it is unsigned and does not need sign extension.</li>
 </ul>
 <p>The default implementation of <code>DataTypeExtension::codec_packbits</code> must be overriden to return <code>Ok(self)</code>:</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>impl DataTypeExtension for DataTypeUint4 {
+<pre><code class="language-rust ignore">impl DataTypeExtension for DataTypeUint4 {
     ...
-    
+
     fn codec_packbits(
         &amp;self,
     ) -&gt; Result&lt;&amp;dyn DataTypeExtensionPackBitsCodec, DataTypeExtensionError&gt; {
         Ok(self)
     }
-}
-<span class="boring">}</span></code></pre>
+}</code></pre>
 <h3 id="registering-the-uint4-data-type"><a class="header" href="#registering-the-uint4-data-type">Registering the <code>uint4</code> Data Type</a></h3>
 <p>A data type must be registered as a <code>DataTypePlugin</code> to be used in an <code>Array</code>.</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>
-// Register the data type so that it can be recognised when opening arrays.
+<pre><code class="language-rust ignore">// Register the data type so that it can be recognised when opening arrays.
 inventory::submit! {
     DataTypePlugin::new(UINT4, is_uint4_dtype, create_uint4_dtype)
 }
@@ -349,23 +328,19 @@ fn create_uint4_dtype(
     } else {
         Err(PluginMetadataInvalidError::new(UINT4, "data_type", metadata.to_string()).into())
     }
-}
-<span class="boring">}</span></code></pre>
+}</code></pre>
 <h3 id="the-datatypeuint4element-struct"><a class="header" href="#the-datatypeuint4element-struct">The <code>DataTypeUint4Element</code> Struct</a></h3>
 <p>The most suitable in-memory representation of a <code>uint4</code> data type element is a <code>u8</code>.</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>/// The in-memory representation of the `uint4` data type.
+<pre><code class="language-rust ignore">/// The in-memory representation of the `uint4` data type.
 #[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
-struct DataTypeUint4Element(u8);
-<span class="boring">}</span></code></pre>
+struct DataTypeUint4Element(u8);</code></pre>
 <p>A data type element must implement the <code>Element</code> trait to be used in <code>Array::store_*_as_elements</code> methods.</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>/// This defines how an in-memory DataTypeUint4 is converted into ArrayBytes before encoding via the codec pipeline.
-impl Element for DataTypeUint4 {
+<pre><code class="language-rust ignore"><span class="boring">#[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
+</span><span class="boring">struct DataTypeUint4Element(u8);
+</span>/// This defines how an in-memory DataTypeUint4Element is converted into ArrayBytes before encoding via the codec pipeline.
+impl Element for DataTypeUint4Element {
     fn validate_data_type(data_type: &amp;DataType) -&gt; Result&lt;(), ArrayError&gt; {
-        (data_type == &amp;DataType::Extension(Arc::new(DataTypeUint4)))
+        (data_type == &amp;DataType::Extension(Arc::new(DataTypeUint4Element)))
             .then_some(())
             .ok_or(ArrayError::IncompatibleElementType)
     }
@@ -375,42 +350,42 @@ impl Element for DataTypeUint4 {
         elements: &amp;'a [Self],
     ) -&gt; Result&lt;zarrs::array::ArrayBytes&lt;'a&gt;, ArrayError&gt; {
         Self::validate_data_type(data_type)?;
-        // Maybe this could be a transmute instead &amp;[DataTypeUint4(u8)] -&gt; Cow::Borrowed(&amp;[u8])
+        // Maybe this could be a transmute instead &amp;[DataTypeUint4Element(u8)] -&gt; Cow::Borrowed(&amp;[u8])
         let mut bytes: Vec&lt;u8&gt; =
-            Vec::with_capacity(elements.len() * size_of::&lt;DataTypeUint4&gt;());
+            Vec::with_capacity(elements.len() * size_of::&lt;DataTypeUint4Element&gt;());
         for element in elements {
             bytes.push(element.0);
         }
         Ok(ArrayBytes::Fixed(Cow::Owned(bytes)))
     }
-}
-<span class="boring">}</span></code></pre>
+}</code></pre>
 <p>A data type element must implement the <code>ElementOwned</code> trait to be used in <code>Array::retrieve_*_as_elements</code> methods.</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>/// This defines how ArrayBytes are converted into a DataTypeUint4 after decoding via the codec pipeline.
-impl ElementOwned for DataTypeUint4 {
+<pre><code class="language-rust ignore"><span class="boring">#[derive(serde::Deserialize, Clone, Copy, Debug, PartialEq)]
+</span><span class="boring">struct DataTypeUint4Element(u8);
+</span>/// This defines how ArrayBytes are converted into a DataTypeUint4Element after decoding via the codec pipeline.
+impl zarrs::array::ElementOwned for DataTypeUint4Element {
     fn from_array_bytes(
-        data_type: &amp;DataType,
-        bytes: ArrayBytes&lt;'_&gt;,
-    ) -&gt; Result&lt;Vec&lt;Self&gt;, ArrayError&gt; {
+        data_type: &amp;zarrs::array::DataType,
+        bytes: zarrs::array::ArrayBytes&lt;'_&gt;,
+    ) -&gt; Result&lt;Vec&lt;Self&gt;, zarrs::array::ArrayError&gt; {
         Self::validate_data_type(data_type)?;
         let bytes = bytes.into_fixed()?;
         let bytes_len = bytes.len();
-        let mut elements = Vec::with_capacity(bytes_len / size_of::&lt;DataTypeUint4&gt;());
+        let mut elements = Vec::with_capacity(bytes_len / size_of::&lt;DataTypeUint4Element&gt;());
         for byte in bytes.iter() {
-            // TODO: Should not construct DataTypeUint4 this way as it could represent a
+            // TODO: Should not construct DataTypeUint4Element this way as it could represent a
             // value outside of [0, 15]. Set upper bits in the byte to 0?
-            elements.push(DataTypeUint4(*byte))
+            elements.push(DataTypeUint4Element(*byte))
         }
         Ok(elements)
     }
-}
-<span class="boring">}</span></code></pre>
+}</code></pre>
 <p>Some non-essential utility methods were defined for <code>DataTypeUint4</code> and used in the snippets above:</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>impl DataTypeUint4 {
+</span><span class="boring">#[derive(serde::Deserialize, Clone, Copy, Debug, PartialEq)]
+</span><span class="boring">struct DataTypeUint4Element(u8);
+</span>impl DataTypeUint4Element {
     fn to_ne_bytes(&amp;self) -&gt; [u8; 1] {
         [self.0]
     }
