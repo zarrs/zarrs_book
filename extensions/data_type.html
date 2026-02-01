@@ -38,10 +38,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-ce85899b.js";
+            window.path_to_searchindex_js = "../searchindex-d44daf2e.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-4822247b.js"></script>
+        <script src="../toc-237a0102.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -189,216 +189,282 @@ For example, the 32-bit signed integer data type defines binary representations 
 <p>The specification defines a limited set of data types, but additional data types can be defined as extensions.</p>
 <p><code>zarrs</code> supports a number of extension data types, many of which are registered in the <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> repository.
 This chapter explains how to create custom data types with a guided walkthrough.</p>
-<h2 id="example-the-uint4-data-type"><a class="header" href="#example-the-uint4-data-type">Example: The <code>uint4</code> Data type</a></h2>
-<p>The <code>uint4</code> data type is registered at the <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> repository.
-The specification can be read here:</p>
-<ul>
-<li><a href="https://github.com/zarr-developers/zarr-extensions/tree/main/data-types/uint4">https://github.com/zarr-developers/zarr-extensions/tree/main/data-types/uint4</a></li>
-</ul>
-<p>In summary, it defines a 4-bit unsigned integer in the range <code>[0, 15]</code> that is supported by the <code>bytes</code> and <code>packbits</code> codecs.</p>
-<h3 id="the-datatypeuint4-struct"><a class="header" href="#the-datatypeuint4-struct">The <code>DataTypeUint4</code> Struct</a></h3>
-<p>The <code>uint4</code> data type has no configuration, so it can be represented by a unit struct:</p>
-<pre><code class="language-rust ignore">/// The `uint4` data type.
-#[derive(Debug)]
-struct DataTypeUint4;</code></pre>
-<h3 id="implementing-datatypeextension"><a class="header" href="#implementing-datatypeextension">Implementing <code>DataTypeExtension</code></a></h3>
-<p>To be used as a data type extension, <code>DataTypeUint4</code> must implement the <code>DataTypeExtension</code> trait.
-The <code>DataTypeUint4Element</code> used in these definitions is defined later on this page.
-This defines properties of the data type such as the metadata (name and configuration), size, and conversion between to and from fill values and fill value metadata.
-It has additional codec related methods detailed shortly.</p>
-<pre><code class="language-rust ignore">/// A unique identifier for `uint4` data type.
-const UINT4: &amp;'static str = "uint4";
+<h2 id="implementing-a-custom-data-type"><a class="header" href="#implementing-a-custom-data-type">Implementing a Custom Data Type</a></h2>
+<p>To open/read/write/create a Zarr <code>Array</code> with a custom data type, the following traits must be implemented:</p>
+<h3 id="core-traits"><a class="header" href="#core-traits">Core Traits</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Trait</th><th>Crate</th><th>Required</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/trait.DataTypeTraits.html"><code>DataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>Yes</td><td>Core data type properties (size, fill value handling, etc.)</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/trait.DataTypeTraitsV3.html"><code>DataTypeTraitsV3</code></a></td><td><code>zarrs_data_type</code></td><td>For V3</td><td>Creation from Zarr V3 metadata (for plugin registration)</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/trait.DataTypeTraitsV2.html"><code>DataTypeTraitsV2</code></a></td><td><code>zarrs_data_type</code></td><td>For V2</td><td>Creation from Zarr V2 metadata (for plugin registration)</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_plugin/latest/zarrs_plugin/trait.ExtensionAliases.html"><code>ExtensionAliases&lt;ZarrVersion3&gt;</code></a></td><td><code>zarrs_plugin</code></td><td>For V3</td><td>Defines the extension name and aliases for Zarr V3 metadata</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_plugin/latest/zarrs_plugin/trait.ExtensionAliases.html"><code>ExtensionAliases&lt;ZarrVersion2&gt;</code></a></td><td><code>zarrs_plugin</code></td><td>For V2</td><td>Defines the extension name and aliases for Zarr V2 metadata</td></tr>
+</tbody>
+</table>
+</div>
+<p>Additionally, the data type must be registered as a <a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/struct.DataTypePluginV3.html"><code>DataTypePluginV3</code></a> and/or <a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/struct.DataTypePluginV2.html"><code>DataTypePluginV2</code></a> using <code>inventory</code>.</p>
+<h3 id="codec-traits"><a class="header" href="#codec-traits">Codec Traits</a></h3>
+<p>The following traits enable compatibility with specific codecs.
+See the <a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/index.html"><code>zarrs_data_type::codec_traits</code></a> module for convenience macros.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Trait</th><th>Crate</th><th>Required</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/bytes/trait.BytesDataTypeTraits.html"><code>BytesDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>bytes</code> codec</td><td>Endianness handling for the <code>bytes</code> codec</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/packbits/trait.PackBitsDataTypeTraits.html"><code>PackBitsDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>packbits</code> codec</td><td>Bit packing/unpacking for the <code>packbits</code> codec</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/bitround/trait.BitroundDataTypeTraits.html"><code>BitroundDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>bitround</code> codec</td><td>Bit rounding for floating-point types</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/fixedscaleoffset/trait.FixedScaleOffsetDataTypeTraits.html"><code>FixedScaleOffsetDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>fixedscaleoffset</code> codec</td><td>Fixed scale/offset encoding</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/pcodec/trait.PcodecDataTypeTraits.html"><code>PcodecDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>pcodec</code> codec</td><td>Pcodec compression</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/zfp/trait.ZfpDataTypeTraits.html"><code>ZfpDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>zfp</code> codec</td><td>ZFP compression for floating-point types</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="element-traits"><a class="header" href="#element-traits">Element Traits</a></h3>
+<p>These traits are implemented on the <em>in-memory representation</em> of the data type (e.g., a newtype wrapper like <code>UInt10DataTypeElement</code>), not on the data type struct itself.
+Alternatively, existing <code>Element</code> implementations for standard numeric types (e.g., <code>u16</code>) can be used by setting <code>compatible_element_types</code> in <code>DataTypeTraits</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Trait</th><th>Crate</th><th>Required</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="https://docs.rs/zarrs/latest/zarrs/array/trait.Element.html"><code>Element</code></a></td><td><code>zarrs</code></td><td>For <code>Array</code> store methods</td><td>Conversion from in-memory elements to array bytes</td></tr>
+<tr><td><a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ElementOwned.html"><code>ElementOwned</code></a></td><td><code>zarrs</code></td><td>For <code>Array</code> retrieve methods</td><td>Conversion from array bytes to in-memory elements</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="example-the-uint10-data-type"><a class="header" href="#example-the-uint10-data-type">Example: The <code>uint10</code> Data Type</a></h2>
+<p>This example demonstrates how to implement a hypothetical <code>uint10</code> data type as a custom extension.
+A 10-bit unsigned integer can represent values in the range <code>[0, 1023]</code> and can be supported by the <code>bytes</code> and <code>packbits</code> codecs.</p>
+<p>The <code>uint10</code> data type has no configuration, so it can be represented by a unit struct:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// The `uint10` data type.
+#[derive(Debug, Clone, Copy)]
+struct UInt10DataType;
+<span class="boring">}</span></code></pre>
+<h3 id="extension-namealias-registration"><a class="header" href="#extension-namealias-registration">Extension Name/Alias Registration</a></h3>
+<p>In <code>zarrs</code> 0.23.0, extension names and aliases are managed through the <code>zarrs_plugin::ExtensionAliases&lt;V&gt;</code> trait.
+The <a href="https://docs.rs/zarrs_plugin/latest/zarrs_plugin/macro.impl_extension_aliases.html"><code>zarrs_plugin::impl_extension_aliases!</code></a> macro provides a convenient way to implement these traits:
+At compile time, extensions are registered (via <code>inventory</code>) so that can be identified when opening an array and created.
+Extensions are registered for usage with Zarr V3 metadata and/or V2 if applicable.
+Note that some extensions types (e.g. chunk grids) are not supported all in Zarr V2.</p>
+<p>For example:</p>
+<pre><code class="language-rust ignore"><span class="boring">extern crate inventory;
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">extern crate zarrs_plugin;
+</span><span class="boring">extern crate zarrs_data_type;
+</span><span class="boring">extern crate zarrs_metadata;
+</span><span class="boring">use std::sync::Arc;
+</span><span class="boring">use zarrs_metadata::v3::MetadataV3;
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct UInt10DataType;
+</span>zarrs_plugin::impl_extension_aliases!(UInt10DataType, v3: "uint10");
+inventory::submit! {
+    zarrs_data_type::DataTypePluginV3::new::&lt;UInt10DataType&gt;(|_: &amp;MetadataV3| Ok(Arc::new(UInt10DataType).into()))
+}</code></pre>
+<h3 id="implementing-datatypetraits"><a class="header" href="#implementing-datatypetraits">Implementing <code>DataTypeTraits</code></a></h3>
+<p>To be used as a data type extension, <code>UInt10DataType</code> must implement the <a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/trait.DataTypeTraits.html"><code>DataTypeTraits</code></a> trait (from <code>zarrs_data_type</code>).
+This defines properties of the data type, such as conversion to/from fill value metadata, size (fixed or variable), and a method to .</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs_data_type;
+</span><span class="boring">extern crate zarrs_metadata;
+</span><span class="boring">extern crate zarrs_plugin;
+</span><span class="boring">use std::convert::TryInto;
+</span><span class="boring">use std::sync::Arc;
+</span><span class="boring">use std::any::Any;
+</span>use zarrs_data_type::{DataTypeTraits, DataTypeTraitsV3, DataTypeFillValueMetadataError, DataTypeFillValueError, FillValue};
+use zarrs_metadata::{Configuration, DataTypeSize, FillValueMetadata, v3::MetadataV3};
+use zarrs_plugin::PluginCreateError;
 
-impl DataTypeExtension for DataTypeUint4 {
-    fn name(&amp;self) -&gt; String {
-        UINT4.to_string()
+// Define a marker struct for the data type
+// A custom data type could also be a struct holding configuration parameters
+#[derive(Debug)]
+struct UInt10DataType;
+
+// Register the data type
+zarrs_plugin::impl_extension_aliases!(UInt10DataType, v3: "uint10");
+
+impl DataTypeTraitsV3 for UInt10DataType {
+    fn create(_metadata: &amp;MetadataV3) -&gt; Result&lt;zarrs_data_type::DataType, PluginCreateError&gt; {
+        // NOTE: Should validate that metadata is empty / missing
+        Ok(Arc::new(UInt10DataType).into())
+    }
+}
+
+inventory::submit! {
+    zarrs_data_type::DataTypePluginV3::new::&lt;UInt10DataType&gt;()
+}
+
+impl DataTypeTraits for UInt10DataType {
+    fn configuration(&amp;self, _zarr_version: zarrs_plugin::ZarrVersion) -&gt; Configuration {
+        Configuration::default()
     }
 
-    fn configuration(&amp;self) -&gt; Configuration {
-        Configuration::default()
+    fn size(&amp;self) -&gt; DataTypeSize {
+        DataTypeSize::Fixed(2)
     }
 
     fn fill_value(
         &amp;self,
-        fill_value_metadata: &amp;FillValueMetadataV3,
+        fill_value_metadata: &amp;FillValueMetadata,
+        _version: zarrs_plugin::ZarrVersion,
     ) -&gt; Result&lt;FillValue, DataTypeFillValueMetadataError&gt; {
-        let err = || DataTypeFillValueMetadataError::new(self.name(), fill_value_metadata.clone());
-        let element_metadata: u64 = fill_value_metadata.as_u64().ok_or_else(err)?;
-        let element = DataTypeUint4Element::try_from(element_metadata).map_err(|_| {
-            DataTypeFillValueMetadataError::new(UINT4.to_string(), fill_value_metadata.clone())
-        })?;
-        Ok(FillValue::new(element.to_ne_bytes().to_vec()))
+        let int = fill_value_metadata.as_u64().ok_or(DataTypeFillValueMetadataError)?;
+        // uint10 range: 0 to 1023
+        if int &gt; 1023 {
+            return Err(DataTypeFillValueMetadataError);
+        }
+        #[expect(clippy::cast_possible_truncation)]
+        Ok(FillValue::from(int as u16))
     }
 
     fn metadata_fill_value(
         &amp;self,
         fill_value: &amp;FillValue,
-    ) -&gt; Result&lt;FillValueMetadataV3, DataTypeFillValueError&gt; {
-        let element = DataTypeUint4Element::from_ne_bytes(
-            fill_value
-                .as_ne_bytes()
-                .try_into()
-                .map_err(|_| DataTypeFillValueError::new(self.name(), fill_value.clone()))?,
-        );
-        Ok(FillValueMetadataV3::from(element.as_u8()))
+    ) -&gt; Result&lt;FillValueMetadata, DataTypeFillValueError&gt; {
+        let bytes: [u8; 2] = fill_value.as_ne_bytes().try_into().map_err(|_| DataTypeFillValueError)?;
+        let number = u16::from_ne_bytes(bytes);
+        Ok(FillValueMetadata::from(number))
     }
 
-    fn size(&amp;self) -&gt; zarrs::array::DataTypeSize {
-        DataTypeSize::Fixed(1)
+    fn compatible_element_types(&amp;self) -&gt; &amp;'static [std::any::TypeId] {
+        // Declare compatibility with u16 for Element trait implementations
+        const TYPES: [std::any::TypeId; 1] = [std::any::TypeId::of::&lt;u16&gt;()];
+        &amp;TYPES
     }
 
-    ...
-}</code></pre>
-<h3 id="implementing-datatypeextensionbytescodec"><a class="header" href="#implementing-datatypeextensionbytescodec">Implementing <code>DataTypeExtensionBytesCodec</code></a></h3>
-<p>Supporting the <code>bytes</code> codec is absolutely trivial for the <code>uint4</code> data type.
-It simply passes through the in-memory data unmodified, since it is already a 1-byte value.</p>
-<pre><code class="language-rust ignore">impl DataTypeExtensionBytesCodec for DataTypeUint4 {
-    fn encode&lt;'a&gt;(
-        &amp;self,
-        bytes: std::borrow::Cow&lt;'a, [u8]&gt;,
-        _endianness: Option&lt;zarrs_metadata::Endianness&gt;,
-    ) -&gt; Result&lt;std::borrow::Cow&lt;'a, [u8]&gt;, DataTypeExtensionBytesCodecError&gt; {
-        Ok(bytes)
+    fn as_any(&amp;self) -&gt; &amp;dyn Any {
+        self
     }
-
-    fn decode&lt;'a&gt;(
-        &amp;self,
-        bytes: std::borrow::Cow&lt;'a, [u8]&gt;,
-        _endianness: Option&lt;zarrs_metadata::Endianness&gt;,
-    ) -&gt; Result&lt;std::borrow::Cow&lt;'a, [u8]&gt;, DataTypeExtensionBytesCodecError&gt; {
-        Ok(bytes)
-    }
-}</code></pre>
-<p>The default implementation of <code>DataTypeExtension::codec_bytes</code> must be overriden to return <code>Ok(self)</code>:</p>
-<pre><code class="language-rust ignore">impl DataTypeExtension for DataTypeUint4 {
-    ...
-
-    fn codec_bytes(&amp;self) -&gt; Result&lt;&amp;dyn DataTypeExtensionBytesCodec, DataTypeExtensionError&gt; {
-        Ok(self)
-    }
-}</code></pre>
-<h3 id="implementing-datatypeextensionpackbitscodec"><a class="header" href="#implementing-datatypeextensionpackbitscodec">Implementing <code>DataTypeExtensionPackBitsCodec</code></a></h3>
-<p>The <code>uint4</code> data type supports the <code>packbits</code> codec as a 4-bit value.
-This can be supported by implementing the <code>DataTypeExtensionPackBitsCodec</code> trait.</p>
-<pre><code class="language-rust ignore">impl DataTypeExtensionPackBitsCodec for DataTypeUint4 {
-    fn component_size_bits(&amp;self) -&gt; u64 {
-        4
-    }
-
-    fn num_components(&amp;self) -&gt; u64 {
-        1
-    }
-
-    fn sign_extension(&amp;self) -&gt; bool {
-        false
-    }
-}</code></pre>
-<p>In this case, the trait methods signify that the data type:</p>
+}
+<span class="boring">}</span></code></pre>
+<h3 id="implementing-bytesdatatypetraits"><a class="header" href="#implementing-bytesdatatypetraits">Implementing <code>BytesDataTypeTraits</code></a></h3>
+<p>Supporting the <code>bytes</code> codec for the <code>uint10</code> data type requires handling endianness conversion.
+The <code>impl_bytes_data_type_traits!</code> macro from <code>zarrs_data_type</code> provides a convenient implementation that reverses byte order if necessary (depending on system endianness and the <code>bytes</code> codec endianness configuration):</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs_data_type;
+</span><span class="boring">extern crate zarrs_plugin;
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct UInt10DataType;
+</span>zarrs_data_type::codec_traits::impl_bytes_data_type_traits!(UInt10DataType, 2);
+<span class="boring">}</span></code></pre>
+<p>The arguments are:</p>
 <ul>
-<li>has 1 component,</li>
-<li>a component size of 4 bits, and</li>
-<li>it is unsigned and does not need sign extension.</li>
+<li>Data type struct</li>
+<li>Fixed size in bytes (2 for uint10)</li>
 </ul>
-<p>The default implementation of <code>DataTypeExtension::codec_packbits</code> must be overriden to return <code>Ok(self)</code>:</p>
-<pre><code class="language-rust ignore">impl DataTypeExtension for DataTypeUint4 {
-    ...
-
-    fn codec_packbits(
-        &amp;self,
-    ) -&gt; Result&lt;&amp;dyn DataTypeExtensionPackBitsCodec, DataTypeExtensionError&gt; {
-        Ok(self)
-    }
+<h3 id="implementing-packbitsdatatypetraits"><a class="header" href="#implementing-packbitsdatatypetraits">Implementing <code>PackBitsDataTypeTraits</code></a></h3>
+<p>The <code>uint10</code> data type supports the <code>packbits</code> codec as a 10-bit value.
+The <code>impl_pack_bits_data_type_traits!</code> macro from <code>zarrs_data_type</code> provides a convenient implementation:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs_data_type;
+</span><span class="boring">extern crate zarrs_plugin;
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct UInt10DataType;
+</span>zarrs_data_type::codec_traits::impl_pack_bits_data_type_traits!(UInt10DataType, 10, unsigned, 1);
+<span class="boring">}</span></code></pre>
+<p>The arguments are:</p>
+<ul>
+<li>Data type struct</li>
+<li>Bits per component (10 for uint10)</li>
+<li>Sign type (<code>unsigned</code> or <code>signed</code>)</li>
+<li>Number of components (1 for scalar types)</li>
+</ul>
+<h3 id="using-existing-element-implementations"><a class="header" href="#using-existing-element-implementations">Using Existing <code>Element</code> Implementations</a></h3>
+<p><code>zarrs</code> provides <code>Element</code> and <code>ElementOwned</code> implementations for standard numeric types like <code>u16</code>.
+To enable these existing implementations for a custom data type, override the <code>compatible_element_types</code> method in <code>DataTypeTraits</code> to return the compatible Rust types.</p>
+<p>For <code>uint10</code>, we declared compatibility with <code>u16</code> above:</p>
+<pre><code class="language-rust ignore">fn compatible_element_types(&amp;self) -&gt; &amp;'static [std::any::TypeId] {
+    const TYPES: [std::any::TypeId; 1] = [std::any::TypeId::of::&lt;u16&gt;()];
+    &amp;TYPES
 }</code></pre>
-<h3 id="registering-the-uint4-data-type"><a class="header" href="#registering-the-uint4-data-type">Registering the <code>uint4</code> Data Type</a></h3>
-<p>A data type must be registered as a <code>DataTypePlugin</code> to be used in an <code>Array</code>.</p>
-<pre><code class="language-rust ignore">// Register the data type so that it can be recognised when opening arrays.
-inventory::submit! {
-    DataTypePlugin::new(UINT4, is_uint4_dtype, create_uint4_dtype)
-}
+<p>This allows using <code>u16</code> directly with <code>Array::store_*</code> and <code>Array::retrieve_*</code> methods without implementing custom <code>Element</code> traits.
+Note that this does NOT enforce that values are in the valid <code>uint10</code> range of <code>[0, 1023]</code>, so a custom type is recommended for stricter type safety.</p>
+<h3 id="custom-element-implementations"><a class="header" href="#custom-element-implementations">Custom <code>Element</code> Implementations</a></h3>
+<p>For custom data types where existing <code>Element</code> implementations are not suitable, you can define a newtype wrapper and implement <code>Element</code> and <code>ElementOwned</code> manually.</p>
+<p>For example, here is how <code>uint10</code> could be supported as a newtype wrapper around <code>u16</code>:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// The in-memory representation of the `uint10` data type.
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct UInt10DataTypeElement(u16);
+<span class="boring">}</span></code></pre>
+<p>A custom element type must implement the <code>Element</code> trait to be used in <code>Array::store_*</code> methods with <code>Vec</code> or <code>ndarray</code> inputs.</p>
+<pre><code class="language-rust ignore">use zarrs::array::{ArrayBytes, ArrayError, DataType, Element};
 
-fn is_uint4_dtype(name: &amp;str) -&gt; bool {
-    name == UINT4
-}
-
-fn create_uint4_dtype(
-    metadata: &amp;MetadataV3,
-) -&gt; Result&lt;Arc&lt;dyn DataTypeExtension&gt;, PluginCreateError&gt; {
-    if metadata.configuration_is_none_or_empty() {
-        Ok(Arc::new(DataTypeUint4))
-    } else {
-        Err(PluginMetadataInvalidError::new(UINT4, "data_type", metadata.to_string()).into())
-    }
-}</code></pre>
-<h3 id="the-datatypeuint4element-struct"><a class="header" href="#the-datatypeuint4element-struct">The <code>DataTypeUint4Element</code> Struct</a></h3>
-<p>The most suitable in-memory representation of a <code>uint4</code> data type element is a <code>u8</code>.</p>
-<pre><code class="language-rust ignore">/// The in-memory representation of the `uint4` data type.
-#[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
-struct DataTypeUint4Element(u8);</code></pre>
-<p>A data type element must implement the <code>Element</code> trait to be used in <code>Array::store_*_as_elements</code> methods.</p>
-<pre><code class="language-rust ignore"><span class="boring">#[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
-</span><span class="boring">struct DataTypeUint4Element(u8);
-</span>/// This defines how an in-memory DataTypeUint4Element is converted into ArrayBytes before encoding via the codec pipeline.
-impl Element for DataTypeUint4Element {
+impl Element for UInt10DataTypeElement {
     fn validate_data_type(data_type: &amp;DataType) -&gt; Result&lt;(), ArrayError&gt; {
-        (data_type == &amp;DataType::Extension(Arc::new(DataTypeUint4Element)))
+        data_type
+            .is::&lt;UInt10DataType&gt;()
             .then_some(())
             .ok_or(ArrayError::IncompatibleElementType)
     }
 
-    fn into_array_bytes&lt;'a&gt;(
+    fn to_array_bytes&lt;'a&gt;(
         data_type: &amp;DataType,
         elements: &amp;'a [Self],
-    ) -&gt; Result&lt;zarrs::array::ArrayBytes&lt;'a&gt;, ArrayError&gt; {
+    ) -&gt; Result&lt;ArrayBytes&lt;'a&gt;, ArrayError&gt; {
         Self::validate_data_type(data_type)?;
-        // Maybe this could be a transmute instead &amp;[DataTypeUint4Element(u8)] -&gt; Cow::Borrowed(&amp;[u8])
-        let mut bytes: Vec&lt;u8&gt; =
-            Vec::with_capacity(elements.len() * size_of::&lt;DataTypeUint4Element&gt;());
+        // Validate all elements are in the valid uint10 range
         for element in elements {
-            bytes.push(element.0);
+            if element.0 &gt; 1023 {
+                return Err(ArrayError::InvalidDataValue);
+            }
         }
-        Ok(ArrayBytes::Fixed(Cow::Owned(bytes)))
+        // Convert to native endian bytes
+        let bytes: Vec&lt;u8&gt; = elements
+            .iter()
+            .flat_map(|e| e.0.to_ne_bytes())
+            .collect();
+        Ok(ArrayBytes::from(bytes))
+    }
+
+    fn into_array_bytes(
+        data_type: &amp;DataType,
+        elements: Vec&lt;Self&gt;,
+    ) -&gt; Result&lt;ArrayBytes&lt;'static&gt;, ArrayError&gt; {
+        Self::to_array_bytes(data_type, &amp;elements)
     }
 }</code></pre>
-<p>A data type element must implement the <code>ElementOwned</code> trait to be used in <code>Array::retrieve_*_as_elements</code> methods.</p>
-<pre><code class="language-rust ignore"><span class="boring">#[derive(serde::Deserialize, Clone, Copy, Debug, PartialEq)]
-</span><span class="boring">struct DataTypeUint4Element(u8);
-</span>/// This defines how ArrayBytes are converted into a DataTypeUint4Element after decoding via the codec pipeline.
-impl zarrs::array::ElementOwned for DataTypeUint4Element {
+<p>A custom element type must implement the <code>ElementOwned</code> trait to be used in <code>Array::retrieve_*</code> methods with <code>Vec</code> or <code>ndarray</code> outputs.</p>
+<pre><code class="language-rust ignore">use zarrs::array::{ArrayBytes, ArrayError, DataType, ElementOwned};
+
+impl ElementOwned for UInt10DataTypeElement {
     fn from_array_bytes(
-        data_type: &amp;zarrs::array::DataType,
-        bytes: zarrs::array::ArrayBytes&lt;'_&gt;,
-    ) -&gt; Result&lt;Vec&lt;Self&gt;, zarrs::array::ArrayError&gt; {
+        data_type: &amp;DataType,
+        bytes: ArrayBytes&lt;'_&gt;,
+    ) -&gt; Result&lt;Vec&lt;Self&gt;, ArrayError&gt; {
         Self::validate_data_type(data_type)?;
         let bytes = bytes.into_fixed()?;
-        let bytes_len = bytes.len();
-        let mut elements = Vec::with_capacity(bytes_len / size_of::&lt;DataTypeUint4Element&gt;());
-        for byte in bytes.iter() {
-            // TODO: Should not construct DataTypeUint4Element this way as it could represent a
-            // value outside of [0, 15]. Set upper bits in the byte to 0?
-            elements.push(DataTypeUint4Element(*byte))
+        if bytes.len() % 2 != 0 {
+            return Err(ArrayError::InvalidDataValue);
+        }
+        let elements: Vec&lt;Self&gt; = bytes
+            .as_chunks::&lt;2&gt;()
+            .0
+            .map(|chunk| {
+                let value = u16::from_ne_bytes(chunk);
+                UInt10DataTypeElement(value)
+            })
+            .collect();
+        for element in &amp;elements {
+            if element.0 &gt; 1023 {
+                return Err(ArrayError::InvalidDataValue);
+            }
         }
         Ok(elements)
     }
 }</code></pre>
-<p>Some non-essential utility methods were defined for <code>DataTypeUint4</code> and used in the snippets above:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">#[derive(serde::Deserialize, Clone, Copy, Debug, PartialEq)]
-</span><span class="boring">struct DataTypeUint4Element(u8);
-</span>impl DataTypeUint4Element {
-    fn to_ne_bytes(&amp;self) -&gt; [u8; 1] {
-        [self.0]
-    }
-
-    fn from_ne_bytes(bytes: &amp;[u8; 1]) -&gt; Self {
-        Self(bytes[0])
-    }
-
-    fn as_u8(&amp;self) -&gt; u8 {
-        self.0
-    }
-}
-<span class="boring">}</span></code></pre>
 <h2 id="more-examples"><a class="header" href="#more-examples">More Examples</a></h2>
 <p>The <code>zarrs</code> repository includes multiple custom data type examples:</p>
 <ul>
@@ -414,18 +480,17 @@ The conformance of <code>zarrs</code> to <a href="https://github.com/zarr-develo
 <ul>
 <li><a href="https://github.com/zarrs/zarrs/issues/191">https://github.com/zarrs/zarrs/issues/191</a></li>
 </ul>
-<p>Contributions are welcomed to support additional data types.
-With a little bit of polish, the <code>uint4</code> example above could be included in <code>zarrs</code> itself (if it isn’t already)!</p>
+<p>Contributions are welcomed to support additional data types.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../extensions/codec.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../extensions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../zarrs_tools.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../extensions/codec.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -435,11 +500,11 @@ With a little bit of polish, the <code>uint4</code> example above could be inclu
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../extensions/codec.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../extensions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../zarrs_tools.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../extensions/codec.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>

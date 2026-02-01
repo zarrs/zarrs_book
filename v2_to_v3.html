@@ -38,10 +38,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ce85899b.js";
+            window.path_to_searchindex_js = "searchindex-d44daf2e.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4822247b.js"></script>
+        <script src="toc-237a0102.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -192,7 +192,7 @@ V2 metadata must be explicitly erased if needed (see below).</p>
 <p>While <code>zarrs</code> fully supports manipulation of Zarr V2 and V3 hierarchies (with supported codecs, data types, etc.), it only supports <strong>forward conversion</strong> of metadata from Zarr V2 to V3.</p>
 </blockquote>
 <h3 id="convert-a-group-to-v3"><a class="header" href="#convert-a-group-to-v3">Convert a Group to V3</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -208,16 +208,16 @@ group.erase_metadata_opt(MetadataEraseVersion::V2)?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <h3 id="convert-an-array-to-v3"><a class="header" href="#convert-an-array-to-v3">Convert an Array to V3</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type};
 </span><span class="boring">use zarrs::config::MetadataEraseVersion;
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 </span><span class="boring">let array = ArrayBuilder::new(
 </span><span class="boring">    vec![8, 8], // array shape
 </span><span class="boring">    vec![4, 4], // regular chunk shape
-</span><span class="boring">    DataType::Float32,
+</span><span class="boring">    data_type::float32(),
 </span><span class="boring">    f32::NAN,
 </span><span class="boring">).build(store.clone(), "/array")?;
 </span>let array = array.to_v3()?;
@@ -234,7 +234,7 @@ array.erase_metadata_opt(MetadataEraseVersion::V2)?;
 <code>GroupMetadataOptions</code> currently has only one option that impacts the Zarr version of the metadata.
 By default, <code>GroupMetadataOptions</code> keeps the current Zarr version.</p>
 <p>To write Zarr V3 metadata:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::{Group, GroupMetadataOptions};
@@ -255,7 +255,7 @@ By default, <code>GroupMetadataOptions</code> keeps the current Zarr version.</p
 </blockquote>
 <p>Note that the original metadata is not automatically deleted.
 If you want to delete it:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;

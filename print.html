@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ce85899b.js";
+            window.path_to_searchindex_js = "searchindex-d44daf2e.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4822247b.js"></script>
+        <script src="toc-237a0102.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -316,7 +316,7 @@ In subsequent chapters, async API method calls are shown commented out below the
 <h3 id="memory"><a class="header" href="#memory">Memory</a></h3>
 <p><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_storage"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__storage-GitHub-blue?logo=github" alt="zarrs_storage_repo"></a> <a href="https://crates.io/crates/zarrs_storage"><img src="https://img.shields.io/crates/v/zarrs_storage" alt="zarrs_storage_ver"></a> <a href="https://docs.rs/zarrs_storage"><img src="https://docs.rs/zarrs_storage/badge.svg" alt="zarrs_storage_doc"></a></p>
 <p><a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/store/struct.MemoryStore.html"><code>MemoryStore</code></a> is a synchronous in-memory store available in the <a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/"><code>zarrs_storage</code></a> crate (re-exported as <code>zarrs::storage</code>).</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;
@@ -329,7 +329,7 @@ let store: ReadableWritableListableStorage = Arc::new(MemoryStore::new());
 <h3 id="filesystem"><a class="header" href="#filesystem">Filesystem</a></h3>
 <p><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_filesystem"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__filesystem-GitHub-blue?logo=github" alt="zarrs_filesystem_repo"></a> <a href="https://crates.io/crates/zarrs_filesystem"><img src="https://img.shields.io/crates/v/zarrs_filesystem" alt="zarrs_filesystem_ver"></a> <a href="https://docs.rs/zarrs_filesystem"><img src="https://docs.rs/zarrs_filesystem/badge.svg" alt="zarrs_filesystem_doc"></a></p>
 <p><a href="https://docs.rs/zarrs_filesystem/latest/zarrs_filesystem/struct.FilesystemStore.html"><code>FilesystemStore</code></a> is a synchronous filesystem store available in the <a href="https://docs.rs/zarrs_filesystem/latest/zarrs_filesystem/"><code>zarrs_filesystem</code></a> crate (re-exported as <code>zarrs::filesystem</code> with the <code>filesystem</code> feature).</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;
@@ -348,7 +348,7 @@ Currently the only option available for filesystem stores is whether or not to e
 <h3 id="http"><a class="header" href="#http">HTTP</a></h3>
 <p><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_http"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__http-GitHub-blue?logo=github" alt="zarrs_http_repo"></a> <a href="https://crates.io/crates/zarrs_http"><img src="https://img.shields.io/crates/v/zarrs_http" alt="zarrs_http_ver"></a> <a href="https://docs.rs/zarrs_http"><img src="https://docs.rs/zarrs_http/badge.svg" alt="zarrs_http_doc"></a></p>
 <p><a href="https://docs.rs/zarrs_http/latest/zarrs_http/struct.HTTPStore.html"><code>HTTPStore</code></a> is a read-only synchronous HTTP store available in the <a href="https://docs.rs/zarrs_http/latest/zarrs_http/"><code>zarrs_http</code></a> crate.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate zarrs_http;
@@ -378,7 +378,7 @@ Supported object stores include:</p>
 <li>Custom implementations</li>
 </ul>
 <p><a href="https://docs.rs/zarrs_object_store/latest/zarrs_object_store/struct.AsyncObjectStore.html"><code>zarrs_object_store::AsyncObjectStore</code></a> wraps <a href="https://docs.rs/object_store/0.11.0/object_store/trait.ObjectStore.html"><code>object_store::ObjectStore</code></a> stores.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate zarrs_object_store;
@@ -400,7 +400,7 @@ let store: AsyncReadableStorage = Arc::new(AsyncObjectStore::new(store));
 <p>The <a href="https://crates.io/crates/opendal"><code>opendal</code></a> crate offers a unified data access layer, empowering users to seamlessly and efficiently retrieve data from diverse storage services.
 It supports a huge range of <a href="https://docs.rs/opendal/latest/opendal/services/index.html">services</a> and <a href="https://docs.rs/opendal/latest/opendal/layers/index.html">layers</a> to extend their behaviour.</p>
 <p><a href="https://docs.rs/zarrs_opendal/latest/zarrs_opendal/struct.AsyncOpendalStore.html"><code>zarrs_object_store::AsyncOpendalStore</code></a> wraps <a href="https://docs.rs/opendal/0.50.2/opendal/struct.Operator.html"><code>opendal::Operator</code></a>.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate zarrs_opendal;
@@ -429,7 +429,7 @@ It enables <code>git</code>-like functionality for array data.</p>
 <h3 id="zip"><a class="header" href="#zip">Zip</a></h3>
 <p><a href="https://github.com/zarrs/zarrs_zip"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__zip-GitHub-blue?logo=github" alt="zarrs_zip_repo"></a> <a href="https://crates.io/crates/zarrs_zip"><img src="https://img.shields.io/crates/v/zarrs_zip" alt="zarrs_zip_ver"></a> <a href="https://docs.rs/zarrs_zip"><img src="https://docs.rs/zarrs_zip/badge.svg" alt="zarrs_zip_doc"></a></p>
 <p>A storage adapter for zip files.</p>
-<pre class="playground"><code class="language-rust no_run edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs_storage;
 </span><span class="boring">extern crate zarrs_filesystem;
@@ -451,7 +451,7 @@ let zip_store = Arc::new(ZipStorageAdapter::new(fs_store, zip_key)?);
 <p>Asynchronous stores can be used in a synchronous context with the <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/async_to_sync/struct.AsyncToSyncStorageAdapter.html"><code>zarrs::storage::AsyncToSyncStorageAdapter</code></a>.</p>
 <p>The <code>AsyncToSyncBlockOn</code> trait must be implemented for a runtime or runtime handle in order to block on futures.
 See the below <code>tokio</code> example:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span>use zarrs::storage::storage_adapter::async_to_sync::AsyncToSyncBlockOn;
@@ -464,7 +464,7 @@ impl AsyncToSyncBlockOn for TokioBlockOn {
     }
 }
 <span class="boring">}</span></code></pre>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate zarrs_opendal;
@@ -499,7 +499,7 @@ let store: ReadableStorage =
 <h3 id="usage-log"><a class="header" href="#usage-log">Usage Log</a></h3>
 <p>The <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/usage_log/struct.UsageLogStorageAdapter.html"><code>zarrs::storage::UsageLogStorageAdapter</code></a> logs storage method calls.</p>
 <p>It is intended to aid in debugging and optimising performance by revealing storage access patterns.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate chrono;
@@ -520,7 +520,7 @@ let store = Arc::new(UsageLogStorageAdapter::new(store, log_writer, || {
 <h3 id="performance-metrics"><a class="header" href="#performance-metrics">Performance Metrics</a></h3>
 <p>The <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/performance_metrics/struct.PerformanceMetricsStorageAdapter.html"><code>zarrs::storage::PerformanceMetricsStorageAdapter</code></a> accumulates metrics, such as bytes read and written.</p>
 <p>It is intended to aid in testing by allowing the application to validate that metrics (e.g., bytes read/written, total read/write operations) match expected values for specific operations.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;
@@ -539,7 +539,7 @@ let store = Arc::new(PerformanceMetricsStorageAdapter::new(store));
 For a group, the metadata document contains the Zarr Version and optional user attributes.</p>
 <h2 id="opening-an-existing-group"><a class="header" href="#opening-an-existing-group">Opening an Existing Group</a></h2>
 <p>An existing group can be opened with <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.open"><code>Group::open</code></a> (or <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.async_open"><code>async_open</code></a>):</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -558,7 +558,7 @@ If you only want to open a specific Zarr version, see <a href="https://docs.rs/z
 <h2 id="creating-attributes"><a class="header" href="#creating-attributes">Creating Attributes</a></h2>
 <p>Attributes are encoded in a JSON object (<code>serde_json::Object</code>).</p>
 <p>Here are a few different approaches for constructing a JSON object:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let value = serde_json::json!({
     "spam": "ham",
@@ -568,7 +568,7 @@ let attributes: serde_json::Map&lt;String, serde_json::Value&gt; =
     serde_json::json!(value).as_object().unwrap().clone();
 let serde_json::Value::Object(attributes) = value else { unreachable!() };
 <span class="boring">}</span></code></pre>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate serde_json;
 </span><span class="boring">use serde_json::Value;
@@ -582,7 +582,7 @@ attributes.insert("eggs".to_string(), Value::Number(42.into()));
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
 <p>The <code>GroupBuilder</code> only supports Zarr V3 groups.</p>
 </blockquote>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 </span><span class="boring">let attributes = serde_json::Map::default();
@@ -604,7 +604,7 @@ The presence of valid metadata can act as a signal that the data is ready.</p>
 </blockquote>
 <h2 id="creating-a-group-from-groupmetadata"><a class="header" href="#creating-a-group-from-groupmetadata">Creating a Group from <code>GroupMetadata</code></a></h2>
 <h3 id="zarr-v3"><a class="header" href="#zarr-v3">Zarr V3</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -622,7 +622,7 @@ group.store_metadata()?;
 // group.async_store_metadata().await?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -651,7 +651,7 @@ group.store_metadata()?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <h3 id="zarr-v2"><a class="header" href="#zarr-v2">Zarr V2</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -670,7 +670,7 @@ group.store_metadata()?;
 </span><span class="boring">}</span></code></pre>
 <h2 id="mutating-group-metadata"><a class="header" href="#mutating-group-metadata">Mutating Group Metadata</a></h2>
 <p>Group attributes can be changed after initialisation with <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.attributes_mut"><code>Group::attributes_mut</code></a>:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern  crate zarrs;
 </span><span class="boring">use zarrs::metadata::{GroupMetadata, v2::GroupMetadataV2};
@@ -696,16 +696,16 @@ An array contains zero or more data elements all of the same data type.</p>
 <h1 id="array-initialisation"><a class="header" href="#array-initialisation">Array Initialisation</a></h1>
 <h2 id="opening-an-existing-array"><a class="header" href="#opening-an-existing-array">Opening an Existing Array</a></h2>
 <p>An existing array can be opened with <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.open"><code>Array::open</code></a> (or <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.async_open"><code>async_open</code></a>):</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 </span>let array_path = "/group/array";
 <span class="boring">let array = ArrayBuilder::new(
 </span><span class="boring">    vec![8, 8], // array shape
 </span><span class="boring">    vec![4, 4], // regular chunk shape
-</span><span class="boring">    DataType::Float32,
+</span><span class="boring">    data_type::float32(),
 </span><span class="boring">    f32::NAN,
 </span><span class="boring">).build(store.clone(), array_path)?;
 </span><span class="boring">array.store_metadata()?;
@@ -723,17 +723,17 @@ If you only want to open a specific Zarr version, see <a href="https://docs.rs/z
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
 <p>The <code>ArrayBuilder</code> only supports Zarr V3 groups.</p>
 </blockquote>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 </span>let array_path = "/group/array";
 let array = ArrayBuilder::new(
     vec![8, 8], // array shape
     vec![4, 4], // regular chunk shape
-    DataType::Float32,
+    data_type::float32(),
     f32::NAN,
 )
 // .bytes_to_bytes_codecs(vec![]) // uncompressed
@@ -763,16 +763,17 @@ The presence of valid metadata can act as a signal that the data is ready.</p>
 </blockquote>
 <h2 id="creating-a-zarr-v3-sharded-array"><a class="header" href="#creating-a-zarr-v3-sharded-array">Creating a Zarr V3 Sharded Array</a></h2>
 <p>The <a href="https://docs.rs/zarrs/latest/zarrs/array/codec/array_to_bytes/sharding/struct.ShardingCodecBuilder.html"><code>ShardingCodecBuilder</code></a> is useful for creating an array that uses the <code>sharding_indexed</code> codec.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;
 </span><span class="boring">use std::num::NonZeroU64;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType, codec::array_to_bytes::sharding::ShardingCodecBuilder};
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type, codec::array_to_bytes::sharding::ShardingCodecBuilder};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 </span><span class="boring">let array_path = "/group/array";
 </span>let mut sharding_codec_builder = ShardingCodecBuilder::new(
-    vec![NonZeroU64::new(2).unwrap(); 2].into() // inner chunk shape
+    vec![NonZeroU64::new(2).unwrap(); 2].into(), // inner chunk shape
+    &amp;data_type::float32(),
 );
 sharding_codec_builder.bytes_to_bytes_codecs(vec![
     Arc::new(zarrs::array::codec::GzipCodec::new(5)?),
@@ -781,7 +782,7 @@ sharding_codec_builder.bytes_to_bytes_codecs(vec![
 let array = ArrayBuilder::new(
     vec![8, 8], // array shape
     vec![4, 4], // regular chunk shape
-    DataType::Float32,
+    data_type::float32(),
     f32::NAN,
 )
 .array_to_bytes_codec(sharding_codec_builder.build_arc())
@@ -792,7 +793,7 @@ array.store_metadata()?;
 </span><span class="boring">}</span></code></pre>
 <h2 id="creating-a-zarr-v3-array-from-metadata"><a class="header" href="#creating-a-zarr-v3-array-from-metadata">Creating a Zarr V3 Array from Metadata</a></h2>
 <p>An array can be created from <code>ArrayMetadata</code> instead of an <code>ArrayBuilder</code> if needed.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;
@@ -868,7 +869,7 @@ array.store_metadata()?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <p>Alternatively, <code>ArrayMetadataV3</code> can be constructed with <code>ArrayMetadataV3::new()</code> and subsequent <code>with_</code> methods:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;
@@ -905,7 +906,7 @@ array.store_metadata()?;
 <h2 id="creating-a-zarr-v2-array"><a class="header" href="#creating-a-zarr-v2-array">Creating a Zarr V2 Array</a></h2>
 <p>The <code>ArrayBuilder</code> does not support Zarr V2 arrays.
 Instead, they must be built from <code>ArrayMetadataV2</code>.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;
@@ -918,7 +919,7 @@ let array_metadata: ArrayMetadata = ArrayMetadataV2::new(
     vec![10, 10], // array shape
     vec![NonZeroU64::new(5).unwrap(); 2].into(), // regular chunk shape
     "&gt;f4".into(), // big endian float32
-    FillValueMetadataV2::NaN, // fill value
+    FillValueMetadataV2::from(f32::NAN), // fill value
     None, // compressor
     None, // filters
 )
@@ -973,29 +974,31 @@ This section focuses on the <a href="https://docs.rs/zarrs_storage/latest/zarrs_
 <h2 id="method-variants"><a class="header" href="#method-variants">Method Variants</a></h2>
 <p>Many <code>retrieve</code> and <code>store</code> methods have multiple variants:</p>
 <ul>
-<li>Standard variants store or retrieve data represented as <a href="https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html"><code>ArrayBytes</code></a> (representing fixed or variable length bytes).</li>
-<li><code>_elements</code> suffix variants can store or retrieve chunks with a known type.</li>
-<li><code>_ndarray</code> suffix variants can store or retrieve an <a href="https://docs.rs/ndarray/latest/ndarray/type.Array.html"><code>ndarray::Array</code></a> (requires <code>ndarray</code> feature).</li>
 <li><code>_opt</code> suffix variants have a <a href="https://docs.rs/zarrs/latest/zarrs/array/codec/options/struct.CodecOptions.html"><code>CodecOptions</code></a> parameter for fine-grained concurrency control and more.</li>
 <li>Variants without the <code>_opt</code> suffix use default <code>CodecOptions</code>.</li>
 <li><code>async_</code> prefix variants can be used with async stores (requires <code>async</code> feature).</li>
 </ul>
+<p>All <code>store_*</code> methods can store data implementing [<code>IntoArrayBytes</code>].
+All <code>retrieve_*</code> methods can retrieve data implementing [<code>FromArrayBytes</code>].</p>
+<h2 id="array-subsets"><a class="header" href="#array-subsets">Array Subsets</a></h2>
+<p>An <a href="https://docs.rs/zarrs/latest/zarrs/array_subset/struct.ArraySubset.html"><code>ArraySubset</code></a> represents a subset (region) of an array or chunk.
+It encodes a starting coordinate and a shape, and is foundational for many array operations.
+It implements [<code>ArraySubsetTraits</code>] alongside other types, such as <code>&amp;[Range&lt;u64&gt;]</code>, <code>[Range&lt;u64&gt;; N]</code>, and <code>Vec&lt;Range&lt;u64&gt;&gt;</code>.
+All array operations that reference a region of an array or chunk accept any type implementing <code>ArraySubsetTraits</code>.</p>
 <h2 id="reading-a-chunk"><a class="header" href="#reading-a-chunk">Reading a Chunk</a></h2>
 <h3 id="reading-and-decoding-a-chunk"><a class="header" href="#reading-and-decoding-a-chunk">Reading and Decoding a Chunk</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate ndarray;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
 </span>let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
 let chunk_bytes: ArrayBytes = array.retrieve_chunk(&amp;chunk_indices)?;
-let chunk_elements: Vec&lt;f32&gt; =
-    array.retrieve_chunk_elements(&amp;chunk_indices)?;
-let chunk_array: ndarray::ArrayD&lt;f32&gt; =
-    array.retrieve_chunk_ndarray(&amp;chunk_indices)?;
+let chunk_elements: Vec&lt;f32&gt; = array.retrieve_chunk(&amp;chunk_indices)?;
+let chunk_array: ndarray::ArrayD&lt;f32&gt; = array.retrieve_chunk(&amp;chunk_indices)?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <blockquote class="blockquote-tag blockquote-tag-warning">
@@ -1005,31 +1008,33 @@ They do not perform any conversion.</p>
 </blockquote>
 <h3 id="skipping-empty-chunks"><a class="header" href="#skipping-empty-chunks">Skipping Empty Chunks</a></h3>
 <p>Use <code>retrieve_chunk_if_exists</code> to only retrieve a chunk if it exists (i.e. is not composed entirely of the fill value, or has yet to be written to the store):</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate ndarray;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
 </span><span class="boring">let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
 </span>let chunk_bytes: Option&lt;ArrayBytes&gt; =
     array.retrieve_chunk_if_exists(&amp;chunk_indices)?;
 let chunk_elements: Option&lt;Vec&lt;f32&gt;&gt; =
-    array.retrieve_chunk_elements_if_exists(&amp;chunk_indices)?;
+    array.retrieve_chunk_if_exists(&amp;chunk_indices)?;
+let chunk_elements: Option&lt;Vec&lt;f32&gt;&gt; =
+    array.retrieve_chunk_if_exists(&amp;chunk_indices)?;
 let chunk_array: Option&lt;ndarray::ArrayD&lt;f32&gt;&gt; =
-    array.retrieve_chunk_ndarray_if_exists(&amp;chunk_indices)?;
+    array.retrieve_chunk_if_exists(&amp;chunk_indices)?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <h3 id="retrieving-an-encoded-chunk"><a class="header" href="#retrieving-an-encoded-chunk">Retrieving an Encoded Chunk</a></h3>
 <p>An encoded chunk can be retrieved without decoding with <code>retrieve_encoded_chunk</code>:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
 </span><span class="boring">let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
 </span>let chunk_bytes_encoded: Option&lt;Vec&lt;u8&gt;&gt; =
@@ -1053,72 +1058,59 @@ Parallelism over chunks can be achieved by spawning tasks outside of <code>zarrs
 If executing many tasks concurrently, consider reducing the codec <a href="https://docs.rs/zarrs/latest/zarrs/array/codec/options/struct.CodecOptions.html#method.set_concurrent_target"><code>concurrent_target</code></a>.</p>
 <h2 id="reading-chunks-in-parallel"><a class="header" href="#reading-chunks-in-parallel">Reading Chunks in Parallel</a></h2>
 <p>The <code>retrieve_chunks</code> methods perform chunk retrieval with chunk parallelism.</p>
-<p>Rather than taking a <code>&amp;[u64]</code> parameter of the indices of a single chunk, these methods take an <code>ArraySubset</code> representing the chunks.
+<p>Rather than taking a <code>&amp;[u64]</code> parameter of the indices of a single chunk, these methods take an <code>&amp;dyn ArraySubsetTraits</code> representing the chunks.
 Rather than returning a <code>Vec</code> for each chunk, the chunks are assembled into a single output for the entire region they cover:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate ndarray;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
-</span>let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..4]);
-let chunks_bytes: ArrayBytes = array.retrieve_chunks(&amp;chunks)?;
-let chunks_elements: Vec&lt;f32&gt; = array.retrieve_chunks_elements(&amp;chunks)?;
-let chunks_array: ndarray::ArrayD&lt;f32&gt; =
-    array.retrieve_chunks_ndarray(&amp;chunks)?;
+</span>let chunks_bytes: ArrayBytes = array.retrieve_chunks(&amp;[0..2, 0..4])?;
+let chunks_elements: Vec&lt;f32&gt; = array.retrieve_chunks(&amp;[0..2, 0..4])?;
+let chunks_array: ndarray::ArrayD&lt;f32&gt; = array.retrieve_chunks(&amp;[0..2, 0..4])?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <p><code>retrieve_encoded_chunks</code> differs in that it does not assemble the output.
 Chunks returned are in order of the chunk indices returned by <code>chunks.indices().into_iter()</code>:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
-</span><span class="boring">use zarrs::array::codec::CodecOptions;
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type};
+</span><span class="boring">use zarrs::array::CodecOptions;
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
-</span><span class="boring">let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..4]);
-</span>let chunk_bytes_encoded: Vec&lt;Option&lt;Vec&lt;u8&gt;&gt;&gt; =
-    array.retrieve_encoded_chunks(&amp;chunks, &amp;CodecOptions::default())?;
+</span>let chunk_bytes_encoded: Vec&lt;Option&lt;Vec&lt;u8&gt;&gt;&gt; = array.retrieve_encoded_chunks(&amp;[0..2, 0..4], &amp;CodecOptions::default())?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <h2 id="reading-a-chunk-subset"><a class="header" href="#reading-a-chunk-subset">Reading a Chunk Subset</a></h2>
-<p>An <a href="https://docs.rs/zarrs/latest/zarrs/array_subset/struct.ArraySubset.html"><code>ArraySubset</code></a> represents a subset (region) of an array or chunk.
-It encodes a starting coordinate and a shape, and is foundational for many array operations.</p>
 <p>The below array subsets are all identical:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
-</span>let subset = ArraySubset::new_with_ranges(&amp;[2..6, 3..5]);
+</span>use zarrs::array::ArraySubset;
+let subset = ArraySubset::new_with_ranges(&amp;[2..6, 3..5]);
 let subset = ArraySubset::new_with_start_shape(vec![2, 3], vec![4, 2])?;
 let subset = ArraySubset::new_with_start_end_exc(vec![2, 3], vec![6, 5])?;
 let subset = ArraySubset::new_with_start_end_inc(vec![2, 3], vec![5, 4])?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <p>The <code>retrieve_chunk_subset</code> methods can be used to retrieve a subset of a chunk:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate ndarray;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
 </span><span class="boring">let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
-</span>let chunk_subset = ArraySubset::new_with_ranges(&amp;[0..2, 0..2]);
-let chunk_subset_bytes: ArrayBytes =
-    array.retrieve_chunk_subset(&amp;chunk_indices, &amp;chunk_subset)?;
-let chunk_subset_elements: Vec&lt;f32&gt; =
-    array.retrieve_chunk_subset_elements(&amp;chunk_indices, &amp;chunk_subset)?;
-let chunk_subset_array: ndarray::ArrayD&lt;f32&gt; =
-    array.retrieve_chunk_subset_ndarray(&amp;chunk_indices, &amp;chunk_subset)?;
+</span>let chunk_subset_bytes: ArrayBytes = array.retrieve_chunk_subset(&amp;chunk_indices, &amp;[0..2, 0..2])?;
+let chunk_subset_elements: Vec&lt;f32&gt; = array.retrieve_chunk_subset(&amp;chunk_indices, &amp;[0..2, 0..2])?;
+let chunk_subset_array: ndarray::ArrayD&lt;f32&gt; = array.retrieve_chunk_subset(&amp;chunk_indices, &amp;[0..2, 0..2])?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <p>It is important to understand what is going on behind the scenes in these methods.
@@ -1129,48 +1121,36 @@ A partial decoder is created that decodes the requested subset.</p>
 </blockquote>
 <h2 id="reading-multiple-chunk-subsets"><a class="header" href="#reading-multiple-chunk-subsets">Reading Multiple Chunk Subsets</a></h2>
 <p>If multiple chunk subsets are needed from a chunk, prefer to create a partial decoder and reuse it for each chunk subset.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
-</span><span class="boring">use zarrs::array::codec::CodecOptions;
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
+</span><span class="boring">use zarrs::array::CodecOptions;
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
 </span><span class="boring">let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
-</span><span class="boring">let chunk_subset_a = ArraySubset::new_with_ranges(&amp;[0..2, 0..2]);
-</span><span class="boring">let chunk_subset_b = ArraySubset::new_with_ranges(&amp;[2..4, 0..2]);
-</span><span class="boring">let chunk_subset_c = ArraySubset::new_with_ranges(&amp;[0..2, 2..4]);
 </span>let partial_decoder = array.partial_decoder(&amp;chunk_indices)?;
-let chunk_subsets_bytes_a: ArrayBytes =
-    partial_decoder.partial_decode(&amp;chunk_subset_a, &amp;CodecOptions::default())?;
-let chunk_subsets_bytes_b: ArrayBytes =
-    partial_decoder.partial_decode(&amp;chunk_subset_b, &amp;CodecOptions::default())?;
-let chunk_subsets_bytes_c: ArrayBytes =
-    partial_decoder.partial_decode(&amp;chunk_subset_c, &amp;CodecOptions::default())?;
+let chunk_subsets_bytes_a: ArrayBytes = partial_decoder.partial_decode(&amp;[0..2, 0..2], &amp;CodecOptions::default())?;
+let chunk_subsets_bytes_b: ArrayBytes = partial_decoder.partial_decode(&amp;[2..4, 0..2], &amp;CodecOptions::default())?;
+let chunk_subsets_bytes_c: ArrayBytes = partial_decoder.partial_decode(&amp;[0..2, 2..4], &amp;CodecOptions::default())?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <p>On initialisation, <strong>partial decoders may insert a cache</strong> (depending on the codecs).
 For example, if a codec does not support partial decoding, its output (or an output of one of its predecessors in the codec chain) will be cached, and subsequent partial decoding operations will not access the store.</p>
 <h2 id="reading-an-array-subset"><a class="header" href="#reading-an-array-subset">Reading an Array Subset</a></h2>
-<p>An arbitrary subset of an array can be read with the <code>retrieve_chunk</code> methods:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<p>An arbitrary subset of an array can be read with the <code>retrieve_array_subset</code> methods:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate ndarray;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes};
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
-</span>let array_subset = ArraySubset::new_with_ranges(&amp;[2..6, 3..5]);
-let subset_bytes: ArrayBytes =
-    array.retrieve_array_subset(&amp;array_subset)?;
-let subset_elements: Vec&lt;f32&gt; =
-    array.retrieve_array_subset_elements(&amp;array_subset)?;
-let subset_array: ndarray::ArrayD&lt;f32&gt; =
-    array.retrieve_array_subset_ndarray(&amp;array_subset)?;
+</span>let subset_bytes: ArrayBytes = array.retrieve_array_subset(&amp;[2..6, 3..5])?;
+let subset_elements: Vec&lt;f32&gt; = array.retrieve_array_subset(&amp;[2..6, 3..5])?;
+let subset_array: ndarray::ArrayD&lt;f32&gt; = array.retrieve_array_subset(&amp;[2..6, 3..5])?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <p>Internally, these methods identify the overlapping chunks, call <code>retrieve_chunk</code> / <code>retrieve_chunk_subset</code> with chunk parallelism, and assemble the output.</p>
@@ -1202,10 +1182,10 @@ Each method has a <code>cache</code> parameter (<a href="https://docs.rs/zarrs/l
 <p>Iterating over chunks or regions is a common pattern.
 There are several approaches.</p>
 <h3 id="serial-chunk-iteration"><a class="header" href="#serial-chunk-iteration">Serial Chunk Iteration</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::ArraySubset;
 </span>let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..4]);
 let indices = chunks.indices();
 for chunk_indices in indices {
@@ -1213,11 +1193,11 @@ for chunk_indices in indices {
 }
 <span class="boring">}</span></code></pre>
 <h3 id="parallel-chunk-iteration"><a class="header" href="#parallel-chunk-iteration">Parallel Chunk Iteration</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate rayon;
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::ArraySubset;
 </span><span class="boring">use rayon::iter::{IntoParallelIterator, ParallelIterator};
 </span>let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..4]);
 let indices = chunks.indices();
@@ -1234,12 +1214,12 @@ indices.into_par_iter().try_for_each(|chunk_indices| {
 <p>The <code>zarrs</code> crate internally uses a macro from the <a href="https://docs.rs/rayon_iter_concurrent_limit/latest/rayon_iter_concurrent_limit/"><code>rayon_iter_concurrent_limit</code></a> crate to limit chunk parallelism where reasonable.
 This macro is a simple wrapper over <code>.into_par_iter().chunks(...).&lt;func&gt;</code>.
 For example:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate rayon;
 </span><span class="boring">extern crate rayon_iter_concurrent_limit;
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::ArraySubset;
 </span><span class="boring">use rayon::iter::{IntoParallelIterator, ParallelIterator};
 </span>let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..4]);
 let indices = chunks.indices();
@@ -1274,54 +1254,49 @@ Cached retrieve methods do not use partial decoders, and any intersected chunk i
 <strong>Benchmark your algorithm/data</strong>.</p>
 <h2 id="reading-a-string-array"><a class="header" href="#reading-a-string-array">Reading a String Array</a></h2>
 <p>A string array can be read as normal with any of the array retrieve methods.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate ndarray;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType, FillValue};
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type, FillValue};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 </span><span class="boring">let array = ArrayBuilder::new(
 </span><span class="boring">    vec![4, 4],
 </span><span class="boring">    vec![2, 2],
-</span><span class="boring">    DataType::String,
+</span><span class="boring">    data_type::string(),
 </span><span class="boring">    FillValue::from(""),
 </span><span class="boring">).build(store.clone(), "/array")?;
-</span><span class="boring">let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..2]);
-</span>let chunks_elements: Vec&lt;String&gt; = array.retrieve_chunks_elements(&amp;chunks)?;
-let chunks_array: ndarray::ArrayD&lt;String&gt; =
-    array.retrieve_chunks_ndarray(&amp;chunks)?;
+</span>let chunks_elements: Vec&lt;String&gt; = array.retrieve_chunks(&amp;[0..2, 0..2])?;
+let chunks_array: ndarray::ArrayD&lt;String&gt; = array.retrieve_chunks(&amp;[0..2, 0..2])?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <p>However, this results in a string allocation per element.
 This can be avoided by retrieving the bytes directly and converting them to a <code>Vec</code> of string references.
 For example:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate ndarray;
 </span><span class="boring">extern crate itertools;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType, ArrayBytes, FillValue};
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type, ArrayBytes, FillValue};
 </span><span class="boring">use ndarray::ArrayD;
 </span><span class="boring">use itertools::Itertools;
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 </span><span class="boring">let array = ArrayBuilder::new(
 </span><span class="boring">    vec![4, 4],
 </span><span class="boring">    vec![2, 2],
-</span><span class="boring">    DataType::String,
+</span><span class="boring">    data_type::string(),
 </span><span class="boring">    FillValue::from(""),
 </span><span class="boring">).build(store.clone(), "/array")?;
-</span><span class="boring">let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..2]);
-</span><span class="boring">let subset_all = array.subset_all();
-</span>let chunks_bytes: ArrayBytes = array.retrieve_chunks(&amp;chunks)?;
-let (bytes, offsets) = chunks_bytes.into_variable()?;
+</span>let chunks_bytes: ArrayBytes = array.retrieve_chunks(&amp;[0..2, 0..2])?;
+let (bytes, offsets) = chunks_bytes.into_variable()?.into_parts();
 let string = String::from_utf8(bytes.into_owned())?;
 let chunks_elements: Vec&lt;&amp;str&gt; = offsets
     .iter()
     .tuple_windows()
     .map(|(&amp;curr, &amp;next)| &amp;string[curr..next])
     .collect();
+let subset_all = array.subset_all();
 let chunks_array =
     ArrayD::&lt;&amp;str&gt;::from_shape_vec(subset_all.shape_usize(), chunks_elements)?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
@@ -1350,25 +1325,25 @@ let chunks_array =
 <li><a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.erase_chunks"><code>erase_chunks</code></a></li>
 </ul>
 <h3 id="store-a-chunk"><a class="header" href="#store-a-chunk">Store a Chunk</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate ndarray;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::array::{Array, ArrayBytes, ArrayBuilder, data_type};
 </span><span class="boring">use ndarray::ArrayD;
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
 </span>let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
-let chunk_bytes: Vec&lt;u8&gt; = vec![0u8; 4 * 4 * 4]; // 4x4 chunk of f32
+let chunk_bytes: ArrayBytes = vec![0u8; 4 * 4 * 4].into(); // 4x4 chunk of f32
 array.store_chunk(&amp;chunk_indices, chunk_bytes)?;
 let chunk_elements: Vec&lt;f32&gt; = vec![1.0; 4 * 4];
-array.store_chunk_elements(&amp;chunk_indices, &amp;chunk_elements)?;
+array.store_chunk(&amp;chunk_indices, &amp;chunk_elements)?;
 let chunk_array = ArrayD::&lt;f32&gt;::from_shape_vec(
     vec![4, 4], // chunk shape
     chunk_elements
 )?;
-array.store_chunk_ndarray(&amp;chunk_indices, chunk_array)?;
+array.store_chunk(&amp;chunk_indices, chunk_array)?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <blockquote class="blockquote-tag blockquote-tag-tip">
@@ -1377,28 +1352,26 @@ array.store_chunk_ndarray(&amp;chunk_indices, chunk_array)?;
 </blockquote>
 <h3 id="store-chunks"><a class="header" href="#store-chunks">Store Chunks</a></h3>
 <p><code>store_chunks</code> (and variants) will dissasemble the input into chunks, and encode and store them in parallel.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::{Array, ArrayBytes, ArrayBuilder, data_type};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
-</span>let chunks = ArraySubset::new_with_ranges(&amp;[0..2, 0..2]);
-let chunks_bytes: Vec&lt;u8&gt; = vec![0u8; 2 * 2 * 4 * 4 * 4]; // 2x2 chunks of 4x4 f32
-array.store_chunks(&amp;chunks, chunks_bytes)?;
+</span>let chunks_bytes: ArrayBytes = vec![0u8; 2 * 2 * 4 * 4 * 4].into(); // 2x2 chunks of 4x4 f32
+array.store_chunks(&amp;[0..2, 0..2], chunks_bytes)?;
 // store_chunks_elements, store_chunks_ndarray...
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <h3 id="store-an-encoded-chunk"><a class="header" href="#store-an-encoded-chunk">Store an Encoded Chunk</a></h3>
 <p>An encoded chunk can be stored directly with <a href="https://docs.rs/zarrs/latest/zarrs/array/struct.Array.html#method.store_encoded_chunk">store_encoded_chunk</a>, bypassing the <code>zarrs</code> codec pipeline.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
+</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
 </span><span class="boring">    .build(store.clone(), "/array")?;
 </span><span class="boring">let chunk_indices: Vec&lt;u64&gt; = vec![1, 2];
 </span>let encoded_chunk_bytes: Vec&lt;u8&gt; = vec![0u8; 4 * 4 * 4]; // pre-encoded bytes
@@ -1427,47 +1400,42 @@ Codecs that do not support true partial encoding will retrieve chunks in their e
 </ul>
 <p>Partial writes to a chunk may be lost if these rules are not respected.</p>
 <h3 id="store-a-chunk-subset"><a class="header" href="#store-a-chunk-subset">Store a Chunk Subset</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![16, 8], vec![4, 4], DataType::Float32, 0.0f32)
-</span><span class="boring">    .build(store.clone(), "/array")?;
-</span>array.store_chunk_subset_elements::&lt;f32&gt;(
+</span>let array = ArrayBuilder::new(vec![16, 8], vec![4, 4], data_type::float32(), 0.0f32)
+    .build(store.clone(), "/array")?;
+array.store_chunk_subset(
     // chunk indices
     &amp;[3, 1],
     // subset within chunk
-    &amp;ArraySubset::new_with_ranges(&amp;[1..2, 0..4]),
+    &amp;[1..2, 0..4],
     // subset elements
-    &amp;[-4.0; 4],
+    &amp;[-4.0f32; 4],
 )?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <h3 id="store-an-array-subset"><a class="header" href="#store-an-array-subset">Store an Array Subset</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
-</span><span class="boring">use zarrs::array_subset::ArraySubset;
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type};
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
-</span><span class="boring">let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], DataType::Float32, 0.0f32)
-</span><span class="boring">    .build(store.clone(), "/array")?;
-</span>array.store_array_subset_elements::&lt;f32&gt;(
-    &amp;ArraySubset::new_with_ranges(&amp;[0..8, 6..7]),
-    &amp;[123.0; 8],
-)?;
+</span>let array = ArrayBuilder::new(vec![8, 8], vec![4, 4], data_type::float32(), 0.0f32)
+    .build(store.clone(), "/array")?;
+array.store_array_subset(&amp;[0..8, 6..7], &amp;[123.0f32; 8])?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <h3 id="partial-encoding-with-the-sharding-codec"><a class="header" href="#partial-encoding-with-the-sharding-codec">Partial Encoding with the Sharding Codec</a></h3>
 <p>In <code>zarrs</code>, the <code>sharding_indexed</code> codec is the only codec that supports real partial encoding if the <a href="https://docs.rs/zarrs/latest/zarrs/config/struct.Config.html#experimental-partial-decoding"><code>Experimental Partial Encoding</code></a> option is enabled.
 If disabled (default), chunks are always fully decoded and updated before being stored.</p>
 <p>To enable partial encoding:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::codec::CodecOptions;
+</span><span class="boring">use zarrs::array::CodecOptions;
 </span>// Set experimental_partial_encoding to true by default
 zarrs::config::global_config_mut().set_experimental_partial_encoding(true);
 
@@ -1499,7 +1467,7 @@ V2 metadata must be explicitly erased if needed (see below).</p>
 <p>While <code>zarrs</code> fully supports manipulation of Zarr V2 and V3 hierarchies (with supported codecs, data types, etc.), it only supports <strong>forward conversion</strong> of metadata from Zarr V2 to V3.</p>
 </blockquote>
 <h3 id="convert-a-group-to-v3"><a class="header" href="#convert-a-group-to-v3">Convert a Group to V3</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -1515,16 +1483,16 @@ group.erase_metadata_opt(MetadataEraseVersion::V2)?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <h3 id="convert-an-array-to-v3"><a class="header" href="#convert-an-array-to-v3">Convert an Array to V3</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
-</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, DataType};
+</span><span class="boring">use zarrs::array::{Array, ArrayBuilder, data_type};
 </span><span class="boring">use zarrs::config::MetadataEraseVersion;
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 </span><span class="boring">let array = ArrayBuilder::new(
 </span><span class="boring">    vec![8, 8], // array shape
 </span><span class="boring">    vec![4, 4], // regular chunk shape
-</span><span class="boring">    DataType::Float32,
+</span><span class="boring">    data_type::float32(),
 </span><span class="boring">    f32::NAN,
 </span><span class="boring">).build(store.clone(), "/array")?;
 </span>let array = array.to_v3()?;
@@ -1541,7 +1509,7 @@ array.erase_metadata_opt(MetadataEraseVersion::V2)?;
 <code>GroupMetadataOptions</code> currently has only one option that impacts the Zarr version of the metadata.
 By default, <code>GroupMetadataOptions</code> keeps the current Zarr version.</p>
 <p>To write Zarr V3 metadata:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::{Group, GroupMetadataOptions};
@@ -1562,7 +1530,7 @@ By default, <code>GroupMetadataOptions</code> keeps the current Zarr version.</p
 </blockquote>
 <p>Note that the original metadata is not automatically deleted.
 If you want to delete it:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -1596,6 +1564,308 @@ The <code>zarrs</code> library, like other Zarr implementations, leverages this 
 <code>zarrs</code> can work with virtually any storage system – in-memory buffers, local filesystems, object stores (like S3 or GCS), databases, etc.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="data-type-extensions"><a class="header" href="#data-type-extensions">Data Type Extensions</a></h1>
+<p>According to the Zarr V3 specification:</p>
+<blockquote>
+<p>A data type defines the set of possible values that an array may contain.
+For example, the 32-bit signed integer data type defines binary representations for all integers in the range −2,147,483,648 to 2,147,483,647.</p>
+</blockquote>
+<p>The specification defines a limited set of data types, but additional data types can be defined as extensions.</p>
+<p><code>zarrs</code> supports a number of extension data types, many of which are registered in the <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> repository.
+This chapter explains how to create custom data types with a guided walkthrough.</p>
+<h2 id="implementing-a-custom-data-type"><a class="header" href="#implementing-a-custom-data-type">Implementing a Custom Data Type</a></h2>
+<p>To open/read/write/create a Zarr <code>Array</code> with a custom data type, the following traits must be implemented:</p>
+<h3 id="core-traits"><a class="header" href="#core-traits">Core Traits</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Trait</th><th>Crate</th><th>Required</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/trait.DataTypeTraits.html"><code>DataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>Yes</td><td>Core data type properties (size, fill value handling, etc.)</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/trait.DataTypeTraitsV3.html"><code>DataTypeTraitsV3</code></a></td><td><code>zarrs_data_type</code></td><td>For V3</td><td>Creation from Zarr V3 metadata (for plugin registration)</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/trait.DataTypeTraitsV2.html"><code>DataTypeTraitsV2</code></a></td><td><code>zarrs_data_type</code></td><td>For V2</td><td>Creation from Zarr V2 metadata (for plugin registration)</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_plugin/latest/zarrs_plugin/trait.ExtensionAliases.html"><code>ExtensionAliases&lt;ZarrVersion3&gt;</code></a></td><td><code>zarrs_plugin</code></td><td>For V3</td><td>Defines the extension name and aliases for Zarr V3 metadata</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_plugin/latest/zarrs_plugin/trait.ExtensionAliases.html"><code>ExtensionAliases&lt;ZarrVersion2&gt;</code></a></td><td><code>zarrs_plugin</code></td><td>For V2</td><td>Defines the extension name and aliases for Zarr V2 metadata</td></tr>
+</tbody>
+</table>
+</div>
+<p>Additionally, the data type must be registered as a <a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/struct.DataTypePluginV3.html"><code>DataTypePluginV3</code></a> and/or <a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/struct.DataTypePluginV2.html"><code>DataTypePluginV2</code></a> using <code>inventory</code>.</p>
+<h3 id="codec-traits"><a class="header" href="#codec-traits">Codec Traits</a></h3>
+<p>The following traits enable compatibility with specific codecs.
+See the <a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/index.html"><code>zarrs_data_type::codec_traits</code></a> module for convenience macros.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Trait</th><th>Crate</th><th>Required</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/bytes/trait.BytesDataTypeTraits.html"><code>BytesDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>bytes</code> codec</td><td>Endianness handling for the <code>bytes</code> codec</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/packbits/trait.PackBitsDataTypeTraits.html"><code>PackBitsDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>packbits</code> codec</td><td>Bit packing/unpacking for the <code>packbits</code> codec</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/bitround/trait.BitroundDataTypeTraits.html"><code>BitroundDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>bitround</code> codec</td><td>Bit rounding for floating-point types</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/fixedscaleoffset/trait.FixedScaleOffsetDataTypeTraits.html"><code>FixedScaleOffsetDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>fixedscaleoffset</code> codec</td><td>Fixed scale/offset encoding</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/pcodec/trait.PcodecDataTypeTraits.html"><code>PcodecDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>pcodec</code> codec</td><td>Pcodec compression</td></tr>
+<tr><td><a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/zfp/trait.ZfpDataTypeTraits.html"><code>ZfpDataTypeTraits</code></a></td><td><code>zarrs_data_type</code></td><td>For <code>zfp</code> codec</td><td>ZFP compression for floating-point types</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="element-traits"><a class="header" href="#element-traits">Element Traits</a></h3>
+<p>These traits are implemented on the <em>in-memory representation</em> of the data type (e.g., a newtype wrapper like <code>UInt10DataTypeElement</code>), not on the data type struct itself.
+Alternatively, existing <code>Element</code> implementations for standard numeric types (e.g., <code>u16</code>) can be used by setting <code>compatible_element_types</code> in <code>DataTypeTraits</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Trait</th><th>Crate</th><th>Required</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="https://docs.rs/zarrs/latest/zarrs/array/trait.Element.html"><code>Element</code></a></td><td><code>zarrs</code></td><td>For <code>Array</code> store methods</td><td>Conversion from in-memory elements to array bytes</td></tr>
+<tr><td><a href="https://docs.rs/zarrs/latest/zarrs/array/trait.ElementOwned.html"><code>ElementOwned</code></a></td><td><code>zarrs</code></td><td>For <code>Array</code> retrieve methods</td><td>Conversion from array bytes to in-memory elements</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="example-the-uint10-data-type"><a class="header" href="#example-the-uint10-data-type">Example: The <code>uint10</code> Data Type</a></h2>
+<p>This example demonstrates how to implement a hypothetical <code>uint10</code> data type as a custom extension.
+A 10-bit unsigned integer can represent values in the range <code>[0, 1023]</code> and can be supported by the <code>bytes</code> and <code>packbits</code> codecs.</p>
+<p>The <code>uint10</code> data type has no configuration, so it can be represented by a unit struct:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// The `uint10` data type.
+#[derive(Debug, Clone, Copy)]
+struct UInt10DataType;
+<span class="boring">}</span></code></pre>
+<h3 id="extension-namealias-registration"><a class="header" href="#extension-namealias-registration">Extension Name/Alias Registration</a></h3>
+<p>In <code>zarrs</code> 0.23.0, extension names and aliases are managed through the <code>zarrs_plugin::ExtensionAliases&lt;V&gt;</code> trait.
+The <a href="https://docs.rs/zarrs_plugin/latest/zarrs_plugin/macro.impl_extension_aliases.html"><code>zarrs_plugin::impl_extension_aliases!</code></a> macro provides a convenient way to implement these traits:
+At compile time, extensions are registered (via <code>inventory</code>) so that can be identified when opening an array and created.
+Extensions are registered for usage with Zarr V3 metadata and/or V2 if applicable.
+Note that some extensions types (e.g. chunk grids) are not supported all in Zarr V2.</p>
+<p>For example:</p>
+<pre><code class="language-rust ignore"><span class="boring">extern crate inventory;
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">extern crate zarrs_plugin;
+</span><span class="boring">extern crate zarrs_data_type;
+</span><span class="boring">extern crate zarrs_metadata;
+</span><span class="boring">use std::sync::Arc;
+</span><span class="boring">use zarrs_metadata::v3::MetadataV3;
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct UInt10DataType;
+</span>zarrs_plugin::impl_extension_aliases!(UInt10DataType, v3: "uint10");
+inventory::submit! {
+    zarrs_data_type::DataTypePluginV3::new::&lt;UInt10DataType&gt;(|_: &amp;MetadataV3| Ok(Arc::new(UInt10DataType).into()))
+}</code></pre>
+<h3 id="implementing-datatypetraits"><a class="header" href="#implementing-datatypetraits">Implementing <code>DataTypeTraits</code></a></h3>
+<p>To be used as a data type extension, <code>UInt10DataType</code> must implement the <a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/trait.DataTypeTraits.html"><code>DataTypeTraits</code></a> trait (from <code>zarrs_data_type</code>).
+This defines properties of the data type, such as conversion to/from fill value metadata, size (fixed or variable), and a method to .</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs_data_type;
+</span><span class="boring">extern crate zarrs_metadata;
+</span><span class="boring">extern crate zarrs_plugin;
+</span><span class="boring">use std::convert::TryInto;
+</span><span class="boring">use std::sync::Arc;
+</span><span class="boring">use std::any::Any;
+</span>use zarrs_data_type::{DataTypeTraits, DataTypeTraitsV3, DataTypeFillValueMetadataError, DataTypeFillValueError, FillValue};
+use zarrs_metadata::{Configuration, DataTypeSize, FillValueMetadata, v3::MetadataV3};
+use zarrs_plugin::PluginCreateError;
+
+// Define a marker struct for the data type
+// A custom data type could also be a struct holding configuration parameters
+#[derive(Debug)]
+struct UInt10DataType;
+
+// Register the data type
+zarrs_plugin::impl_extension_aliases!(UInt10DataType, v3: "uint10");
+
+impl DataTypeTraitsV3 for UInt10DataType {
+    fn create(_metadata: &amp;MetadataV3) -&gt; Result&lt;zarrs_data_type::DataType, PluginCreateError&gt; {
+        // NOTE: Should validate that metadata is empty / missing
+        Ok(Arc::new(UInt10DataType).into())
+    }
+}
+
+inventory::submit! {
+    zarrs_data_type::DataTypePluginV3::new::&lt;UInt10DataType&gt;()
+}
+
+impl DataTypeTraits for UInt10DataType {
+    fn configuration(&amp;self, _zarr_version: zarrs_plugin::ZarrVersion) -&gt; Configuration {
+        Configuration::default()
+    }
+
+    fn size(&amp;self) -&gt; DataTypeSize {
+        DataTypeSize::Fixed(2)
+    }
+
+    fn fill_value(
+        &amp;self,
+        fill_value_metadata: &amp;FillValueMetadata,
+        _version: zarrs_plugin::ZarrVersion,
+    ) -&gt; Result&lt;FillValue, DataTypeFillValueMetadataError&gt; {
+        let int = fill_value_metadata.as_u64().ok_or(DataTypeFillValueMetadataError)?;
+        // uint10 range: 0 to 1023
+        if int &gt; 1023 {
+            return Err(DataTypeFillValueMetadataError);
+        }
+        #[expect(clippy::cast_possible_truncation)]
+        Ok(FillValue::from(int as u16))
+    }
+
+    fn metadata_fill_value(
+        &amp;self,
+        fill_value: &amp;FillValue,
+    ) -&gt; Result&lt;FillValueMetadata, DataTypeFillValueError&gt; {
+        let bytes: [u8; 2] = fill_value.as_ne_bytes().try_into().map_err(|_| DataTypeFillValueError)?;
+        let number = u16::from_ne_bytes(bytes);
+        Ok(FillValueMetadata::from(number))
+    }
+
+    fn compatible_element_types(&amp;self) -&gt; &amp;'static [std::any::TypeId] {
+        // Declare compatibility with u16 for Element trait implementations
+        const TYPES: [std::any::TypeId; 1] = [std::any::TypeId::of::&lt;u16&gt;()];
+        &amp;TYPES
+    }
+
+    fn as_any(&amp;self) -&gt; &amp;dyn Any {
+        self
+    }
+}
+<span class="boring">}</span></code></pre>
+<h3 id="implementing-bytesdatatypetraits"><a class="header" href="#implementing-bytesdatatypetraits">Implementing <code>BytesDataTypeTraits</code></a></h3>
+<p>Supporting the <code>bytes</code> codec for the <code>uint10</code> data type requires handling endianness conversion.
+The <code>impl_bytes_data_type_traits!</code> macro from <code>zarrs_data_type</code> provides a convenient implementation that reverses byte order if necessary (depending on system endianness and the <code>bytes</code> codec endianness configuration):</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs_data_type;
+</span><span class="boring">extern crate zarrs_plugin;
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct UInt10DataType;
+</span>zarrs_data_type::codec_traits::impl_bytes_data_type_traits!(UInt10DataType, 2);
+<span class="boring">}</span></code></pre>
+<p>The arguments are:</p>
+<ul>
+<li>Data type struct</li>
+<li>Fixed size in bytes (2 for uint10)</li>
+</ul>
+<h3 id="implementing-packbitsdatatypetraits"><a class="header" href="#implementing-packbitsdatatypetraits">Implementing <code>PackBitsDataTypeTraits</code></a></h3>
+<p>The <code>uint10</code> data type supports the <code>packbits</code> codec as a 10-bit value.
+The <code>impl_pack_bits_data_type_traits!</code> macro from <code>zarrs_data_type</code> provides a convenient implementation:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs_data_type;
+</span><span class="boring">extern crate zarrs_plugin;
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct UInt10DataType;
+</span>zarrs_data_type::codec_traits::impl_pack_bits_data_type_traits!(UInt10DataType, 10, unsigned, 1);
+<span class="boring">}</span></code></pre>
+<p>The arguments are:</p>
+<ul>
+<li>Data type struct</li>
+<li>Bits per component (10 for uint10)</li>
+<li>Sign type (<code>unsigned</code> or <code>signed</code>)</li>
+<li>Number of components (1 for scalar types)</li>
+</ul>
+<h3 id="using-existing-element-implementations"><a class="header" href="#using-existing-element-implementations">Using Existing <code>Element</code> Implementations</a></h3>
+<p><code>zarrs</code> provides <code>Element</code> and <code>ElementOwned</code> implementations for standard numeric types like <code>u16</code>.
+To enable these existing implementations for a custom data type, override the <code>compatible_element_types</code> method in <code>DataTypeTraits</code> to return the compatible Rust types.</p>
+<p>For <code>uint10</code>, we declared compatibility with <code>u16</code> above:</p>
+<pre><code class="language-rust ignore">fn compatible_element_types(&amp;self) -&gt; &amp;'static [std::any::TypeId] {
+    const TYPES: [std::any::TypeId; 1] = [std::any::TypeId::of::&lt;u16&gt;()];
+    &amp;TYPES
+}</code></pre>
+<p>This allows using <code>u16</code> directly with <code>Array::store_*</code> and <code>Array::retrieve_*</code> methods without implementing custom <code>Element</code> traits.
+Note that this does NOT enforce that values are in the valid <code>uint10</code> range of <code>[0, 1023]</code>, so a custom type is recommended for stricter type safety.</p>
+<h3 id="custom-element-implementations"><a class="header" href="#custom-element-implementations">Custom <code>Element</code> Implementations</a></h3>
+<p>For custom data types where existing <code>Element</code> implementations are not suitable, you can define a newtype wrapper and implement <code>Element</code> and <code>ElementOwned</code> manually.</p>
+<p>For example, here is how <code>uint10</code> could be supported as a newtype wrapper around <code>u16</code>:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// The in-memory representation of the `uint10` data type.
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct UInt10DataTypeElement(u16);
+<span class="boring">}</span></code></pre>
+<p>A custom element type must implement the <code>Element</code> trait to be used in <code>Array::store_*</code> methods with <code>Vec</code> or <code>ndarray</code> inputs.</p>
+<pre><code class="language-rust ignore">use zarrs::array::{ArrayBytes, ArrayError, DataType, Element};
+
+impl Element for UInt10DataTypeElement {
+    fn validate_data_type(data_type: &amp;DataType) -&gt; Result&lt;(), ArrayError&gt; {
+        data_type
+            .is::&lt;UInt10DataType&gt;()
+            .then_some(())
+            .ok_or(ArrayError::IncompatibleElementType)
+    }
+
+    fn to_array_bytes&lt;'a&gt;(
+        data_type: &amp;DataType,
+        elements: &amp;'a [Self],
+    ) -&gt; Result&lt;ArrayBytes&lt;'a&gt;, ArrayError&gt; {
+        Self::validate_data_type(data_type)?;
+        // Validate all elements are in the valid uint10 range
+        for element in elements {
+            if element.0 &gt; 1023 {
+                return Err(ArrayError::InvalidDataValue);
+            }
+        }
+        // Convert to native endian bytes
+        let bytes: Vec&lt;u8&gt; = elements
+            .iter()
+            .flat_map(|e| e.0.to_ne_bytes())
+            .collect();
+        Ok(ArrayBytes::from(bytes))
+    }
+
+    fn into_array_bytes(
+        data_type: &amp;DataType,
+        elements: Vec&lt;Self&gt;,
+    ) -&gt; Result&lt;ArrayBytes&lt;'static&gt;, ArrayError&gt; {
+        Self::to_array_bytes(data_type, &amp;elements)
+    }
+}</code></pre>
+<p>A custom element type must implement the <code>ElementOwned</code> trait to be used in <code>Array::retrieve_*</code> methods with <code>Vec</code> or <code>ndarray</code> outputs.</p>
+<pre><code class="language-rust ignore">use zarrs::array::{ArrayBytes, ArrayError, DataType, ElementOwned};
+
+impl ElementOwned for UInt10DataTypeElement {
+    fn from_array_bytes(
+        data_type: &amp;DataType,
+        bytes: ArrayBytes&lt;'_&gt;,
+    ) -&gt; Result&lt;Vec&lt;Self&gt;, ArrayError&gt; {
+        Self::validate_data_type(data_type)?;
+        let bytes = bytes.into_fixed()?;
+        if bytes.len() % 2 != 0 {
+            return Err(ArrayError::InvalidDataValue);
+        }
+        let elements: Vec&lt;Self&gt; = bytes
+            .as_chunks::&lt;2&gt;()
+            .0
+            .map(|chunk| {
+                let value = u16::from_ne_bytes(chunk);
+                UInt10DataTypeElement(value)
+            })
+            .collect();
+        for element in &amp;elements {
+            if element.0 &gt; 1023 {
+                return Err(ArrayError::InvalidDataValue);
+            }
+        }
+        Ok(elements)
+    }
+}</code></pre>
+<h2 id="more-examples"><a class="header" href="#more-examples">More Examples</a></h2>
+<p>The <code>zarrs</code> repository includes multiple custom data type examples:</p>
+<ul>
+<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_uint12.rs">custom_data_type_uint12.rs</a></li>
+<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_uint4.rs">custom_data_type_uint4.rs</a></li>
+<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_float8_e3m4.rs">custom_data_type_float8_e3m4.rs</a></li>
+<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_fixed_size.rs">custom_data_type_fixed_size.rs</a></li>
+<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_variable_size.rs">custom_data_type_variable_size.rs</a></li>
+</ul>
+<h2 id="contributing-new-data-types-to-zarrs"><a class="header" href="#contributing-new-data-types-to-zarrs">Contributing New Data Types to <code>zarrs</code></a></h2>
+<p>The <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> repository is always growing with new Zarr extensions.
+The conformance of <code>zarrs</code> to <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> is tracked in this issue:</p>
+<ul>
+<li><a href="https://github.com/zarrs/zarrs/issues/191">https://github.com/zarrs/zarrs/issues/191</a></li>
+</ul>
+<p>Contributions are welcomed to support additional data types.</p>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="codec-extensions"><a class="header" href="#codec-extensions">Codec Extensions</a></h1>
 <p>Among the most impactful and frequently utilised extension points are <strong>codecs</strong>. At their core, codecs define the transformations applied to array chunk data as it moves between its logical, in-memory representation and its serialized, stored representation as a sequence of bytes.</p>
 <p>Codecs are the workhorses behind essential Zarr features like <strong>compression</strong> (reducing storage size and transfer time) and <strong>filtering</strong> (rearranging or modifying data to improve compression effectiveness). The Zarr v3 specification allows for a <strong>pipeline of codecs</strong> to be defined for each array, where the output of one codec becomes the input for the next during encoding, and the process is reversed during decoding.</p>
@@ -1621,7 +1891,7 @@ The <code>zarrs</code> library, like other Zarr implementations, leverages this 
 </ul>
 <p>The traits are:</p>
 <ul>
-<li><code>CodecTraits</code>: Defines the codec <code>configuration</code> creation method, the unique <code>zarrs</code> codec <code>identifier</code>, and some hints related to partial decoding.</li>
+<li><code>CodecTraits</code>: Defines the codec <code>configuration</code> creation method, the unique <code>zarrs</code> codec <code>identifier</code>, and capabilities related to partial decoding/encoding.</li>
 <li><code>ArrayCodecTraits</code>: defines the <code>recommended_concurrency</code> and <code>partial_decode_granularity</code>.</li>
 <li><code>ArrayToArrayCodecTraits</code> / <code>ArrayToBytesCodecTraits</code> / <code>BytesToBytesCodecTraits</code>: Defines the codec <code>encode</code> and <code>decode</code> methods (including partial encoding and decoding), as well as methods for querying the encoded representation.</li>
 </ul>
@@ -1647,82 +1917,120 @@ So, any <code>i32</code> can be permitted here and there is no need follow <a hr
 ]
 </code></pre>
 <p>The configuration can be represented by a simple struct:</p>
-<pre><code class="language-rust ignore">/// `lz4` codec configuration parameters
-#[derive(Serialize, Deserialize, Clone, Eq, PartialEq, Debug, Display)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate serde;
+</span><span class="boring">extern crate derive_more;
+</span>/// `lz4` codec configuration parameters
+#[derive(serde::Serialize, serde::Deserialize, Clone, Eq, PartialEq, Debug, derive_more::Display)]
+#[display("{}", serde_json::to_string(self).unwrap_or_default())]
 pub struct Lz4CodecConfiguration {
     pub acceleration: i32
-}</code></pre>
+}
+<span class="boring">}</span></code></pre>
 <p>Note that codec configurations in <a href="https://docs.rs/zarrs_metadata/latest/zarrs_metadata/"><code>zarrs_metadata</code></a> are versioned so that they can adapt to potential codec specification revisions.</p>
-<p><code>Lz4CodecConfiguration</code> is JSON serialisable, so implement the <code>ConfigurationSerialize</code> trait:</p>
-<pre><code class="language-rust ignore">impl ConfigurationSerialize for Lz4CodecConfiguration {}</code></pre>
-<p>This trait requires <code>Serialize + DeserializeOwned</code>, and enables any implementing struct to be infallibly converted from a JSON object or anything convertible to a JSON object.
-A codec configuration must not be able to hold unrepresentable JSON state, otherwise such a conversion could panic at runtime.</p>
 <h3 id="the-lz4codec-struct"><a class="header" href="#the-lz4codec-struct">The <code>Lz4Codec</code> Struct</a></h3>
 <p>Now create the codec struct.
 For encoding, the <code>acceleration</code> needs to be known, so this must be a field of the struct:</p>
-<pre><code class="language-rust ignore">pub struct Lz4Codec {
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">#[derive(serde::Serialize, serde::Deserialize, Clone, Eq, PartialEq, Debug, derive_more::Display)]
+</span><span class="boring">#[display("{}", serde_json::to_string(self).unwrap_or_default())]
+</span><span class="boring">pub struct Lz4CodecConfiguration { pub acceleration: i32 }
+</span>/// An `lz4` codec implementation.
+#[derive(Clone, Debug)]
+pub struct Lz4Codec {
     acceleration: i32
-}</code></pre>
-<p>Next we define two constructors.
-These are not officially required for the codec to be used, but it is common practice in <code>zarrs</code> to include constructors based on the underlying codec parameters as well as a constructor from configuration.</p>
-<pre><code class="language-rust ignore">impl Lz4Codec {
+}
+
+impl Lz4Codec {
+    /// Create a new `lz4` codec.
     #[must_use]
     pub fn new(acceleration: i32) -&gt; Self {
         Self { acceleration }
     }
 
+    /// Create a new `lz4` codec from configuration.
     #[must_use]
-    pub fn new_with_configuration(
-        configuration: &amp;Lz4CodecConfiguration,
-    ) -&gt; Self {
+    pub fn new_with_configuration(configuration: &amp;Lz4CodecConfiguration) -&gt; Self {
         Self { acceleration: configuration.acceleration }
     }
-}</code></pre>
+}
+<span class="boring">}</span></code></pre>
+<h3 id="extensionidentifier-and-extensionaliases-traits"><a class="header" href="#extensionidentifier-and-extensionaliases-traits"><code>ExtensionIdentifier</code> and <code>ExtensionAliases</code> Traits</a></h3>
+<p>In zarrs 0.23.0, codec identity and aliasing are managed through the <code>ExtensionIdentifier</code> and <code>ExtensionAliases&lt;V&gt;</code> traits.
+The <code>impl_extension_aliases!</code> macro from <code>zarrs_plugin</code> (<code>zarrs::plugin</code>) provides a convenient way to implement these traits:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">extern crate zarrs;
+</span><span class="boring">pub struct Lz4Codec { acceleration: i32 }
+</span>zarrs_plugin::impl_extension_aliases!(Lz4Codec, v3: "example.lz4");
+<span class="boring">}</span></code></pre>
+<p>This macro generates implementations for both <code>ExtensionIdentifier</code> (providing the <code>IDENTIFIER</code> constant) and <code>ExtensionAliases</code> for Zarr V2 and V3.
+The generated <code>ExtensionIdentifier::IDENTIFIER</code> constant can be used throughout your codec implementation.</p>
+<p>For more complex aliasing needs (e.g., different aliases for V2 vs V3, or regex patterns), the macro supports additional forms:</p>
+<pre><code class="language-rust ignore">// V3 aliases only
+zarrs_plugin::impl_extension_aliases!(Lz4Codec, v3: "example.lz4", ["numcodecs.lz4"]);
+
+// V2 and V3 aliases
+zarrs_plugin::impl_extension_aliases!(Lz4Codec, "example.lz4",
+    v3: "example.lz4", ["numcodecs.lz4"],
+    v2: "example.lz4", ["lz4"]
+);</code></pre>
 <h3 id="codectraits"><a class="header" href="#codectraits"><code>CodecTraits</code></a></h3>
 <p>Now we implement the <code>CodecTraits</code>, which are required for every codec.</p>
-<pre><code class="language-rust ignore">/// Unique identifier for the LZ4 codec
-pub const LZ4: &amp;str = "example.lz4";
+<pre><code class="language-rust ignore">use std::any::Any;
+use zarrs::array::codec::{
+    CodecTraits, CodecMetadataOptions, PartialDecoderCapability, PartialEncoderCapability
+};
+use zarrs::metadata::Configuration;
+use zarrs_plugin::{ExtensionIdentifier, ZarrVersion};
 
 impl CodecTraits for Lz4Codec {
-    /// Unique identifier for the codec.
-    fn identifier(&amp;self) -&gt; &amp;str {
-        LZ4
+    /// Returns self as `Any` for downcasting.
+    fn as_any(&amp;self) -&gt; &amp;dyn Any {
+        self
     }
 
     /// Create the codec configuration.
-    fn configuration_opt(
+    fn configuration(
         &amp;self,
-        _name: &amp;str,
+        _version: ZarrVersion,
         _options: &amp;CodecMetadataOptions,
     ) -&gt; Option&lt;Configuration&gt; {
-        // The into comes from the auto implementation of From&lt;T: ConfigurationSerialize&gt; for Configuration
-        Some(Lz4CodecConfiguration::new(self.acceleration).into())
+        Some(Lz4CodecConfiguration { acceleration: self.acceleration }.into())
     }
 
-    /// Indicates if the input to a codecs partial decoder should be cached for optimal performance.
-    /// If true, a cache may be inserted *before* it in a [`CodecChain`] partial decoder.
-    fn partial_decoder_should_cache_input(&amp;self) -&gt; bool {
-        false
+    /// Returns the partial decoder capability of the codec.
+    fn partial_decoder_capability(&amp;self) -&gt; PartialDecoderCapability {
+        PartialDecoderCapability {
+            partial_read: false,
+            partial_decode: false,
+        }
     }
 
-    /// Indicates if a partial decoder decodes all bytes from its input handle and its output should be cached for optimal performance.
-    /// If true, a cache will be inserted at some point *after* it in a [`CodecChain`] partial decoder.
-    fn partial_decoder_decodes_all(&amp;self) -&gt; bool {
-        true
+    /// Returns the partial encoder capability of the codec.
+    fn partial_encoder_capability(&amp;self) -&gt; PartialEncoderCapability {
+        PartialEncoderCapability {
+            partial_encode: false,
+        }
     }
 }</code></pre>
-<p>A unique identifier is defined for the LZ4 codec, which is chosen as to not conflict with a potential future codec that may be implemented in <code>zarrs</code> itself (likely <code>lz4</code>).
-This is returned by the <code>identifier()</code> method.
-The identifier is used in codec registration, and enables features such as renaming of codecs for serialisation, and supporting multiple codec aliases.</p>
-<p>The <code>configuration_opt</code> method creates the codec configuration.
-Note that this takes a <code>name</code> and <code>options</code> which are typically unneeded.
-However, there are cases where the configuration may be dependent on the codec <code>name</code>, or a runtime option could impact serialisation behaviour.</p>
-<p>While the <code>lz4</code> codec may actually support partial decoding, this needs to be implemented by the wrapper (and it may not be efficient anyway, depending on the access pattern).
-For simplicity in this example, let us indicate that partial decoding is NOT supported and make <code>partial_decoder_decodes_all()</code> return <code>true</code>.
-This ensures that a cache is inserted at the appropriate location in a partial decoder codec chain.</p>
+<p>The <code>as_any()</code> method is required for downcasting the codec to its concrete type.</p>
+<p>The <code>configuration</code> method creates the codec configuration.
+It takes a <code>version</code> and <code>options</code> parameter that can impact serialisation behaviour.</p>
+<p>The <code>partial_decoder_capability</code> and <code>partial_encoder_capability</code> methods indicate the codec’s support for partial operations.
+Since the <code>lz4</code> codec does not support partial decoding or encoding, both capabilities are set to <code>false</code>.</p>
 <h3 id="bytestobytescodectraits"><a class="header" href="#bytestobytescodectraits"><code>BytesToBytesCodecTraits</code></a></h3>
 <p>The <code>BytesToBytesCodecTraits</code> are where the encoding and decoding methods are implemented.</p>
-<pre><code class="language-rust ignore">impl BytesToBytesCodecTraits for BloscCodec {
+<pre><code class="language-rust ignore">use std::borrow::Cow;
+use std::sync::Arc;
+use zarrs::array::{ArrayBytesRaw, BytesRepresentation};
+use zarrs::array::codec::{
+    BytesToBytesCodecTraits, CodecError, CodecOptions, RecommendedConcurrency
+};
+
+impl BytesToBytesCodecTraits for Lz4Codec {
     /// Return a dynamic version of the codec.
     fn into_dyn(self: Arc&lt;Self&gt;) -&gt; Arc&lt;dyn BytesToBytesCodecTraits&gt; {
         self as Arc&lt;dyn BytesToBytesCodecTraits&gt;
@@ -1741,24 +2049,28 @@ This ensures that a cache is inserted at the appropriate location in a partial d
         &amp;self,
         decoded_representation: &amp;BytesRepresentation,
     ) -&gt; BytesRepresentation {
-        todo!()
+        // LZ4 has an upper bound on compressed size
+        // See: https://github.com/lz4/lz4/blob/dev/lib/lz4.h#L217-L226
+        todo!("Calculate LZ4_compressBound")
     }
 
     fn encode&lt;'a&gt;(
         &amp;self,
-        decoded_value: RawBytes&lt;'a&gt;,
+        decoded_value: ArrayBytesRaw&lt;'a&gt;,
         _options: &amp;CodecOptions,
-    ) -&gt; Result&lt;RawBytes&lt;'a&gt;, CodecError&gt; {
-        todo!()
+    ) -&gt; Result&lt;ArrayBytesRaw&lt;'a&gt;, CodecError&gt; {
+        // Use the lz4 crate to compress decoded_value
+        todo!("Implement LZ4 compression")
     }
 
     fn decode&lt;'a&gt;(
         &amp;self,
-        encoded_value: RawBytes&lt;'a&gt;,
+        encoded_value: ArrayBytesRaw&lt;'a&gt;,
         _decoded_representation: &amp;BytesRepresentation,
         _options: &amp;CodecOptions,
-    ) -&gt; Result&lt;RawBytes&lt;'a&gt;, CodecError&gt; {
-        todo!()
+    ) -&gt; Result&lt;ArrayBytesRaw&lt;'a&gt;, CodecError&gt; {
+        // Use the lz4 crate to decompress encoded_value
+        todo!("Implement LZ4 decompression")
     }
 }</code></pre>
 <p>In the above example, the encode and decode methods have been left as an exercise to the reader.
@@ -1776,54 +2088,45 @@ For example, the <code>blosc</code> codec in <code>zarrs</code> activates <em>co
 <p>Note that the <code>[async_]partial_decoder</code> and <code>[async_]partial_encoder</code> methods of <code>BytesToBytesCodecTraits</code> are not implemented in the above example, and the default implementations encode/decode the entire chunk.
 Partial encoding is not applicable to the <code>lz4</code> codec, but it <em>could</em> support partial decoding.
 The <code>blosc</code> codec in <code>zarrs</code> is an example of partial decoding.
-The input is always fully decoded (and is cached because <code>partial_decoder_should_cache_input()</code> returns <code>true</code>), but only requested byte ranges are decompressed.</p>
+The input is always fully decoded (and is cached), but only requested byte ranges are decompressed.</p>
 <h3 id="codec-registration"><a class="header" href="#codec-registration">Codec Registration</a></h3>
 <p><code>zarrs</code> uses <a href="https://crates.io/crates/inventory"><code>inventory</code></a> for compile time registration of codecs.
-Registration involves creating a method that is used to check if the identifier is a match, and a function that actually creates the codec from a configuration.</p>
-<pre><code class="language-rust ignore">// Register the codec.
+Registration involves implementing <code>CodecTraitsV3</code> and submitting a <code>CodecPluginV3</code>.</p>
+<pre><code class="language-rust ignore">use std::sync::Arc;
+use zarrs::array::{Codec, CodecPluginV3, CodecTraitsV3};
+use zarrs::metadata::v3::MetadataV3;
+use zarrs_plugin::{ExtensionIdentifier, PluginCreateError, PluginMetadataInvalidError};
+
+impl CodecTraitsV3 for Lz4Codec {
+    fn create(metadata: &amp;MetadataV3) -&gt; Result&lt;Codec, PluginCreateError&gt; {
+        let configuration: Lz4CodecConfiguration = metadata
+            .to_configuration()
+            .map_err(|_| PluginMetadataInvalidError::new(
+                Lz4Codec::IDENTIFIER, "codec", metadata.to_string()
+            ))?;
+        let codec = Arc::new(Lz4Codec::new_with_configuration(&amp;configuration));
+        Ok(Codec::BytesToBytes(codec))
+    }
+}
+
+// Register the codec.
 inventory::submit! {
-    CodecPlugin::new(LZ4, is_identifier_lz4, create_codec_lz4)
-}
-
-fn is_identifier_lz4(identifier: &amp;str) -&gt; bool {
-    identifier == LZ4
-}
-
-pub(crate) fn create_codec_lz4(metadata: &amp;MetadataV3) -&gt; Result&lt;Codec, PluginCreateError&gt; {
-    let configuration: Lz4Codec = metadata
-        .to_configuration()
-        .map_err(|_| PluginMetadataInvalidError::new(LZ4, "codec", metadata.clone()))?;
-    let codec = Arc::new(Lz4Codec::new_with_configuration(&amp;configuration)?);
-    Ok(Codec::BytesToBytes(codec))
+    CodecPluginV3::new::&lt;Lz4Codec&gt;()
 }</code></pre>
-<h3 id="codec-aliasing"><a class="header" href="#codec-aliasing">Codec Aliasing</a></h3>
-<p>By default, the codec <code>name</code> will be the codec <code>identifier()</code>, however that may not be desirable (especially with <code>example.lz4</code>!).</p>
-<pre><code class="language-rust ignore">assert_eq!(Lz4::new(1).default_name(), "example.lz4");</code></pre>
-<p><code>zarrs</code> includes a mechanism for setting the serialised <code>name</code> of codecs, as well as supported <code>name</code> aliases for decoding.
-By default, <code>zarrs</code> will preserve the alias if an array is rewritten, but this can be changed (see the <code>zarrs</code> global config).</p>
-<p>If the codec is confirmed to be fully compatible with <code>numcodecs.lz4</code>, its default name could be changed with a runtime configuration:</p>
-<pre><code class="language-rust ignore">global_config_mut()
-    .codec_aliases_v3_mut()
-    .default_names
-    .entry(LZ4.into())
-    .and_modify(|entry| {
-        *entry = "numcodecs.lz4".into();
-    });
-assert_eq!(Lz4::new(1).default_name(), "numcodecs.lz4");</code></pre>
-<p>Or the <code>identifier</code> could just be changed to <code>numcodecs.lz4</code>, for example.</p>
+<p>The <code>matches_name</code> function is automatically provided by the <code>impl_extension_aliases!</code> macro.</p>
+<p>zarrs 0.23.0 also supports runtime extension registration, allowing extensions to be registered dynamically rather than only at compile time.</p>
 <h3 id="ready-to-test"><a class="header" href="#ready-to-test">Ready to Test</a></h3>
 <p>At this point, the <code>lz4</code> is ready to go and could be tested for compatibility against <code>numcodecs.lz4</code> in <code>zarr-python</code>.</p>
 <p>This codec would be a great candidate for merging into <code>zarrs</code> itself.
-Using the <code>lz4</code> identifier would be recommended in this case and the default name would be set to <code>numcodecs.lz4</code> by default.
-If <code>lz4</code> were ever standardised without a <code>numcodecs.</code> prefix, then the default name could be <code>lz4</code> but an alias would remain for <code>numcodecs.lz4</code>.</p>
+Using the <code>lz4</code> identifier would be recommended in this case, with <code>numcodecs.lz4</code> as an alias.
+If <code>lz4</code> were ever standardised without a <code>numcodecs.</code> prefix, then the identifier could be <code>lz4</code> but an alias would remain for <code>numcodecs.lz4</code>.</p>
 <h2 id="array-to-array-and-array-to-bytes-codecs"><a class="header" href="#array-to-array-and-array-to-bytes-codecs">Array-to-Array and Array-to-Bytes Codecs</a></h2>
-<p>Implementing an <strong>Array-to-Array</strong> or <strong>Array-to-Bytes</strong> codec is similar, but the <code>ArrayCodecTraits</code> and <code>ArraytoArrayCodecTraits</code> or <code>ArrayToBytesCodecTraits</code> must be implemented too.</p>
+<p>Implementing an <strong>Array-to-Array</strong> or <strong>Array-to-Bytes</strong> codec is similar, but the <code>ArrayCodecTraits</code> and <code>ArrayToArrayCodecTraits</code> or <code>ArrayToBytesCodecTraits</code> must be implemented too.</p>
 <h3 id="arraycodectraits"><a class="header" href="#arraycodectraits"><code>ArrayCodecTraits</code></a></h3>
-<p><a href="https://docs.rs/zarrs/latest/zarrs/array/codec/trait.ArrayCodecTraits.html"><code>ArrayCodecTraits</code></a> has two methods.</p>
-<p><strong><code>recommended_concurrency()</code></strong> (Required)</p>
-<p>This method differs from that of <code>BytesToBytesCodecTraits</code> only in the type of the <code>decoded_representation</code> parameter.
-It takes a <a href="https://docs.rs/zarrs/latest/zarrs/array/type.ChunkRepresentation.html"><code>ChunkRepresentation</code></a> which holds a chunk shape, data type, and fill value.</p>
-<p><strong><code>partial_decode_granularity()</code></strong> (Provided)</p>
+<p><a href="https://docs.rs/zarrs_codec/latest/zarrs_codec/trait.ArrayCodecTraits.html"><code>ArrayCodecTraits</code></a> has two methods.</p>
+<p><strong><code>recommended_concurrency(shape, data_type)</code></strong> (Required)</p>
+<p>This method differs from that of <code>BytesToBytesCodecTraits</code> in that it takes a chunk <code>shape</code> and <code>data_type</code> instead of a <code>BytesRepresentation</code>.</p>
+<p><strong><code>partial_decode_granularity(shape)</code></strong> (Provided)</p>
 <p>Returns the shape of the smallest subset of a chunk that can be efficiently decoded if the chunk were subdivided into a regular grid.
 For most codecs, this is just the shape of the chunk.
 It is the shape of the “inner chunks” for the sharding codec.
@@ -1832,266 +2135,102 @@ The default implementation just returns the chunk shape.</p>
 <p>This trait is similar to <code>BytesToBytesCodecTraits</code> except the <code>encode</code> and <code>decode</code> methods input and return <a href="https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html"><code>ArrayBytes</code></a>, which can represent arrays with fixed or variable sized elements.</p>
 <p>Key methods beyond <code>encode</code> and <code>decode</code> are:</p>
 <ul>
-<li><code>encoded_data_type()</code> (required).
-<ul>
-<li>This is where a codec can put an input data type compatibility check and indicate if the data type changes on encoding.</li>
-</ul>
-</li>
-<li><code>encoded_fill_value()</code> (provided) Defaults to the input fill value.</li>
-<li><code>encoded_shape()</code> (provided) Defaults to the input shape.</li>
-<li><code>decoded_shape()</code> (provided) Defaults to the input shape.</li>
-<li><code>encoded_representation()</code> (provided) Creates a <code>ChunkRepresentation</code> from the output of <code>encoded_{data_type,fill_value,shape}()</code></li>
+<li><code>encoded_data_type(decoded_data_type)</code> (required) - validates input data type compatibility and returns the encoded data type.</li>
+<li><code>encoded_fill_value(decoded_data_type, decoded_fill_value)</code> (provided) - computes the encoded fill value. Defaults to encoding a single element.</li>
+<li><code>encoded_shape(decoded_shape)</code> (provided) - returns the encoded shape. Defaults to the input shape.</li>
+<li><code>decoded_shape(encoded_shape)</code> (provided) - returns the decoded shape. Defaults to the input shape.</li>
+<li><code>encoded_representation(shape, data_type, fill_value)</code> (provided) - creates an encoded representation from the above methods.</li>
 </ul>
 <p>Default implementations are provided for <code>[async_]partial_{encoder,decoder}</code> which encode/decode the entire chunk.</p>
 <h3 id="arraytobytescodectraits"><a class="header" href="#arraytobytescodectraits"><code>ArrayToBytesCodecTraits</code></a></h3>
-<p>This trait has a required <code>encoded_representation()</code> method that returns a a <code>BytesRepresentation</code> based on <code>ChunkRepresentation</code> parameter.
-The <code>decode()</code> and <code>encode()</code> methods transform between <a href="https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html"><code>ArrayBytes</code></a> and <a href="https://docs.rs/zarrs/latest/zarrs/array/type.RawBytes.html"><code>RawBytes</code></a>.</p>
+<p>This trait has a required <code>encoded_representation(shape, data_type, fill_value)</code> method that returns a <code>BytesRepresentation</code>.
+The <code>encode()</code> and <code>decode()</code> methods transform between <a href="https://docs.rs/zarrs/latest/zarrs/array/enum.ArrayBytes.html"><code>ArrayBytes</code></a> and <a href="https://docs.rs/zarrs/latest/zarrs/array/type.ArrayBytesRaw.html"><code>ArrayBytesRaw</code></a>, taking shape, data type, and fill value parameters.</p>
 <h2 id="custom-data-type-interaction"><a class="header" href="#custom-data-type-interaction">Custom Data Type Interaction</a></h2>
-<p>The next page deals with custom data types, however it is worth highlighting that third party codecs are expected to handle custom data types internally.</p>
-<p>A first party codec may extend <code>DataTypeExtension</code> with a new <code>codec_&lt;CODEC_NAME&gt;</code> method and a new <code>DataTypeExtension&lt;CodecName&gt;</code> trait to enable a codec to be used with custom data types.
-Currently <code>zarrs</code> has data type extension traits for the <code>bytes</code> and <code>packbits</code> codecs.
-All other codecs are either data type agnostic (e.g. <code>transpose</code>, compression codecs, etc.) or operate on a specific set of data types (e.g. <code>zfp</code>).</p>
-<blockquote class="blockquote-tag blockquote-tag-note">
-<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
-<p>If the need arises, <code>DataTypeExtension</code> may be changed in the future to better support interaction between custom data types and custom codecs.</p>
-</blockquote>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="data-type-extensions"><a class="header" href="#data-type-extensions">Data Type Extensions</a></h1>
-<p>According to the Zarr V3 specification:</p>
-<blockquote>
-<p>A data type defines the set of possible values that an array may contain.
-For example, the 32-bit signed integer data type defines binary representations for all integers in the range −2,147,483,648 to 2,147,483,647.</p>
-</blockquote>
-<p>The specification defines a limited set of data types, but additional data types can be defined as extensions.</p>
-<p><code>zarrs</code> supports a number of extension data types, many of which are registered in the <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> repository.
-This chapter explains how to create custom data types with a guided walkthrough.</p>
-<h2 id="example-the-uint4-data-type"><a class="header" href="#example-the-uint4-data-type">Example: The <code>uint4</code> Data type</a></h2>
-<p>The <code>uint4</code> data type is registered at the <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> repository.
-The specification can be read here:</p>
+<p>The previous page deals with custom data types, however it is worth highlighting that third party codecs are expected to handle custom data types internally.</p>
+<p>Some first party codecs define codec-specific data type traits to enable compatibility with custom data types.
+See the <a href="https://docs.rs/zarrs_data_type/latest/zarrs_data_type/codec_traits/index.html"><code>zarrs_data_type::codec_traits</code></a> module for the available codec data type traits:</p>
 <ul>
-<li><a href="https://github.com/zarr-developers/zarr-extensions/tree/main/data-types/uint4">https://github.com/zarr-developers/zarr-extensions/tree/main/data-types/uint4</a></li>
+<li><code>BytesDataTypeTraits</code> - for the <code>bytes</code> codec</li>
+<li><code>PackBitsDataTypeTraits</code> - for the <code>packbits</code> codec</li>
+<li><code>BitroundDataTypeTraits</code> - for the <code>bitround</code> codec</li>
+<li><code>FixedScaleOffsetDataTypeTraits</code> - for the <code>fixedscaleoffset</code> codec</li>
+<li><code>PcodecDataTypeTraits</code> - for the <code>pcodec</code> codec</li>
+<li><code>ZfpDataTypeTraits</code> - for the <code>zfp</code> codec</li>
 </ul>
-<p>In summary, it defines a 4-bit unsigned integer in the range <code>[0, 15]</code> that is supported by the <code>bytes</code> and <code>packbits</code> codecs.</p>
-<h3 id="the-datatypeuint4-struct"><a class="header" href="#the-datatypeuint4-struct">The <code>DataTypeUint4</code> Struct</a></h3>
-<p>The <code>uint4</code> data type has no configuration, so it can be represented by a unit struct:</p>
-<pre><code class="language-rust ignore">/// The `uint4` data type.
-#[derive(Debug)]
-struct DataTypeUint4;</code></pre>
-<h3 id="implementing-datatypeextension"><a class="header" href="#implementing-datatypeextension">Implementing <code>DataTypeExtension</code></a></h3>
-<p>To be used as a data type extension, <code>DataTypeUint4</code> must implement the <code>DataTypeExtension</code> trait.
-The <code>DataTypeUint4Element</code> used in these definitions is defined later on this page.
-This defines properties of the data type such as the metadata (name and configuration), size, and conversion between to and from fill values and fill value metadata.
-It has additional codec related methods detailed shortly.</p>
-<pre><code class="language-rust ignore">/// A unique identifier for `uint4` data type.
-const UINT4: &amp;'static str = "uint4";
+<p>All other codecs are either data type agnostic (e.g., <code>transpose</code>, compression codecs, etc.) or operate on a specific set of data types.</p>
+<h3 id="creating-a-custom-codec-data-type-trait"><a class="header" href="#creating-a-custom-codec-data-type-trait">Creating a Custom Codec Data Type Trait</a></h3>
+<p>If you are implementing a codec that requires data type-specific behaviour (e.g., endianness handling, bit manipulation), you can create a custom codec data type trait.
+This allows custom data types to register support for your codec.</p>
+<p>The process involves three components:</p>
+<ol>
+<li><strong>Define the trait</strong> - Create a trait that defines the data type-specific operations your codec needs</li>
+<li><strong>Generate support infrastructure</strong> - Use the <code>define_data_type_support!</code> macro to create the plugin and extension trait</li>
+<li><strong>Provide a registration macro</strong> - Create a convenience macro for data types to implement and register support (if appropriate)</li>
+</ol>
+<p>Here’s an example of how the <code>bytes</code> codec data type trait is structured:</p>
+<pre><code class="language-rust ignore">use std::borrow::Cow;
+use zarrs_metadata::Endianness;
 
-impl DataTypeExtension for DataTypeUint4 {
-    fn name(&amp;self) -&gt; String {
-        UINT4.to_string()
-    }
+/// Error type for the codec.
+#[derive(Debug, Clone, Copy, thiserror::Error)]
+#[error("endianness must be specified for multi-byte data types")]
+pub struct BytesCodecEndiannessMissingError;
 
-    fn configuration(&amp;self) -&gt; Configuration {
-        Configuration::default()
-    }
-
-    fn fill_value(
-        &amp;self,
-        fill_value_metadata: &amp;FillValueMetadataV3,
-    ) -&gt; Result&lt;FillValue, DataTypeFillValueMetadataError&gt; {
-        let err = || DataTypeFillValueMetadataError::new(self.name(), fill_value_metadata.clone());
-        let element_metadata: u64 = fill_value_metadata.as_u64().ok_or_else(err)?;
-        let element = DataTypeUint4Element::try_from(element_metadata).map_err(|_| {
-            DataTypeFillValueMetadataError::new(UINT4.to_string(), fill_value_metadata.clone())
-        })?;
-        Ok(FillValue::new(element.to_ne_bytes().to_vec()))
-    }
-
-    fn metadata_fill_value(
-        &amp;self,
-        fill_value: &amp;FillValue,
-    ) -&gt; Result&lt;FillValueMetadataV3, DataTypeFillValueError&gt; {
-        let element = DataTypeUint4Element::from_ne_bytes(
-            fill_value
-                .as_ne_bytes()
-                .try_into()
-                .map_err(|_| DataTypeFillValueError::new(self.name(), fill_value.clone()))?,
-        );
-        Ok(FillValueMetadataV3::from(element.as_u8()))
-    }
-
-    fn size(&amp;self) -&gt; zarrs::array::DataTypeSize {
-        DataTypeSize::Fixed(1)
-    }
-
-    ...
-}</code></pre>
-<h3 id="implementing-datatypeextensionbytescodec"><a class="header" href="#implementing-datatypeextensionbytescodec">Implementing <code>DataTypeExtensionBytesCodec</code></a></h3>
-<p>Supporting the <code>bytes</code> codec is absolutely trivial for the <code>uint4</code> data type.
-It simply passes through the in-memory data unmodified, since it is already a 1-byte value.</p>
-<pre><code class="language-rust ignore">impl DataTypeExtensionBytesCodec for DataTypeUint4 {
+/// The codec data type trait.
+pub trait BytesDataTypeTraits {
+    /// Encode the bytes to a specified endianness.
     fn encode&lt;'a&gt;(
         &amp;self,
-        bytes: std::borrow::Cow&lt;'a, [u8]&gt;,
-        _endianness: Option&lt;zarrs_metadata::Endianness&gt;,
-    ) -&gt; Result&lt;std::borrow::Cow&lt;'a, [u8]&gt;, DataTypeExtensionBytesCodecError&gt; {
-        Ok(bytes)
+        bytes: Cow&lt;'a, [u8]&gt;,
+        endianness: Option&lt;Endianness&gt;,
+    ) -&gt; Result&lt;Cow&lt;'a, [u8]&gt;, BytesCodecEndiannessMissingError&gt;;
+
+    /// Decode the bytes from a specified endianness.
+    fn decode&lt;'a&gt;(
+        &amp;self,
+        bytes: Cow&lt;'a, [u8]&gt;,
+        endianness: Option&lt;Endianness&gt;,
+    ) -&gt; Result&lt;Cow&lt;'a, [u8]&gt;, BytesCodecEndiannessMissingError&gt;;
+}
+
+// Generate the plugin and extension trait infrastructure
+zarrs_data_type::define_data_type_support!(Bytes);</code></pre>
+<p>The <code>define_data_type_support!(Bytes)</code> macro generates:</p>
+<ul>
+<li><code>BytesDataTypePlugin</code> - A struct for <code>inventory</code> registration</li>
+<li><code>BytesDataTypeExt</code> - An extension trait on <code>DataType</code> with a <code>codec_bytes()</code> method</li>
+</ul>
+<p>The codec can then use the extension trait to access the data type’s implementation:</p>
+<pre><code class="language-rust ignore">// In the codec's encode method:
+let bytes_encoded = data_type.codec_bytes()?.encode(bytes, self.endian)?;
+
+// In the codec's decode method:
+let bytes_decoded = data_type.codec_bytes()?.decode(bytes, self.endian)?;</code></pre>
+<p>Data types register support using the <code>register_data_type_extension_codec!</code> macro:</p>
+<pre><code class="language-rust ignore">impl BytesDataTypeTraits for MyDataType {
+    fn encode&lt;'a&gt;(
+        &amp;self,
+        bytes: Cow&lt;'a, [u8]&gt;,
+        endianness: Option&lt;Endianness&gt;,
+    ) -&gt; Result&lt;Cow&lt;'a, [u8]&gt;, BytesCodecEndiannessMissingError&gt; {
+        // Implementation...
     }
 
     fn decode&lt;'a&gt;(
         &amp;self,
-        bytes: std::borrow::Cow&lt;'a, [u8]&gt;,
-        _endianness: Option&lt;zarrs_metadata::Endianness&gt;,
-    ) -&gt; Result&lt;std::borrow::Cow&lt;'a, [u8]&gt;, DataTypeExtensionBytesCodecError&gt; {
-        Ok(bytes)
-    }
-}</code></pre>
-<p>The default implementation of <code>DataTypeExtension::codec_bytes</code> must be overriden to return <code>Ok(self)</code>:</p>
-<pre><code class="language-rust ignore">impl DataTypeExtension for DataTypeUint4 {
-    ...
-
-    fn codec_bytes(&amp;self) -&gt; Result&lt;&amp;dyn DataTypeExtensionBytesCodec, DataTypeExtensionError&gt; {
-        Ok(self)
-    }
-}</code></pre>
-<h3 id="implementing-datatypeextensionpackbitscodec"><a class="header" href="#implementing-datatypeextensionpackbitscodec">Implementing <code>DataTypeExtensionPackBitsCodec</code></a></h3>
-<p>The <code>uint4</code> data type supports the <code>packbits</code> codec as a 4-bit value.
-This can be supported by implementing the <code>DataTypeExtensionPackBitsCodec</code> trait.</p>
-<pre><code class="language-rust ignore">impl DataTypeExtensionPackBitsCodec for DataTypeUint4 {
-    fn component_size_bits(&amp;self) -&gt; u64 {
-        4
-    }
-
-    fn num_components(&amp;self) -&gt; u64 {
-        1
-    }
-
-    fn sign_extension(&amp;self) -&gt; bool {
-        false
-    }
-}</code></pre>
-<p>In this case, the trait methods signify that the data type:</p>
-<ul>
-<li>has 1 component,</li>
-<li>a component size of 4 bits, and</li>
-<li>it is unsigned and does not need sign extension.</li>
-</ul>
-<p>The default implementation of <code>DataTypeExtension::codec_packbits</code> must be overriden to return <code>Ok(self)</code>:</p>
-<pre><code class="language-rust ignore">impl DataTypeExtension for DataTypeUint4 {
-    ...
-
-    fn codec_packbits(
-        &amp;self,
-    ) -&gt; Result&lt;&amp;dyn DataTypeExtensionPackBitsCodec, DataTypeExtensionError&gt; {
-        Ok(self)
-    }
-}</code></pre>
-<h3 id="registering-the-uint4-data-type"><a class="header" href="#registering-the-uint4-data-type">Registering the <code>uint4</code> Data Type</a></h3>
-<p>A data type must be registered as a <code>DataTypePlugin</code> to be used in an <code>Array</code>.</p>
-<pre><code class="language-rust ignore">// Register the data type so that it can be recognised when opening arrays.
-inventory::submit! {
-    DataTypePlugin::new(UINT4, is_uint4_dtype, create_uint4_dtype)
-}
-
-fn is_uint4_dtype(name: &amp;str) -&gt; bool {
-    name == UINT4
-}
-
-fn create_uint4_dtype(
-    metadata: &amp;MetadataV3,
-) -&gt; Result&lt;Arc&lt;dyn DataTypeExtension&gt;, PluginCreateError&gt; {
-    if metadata.configuration_is_none_or_empty() {
-        Ok(Arc::new(DataTypeUint4))
-    } else {
-        Err(PluginMetadataInvalidError::new(UINT4, "data_type", metadata.to_string()).into())
-    }
-}</code></pre>
-<h3 id="the-datatypeuint4element-struct"><a class="header" href="#the-datatypeuint4element-struct">The <code>DataTypeUint4Element</code> Struct</a></h3>
-<p>The most suitable in-memory representation of a <code>uint4</code> data type element is a <code>u8</code>.</p>
-<pre><code class="language-rust ignore">/// The in-memory representation of the `uint4` data type.
-#[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
-struct DataTypeUint4Element(u8);</code></pre>
-<p>A data type element must implement the <code>Element</code> trait to be used in <code>Array::store_*_as_elements</code> methods.</p>
-<pre><code class="language-rust ignore"><span class="boring">#[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
-</span><span class="boring">struct DataTypeUint4Element(u8);
-</span>/// This defines how an in-memory DataTypeUint4Element is converted into ArrayBytes before encoding via the codec pipeline.
-impl Element for DataTypeUint4Element {
-    fn validate_data_type(data_type: &amp;DataType) -&gt; Result&lt;(), ArrayError&gt; {
-        (data_type == &amp;DataType::Extension(Arc::new(DataTypeUint4Element)))
-            .then_some(())
-            .ok_or(ArrayError::IncompatibleElementType)
-    }
-
-    fn into_array_bytes&lt;'a&gt;(
-        data_type: &amp;DataType,
-        elements: &amp;'a [Self],
-    ) -&gt; Result&lt;zarrs::array::ArrayBytes&lt;'a&gt;, ArrayError&gt; {
-        Self::validate_data_type(data_type)?;
-        // Maybe this could be a transmute instead &amp;[DataTypeUint4Element(u8)] -&gt; Cow::Borrowed(&amp;[u8])
-        let mut bytes: Vec&lt;u8&gt; =
-            Vec::with_capacity(elements.len() * size_of::&lt;DataTypeUint4Element&gt;());
-        for element in elements {
-            bytes.push(element.0);
-        }
-        Ok(ArrayBytes::Fixed(Cow::Owned(bytes)))
-    }
-}</code></pre>
-<p>A data type element must implement the <code>ElementOwned</code> trait to be used in <code>Array::retrieve_*_as_elements</code> methods.</p>
-<pre><code class="language-rust ignore"><span class="boring">#[derive(serde::Deserialize, Clone, Copy, Debug, PartialEq)]
-</span><span class="boring">struct DataTypeUint4Element(u8);
-</span>/// This defines how ArrayBytes are converted into a DataTypeUint4Element after decoding via the codec pipeline.
-impl zarrs::array::ElementOwned for DataTypeUint4Element {
-    fn from_array_bytes(
-        data_type: &amp;zarrs::array::DataType,
-        bytes: zarrs::array::ArrayBytes&lt;'_&gt;,
-    ) -&gt; Result&lt;Vec&lt;Self&gt;, zarrs::array::ArrayError&gt; {
-        Self::validate_data_type(data_type)?;
-        let bytes = bytes.into_fixed()?;
-        let bytes_len = bytes.len();
-        let mut elements = Vec::with_capacity(bytes_len / size_of::&lt;DataTypeUint4Element&gt;());
-        for byte in bytes.iter() {
-            // TODO: Should not construct DataTypeUint4Element this way as it could represent a
-            // value outside of [0, 15]. Set upper bits in the byte to 0?
-            elements.push(DataTypeUint4Element(*byte))
-        }
-        Ok(elements)
-    }
-}</code></pre>
-<p>Some non-essential utility methods were defined for <code>DataTypeUint4</code> and used in the snippets above:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">#[derive(serde::Deserialize, Clone, Copy, Debug, PartialEq)]
-</span><span class="boring">struct DataTypeUint4Element(u8);
-</span>impl DataTypeUint4Element {
-    fn to_ne_bytes(&amp;self) -&gt; [u8; 1] {
-        [self.0]
-    }
-
-    fn from_ne_bytes(bytes: &amp;[u8; 1]) -&gt; Self {
-        Self(bytes[0])
-    }
-
-    fn as_u8(&amp;self) -&gt; u8 {
-        self.0
+        bytes: Cow&lt;'a, [u8]&gt;,
+        endianness: Option&lt;Endianness&gt;,
+    ) -&gt; Result&lt;Cow&lt;'a, [u8]&gt;, BytesCodecEndiannessMissingError&gt; {
+        // Implementation...
     }
 }
-<span class="boring">}</span></code></pre>
-<h2 id="more-examples"><a class="header" href="#more-examples">More Examples</a></h2>
-<p>The <code>zarrs</code> repository includes multiple custom data type examples:</p>
-<ul>
-<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_uint12.rs">custom_data_type_uint12.rs</a></li>
-<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_uint4.rs">custom_data_type_uint4.rs</a></li>
-<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_float8_e3m4.rs">custom_data_type_float8_e3m4.rs</a></li>
-<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_fixed_size.rs">custom_data_type_fixed_size.rs</a></li>
-<li><a href="https://github.com/zarrs/zarrs/blob/main/zarrs/examples/custom_data_type_variable_size.rs">custom_data_type_variable_size.rs</a></li>
-</ul>
-<h2 id="contributing-new-data-types-to-zarrs"><a class="header" href="#contributing-new-data-types-to-zarrs">Contributing New Data Types to <code>zarrs</code></a></h2>
-<p>The <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> repository is always growing with new Zarr extensions.
-The conformance of <code>zarrs</code> to <a href="https://github.com/zarr-developers/zarr-extensions"><code>zarr-extensions</code></a> is tracked in this issue:</p>
-<ul>
-<li><a href="https://github.com/zarrs/zarrs/issues/191">https://github.com/zarrs/zarrs/issues/191</a></li>
-</ul>
-<p>Contributions are welcomed to support additional data types.
-With a little bit of polish, the <code>uint4</code> example above could be included in <code>zarrs</code> itself (if it isn’t already)!</p>
+
+zarrs_data_type::register_data_type_extension_codec!(
+    MyDataType,
+    BytesDataTypePlugin,
+    BytesDataTypeTraits
+);</code></pre>
+<p>First party codecs typically provide convenience macros (e.g., <code>impl_bytes_data_type_traits!</code>) that implement the trait and register support in one step.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="zarrs_tools-1"><a href="#zarrs_tools-1" class="header">zarrs_tools</a></h1>
 <h3 id="zarrs_tools"><a class="header" href="#zarrs_tools"><code>zarrs_tools</code> <a href="https://crates.io/crates/zarrs_tools"><img src="https://img.shields.io/crates/v/zarrs_tools.svg" alt="zarrs_tools_ver"></a> <a href="https://docs.rs/zarrs_tools"><img src="https://docs.rs/zarrs_tools/badge.svg" alt="zarrs_tools_doc"></a></a></h3>

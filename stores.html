@@ -38,10 +38,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ce85899b.js";
+            window.path_to_searchindex_js = "searchindex-d44daf2e.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4822247b.js"></script>
+        <script src="toc-237a0102.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -199,7 +199,7 @@ In subsequent chapters, async API method calls are shown commented out below the
 <h3 id="memory"><a class="header" href="#memory">Memory</a></h3>
 <p><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_storage"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__storage-GitHub-blue?logo=github" alt="zarrs_storage_repo"></a> <a href="https://crates.io/crates/zarrs_storage"><img src="https://img.shields.io/crates/v/zarrs_storage" alt="zarrs_storage_ver"></a> <a href="https://docs.rs/zarrs_storage"><img src="https://docs.rs/zarrs_storage/badge.svg" alt="zarrs_storage_doc"></a></p>
 <p><a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/store/struct.MemoryStore.html"><code>MemoryStore</code></a> is a synchronous in-memory store available in the <a href="https://docs.rs/zarrs_storage/latest/zarrs_storage/"><code>zarrs_storage</code></a> crate (re-exported as <code>zarrs::storage</code>).</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;
@@ -212,7 +212,7 @@ let store: ReadableWritableListableStorage = Arc::new(MemoryStore::new());
 <h3 id="filesystem"><a class="header" href="#filesystem">Filesystem</a></h3>
 <p><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_filesystem"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__filesystem-GitHub-blue?logo=github" alt="zarrs_filesystem_repo"></a> <a href="https://crates.io/crates/zarrs_filesystem"><img src="https://img.shields.io/crates/v/zarrs_filesystem" alt="zarrs_filesystem_ver"></a> <a href="https://docs.rs/zarrs_filesystem"><img src="https://docs.rs/zarrs_filesystem/badge.svg" alt="zarrs_filesystem_doc"></a></p>
 <p><a href="https://docs.rs/zarrs_filesystem/latest/zarrs_filesystem/struct.FilesystemStore.html"><code>FilesystemStore</code></a> is a synchronous filesystem store available in the <a href="https://docs.rs/zarrs_filesystem/latest/zarrs_filesystem/"><code>zarrs_filesystem</code></a> crate (re-exported as <code>zarrs::filesystem</code> with the <code>filesystem</code> feature).</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;
@@ -231,7 +231,7 @@ Currently the only option available for filesystem stores is whether or not to e
 <h3 id="http"><a class="header" href="#http">HTTP</a></h3>
 <p><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_http"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__http-GitHub-blue?logo=github" alt="zarrs_http_repo"></a> <a href="https://crates.io/crates/zarrs_http"><img src="https://img.shields.io/crates/v/zarrs_http" alt="zarrs_http_ver"></a> <a href="https://docs.rs/zarrs_http"><img src="https://docs.rs/zarrs_http/badge.svg" alt="zarrs_http_doc"></a></p>
 <p><a href="https://docs.rs/zarrs_http/latest/zarrs_http/struct.HTTPStore.html"><code>HTTPStore</code></a> is a read-only synchronous HTTP store available in the <a href="https://docs.rs/zarrs_http/latest/zarrs_http/"><code>zarrs_http</code></a> crate.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate zarrs_http;
@@ -261,7 +261,7 @@ Supported object stores include:</p>
 <li>Custom implementations</li>
 </ul>
 <p><a href="https://docs.rs/zarrs_object_store/latest/zarrs_object_store/struct.AsyncObjectStore.html"><code>zarrs_object_store::AsyncObjectStore</code></a> wraps <a href="https://docs.rs/object_store/0.11.0/object_store/trait.ObjectStore.html"><code>object_store::ObjectStore</code></a> stores.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate zarrs_object_store;
@@ -283,7 +283,7 @@ let store: AsyncReadableStorage = Arc::new(AsyncObjectStore::new(store));
 <p>The <a href="https://crates.io/crates/opendal"><code>opendal</code></a> crate offers a unified data access layer, empowering users to seamlessly and efficiently retrieve data from diverse storage services.
 It supports a huge range of <a href="https://docs.rs/opendal/latest/opendal/services/index.html">services</a> and <a href="https://docs.rs/opendal/latest/opendal/layers/index.html">layers</a> to extend their behaviour.</p>
 <p><a href="https://docs.rs/zarrs_opendal/latest/zarrs_opendal/struct.AsyncOpendalStore.html"><code>zarrs_object_store::AsyncOpendalStore</code></a> wraps <a href="https://docs.rs/opendal/0.50.2/opendal/struct.Operator.html"><code>opendal::Operator</code></a>.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate zarrs_opendal;
@@ -312,7 +312,7 @@ It enables <code>git</code>-like functionality for array data.</p>
 <h3 id="zip"><a class="header" href="#zip">Zip</a></h3>
 <p><a href="https://github.com/zarrs/zarrs_zip"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__zip-GitHub-blue?logo=github" alt="zarrs_zip_repo"></a> <a href="https://crates.io/crates/zarrs_zip"><img src="https://img.shields.io/crates/v/zarrs_zip" alt="zarrs_zip_ver"></a> <a href="https://docs.rs/zarrs_zip"><img src="https://docs.rs/zarrs_zip/badge.svg" alt="zarrs_zip_doc"></a></p>
 <p>A storage adapter for zip files.</p>
-<pre class="playground"><code class="language-rust no_run edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs_storage;
 </span><span class="boring">extern crate zarrs_filesystem;
@@ -334,7 +334,7 @@ let zip_store = Arc::new(ZipStorageAdapter::new(fs_store, zip_key)?);
 <p>Asynchronous stores can be used in a synchronous context with the <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/async_to_sync/struct.AsyncToSyncStorageAdapter.html"><code>zarrs::storage::AsyncToSyncStorageAdapter</code></a>.</p>
 <p>The <code>AsyncToSyncBlockOn</code> trait must be implemented for a runtime or runtime handle in order to block on futures.
 See the below <code>tokio</code> example:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span>use zarrs::storage::storage_adapter::async_to_sync::AsyncToSyncBlockOn;
@@ -347,7 +347,7 @@ impl AsyncToSyncBlockOn for TokioBlockOn {
     }
 }
 <span class="boring">}</span></code></pre>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate zarrs_opendal;
@@ -382,7 +382,7 @@ let store: ReadableStorage =
 <h3 id="usage-log"><a class="header" href="#usage-log">Usage Log</a></h3>
 <p>The <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/usage_log/struct.UsageLogStorageAdapter.html"><code>zarrs::storage::UsageLogStorageAdapter</code></a> logs storage method calls.</p>
 <p>It is intended to aid in debugging and optimising performance by revealing storage access patterns.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">extern crate chrono;
@@ -403,7 +403,7 @@ let store = Arc::new(UsageLogStorageAdapter::new(store, log_writer, || {
 <h3 id="performance-metrics"><a class="header" href="#performance-metrics">Performance Metrics</a></h3>
 <p>The <a href="https://docs.rs/zarrs_storage/0.2.2/zarrs_storage/storage_adapter/performance_metrics/struct.PerformanceMetricsStorageAdapter.html"><code>zarrs::storage::PerformanceMetricsStorageAdapter</code></a> accumulates metrics, such as bytes read and written.</p>
 <p>It is intended to aid in testing by allowing the application to validate that metrics (e.g., bytes read/written, total read/write operations) match expected values for specific operations.</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use std::sync::Arc;

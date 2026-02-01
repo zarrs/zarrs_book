@@ -38,10 +38,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ce85899b.js";
+            window.path_to_searchindex_js = "searchindex-d44daf2e.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4822247b.js"></script>
+        <script src="toc-237a0102.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -187,7 +187,7 @@
 For a group, the metadata document contains the Zarr Version and optional user attributes.</p>
 <h2 id="opening-an-existing-group"><a class="header" href="#opening-an-existing-group">Opening an Existing Group</a></h2>
 <p>An existing group can be opened with <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.open"><code>Group::open</code></a> (or <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.async_open"><code>async_open</code></a>):</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -206,7 +206,7 @@ If you only want to open a specific Zarr version, see <a href="https://docs.rs/z
 <h2 id="creating-attributes"><a class="header" href="#creating-attributes">Creating Attributes</a></h2>
 <p>Attributes are encoded in a JSON object (<code>serde_json::Object</code>).</p>
 <p>Here are a few different approaches for constructing a JSON object:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let value = serde_json::json!({
     "spam": "ham",
@@ -216,7 +216,7 @@ let attributes: serde_json::Map&lt;String, serde_json::Value&gt; =
     serde_json::json!(value).as_object().unwrap().clone();
 let serde_json::Value::Object(attributes) = value else { unreachable!() };
 <span class="boring">}</span></code></pre>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate serde_json;
 </span><span class="boring">use serde_json::Value;
@@ -230,7 +230,7 @@ attributes.insert("eggs".to_string(), Value::Number(42.into()));
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
 <p>The <code>GroupBuilder</code> only supports Zarr V3 groups.</p>
 </blockquote>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">let store = std::sync::Arc::new(zarrs::storage::store::MemoryStore::new());
 </span><span class="boring">let attributes = serde_json::Map::default();
@@ -252,7 +252,7 @@ The presence of valid metadata can act as a signal that the data is ready.</p>
 </blockquote>
 <h2 id="creating-a-group-from-groupmetadata"><a class="header" href="#creating-a-group-from-groupmetadata">Creating a Group from <code>GroupMetadata</code></a></h2>
 <h3 id="zarr-v3"><a class="header" href="#zarr-v3">Zarr V3</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -270,7 +270,7 @@ group.store_metadata()?;
 // group.async_store_metadata().await?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -299,7 +299,7 @@ group.store_metadata()?;
 <span class="boring">Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <h3 id="zarr-v2"><a class="header" href="#zarr-v2">Zarr V2</a></h3>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern crate zarrs;
 </span><span class="boring">use zarrs::group::Group;
@@ -318,7 +318,7 @@ group.store_metadata()?;
 </span><span class="boring">}</span></code></pre>
 <h2 id="mutating-group-metadata"><a class="header" href="#mutating-group-metadata">Mutating Group Metadata</a></h2>
 <p>Group attributes can be changed after initialisation with <a href="https://docs.rs/zarrs/latest/zarrs/group/struct.Group.html#method.attributes_mut"><code>Group::attributes_mut</code></a>:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">extern  crate zarrs;
 </span><span class="boring">use zarrs::metadata::{GroupMetadata, v2::GroupMetadataV2};
