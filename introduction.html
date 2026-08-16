@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f325f904.js";
+            window.path_to_searchindex_js = "searchindex-dab2c26c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5a1e85ad.js"></script>
@@ -189,6 +189,7 @@ If you don’t know what Zarr is, check out:</p>
 </ul>
 <p><code>zarrs</code> was originally designed exclusively as a Rust library for Zarr V3.
 However, it now supports a V3 compatible subset of Zarr V2, and has Python and C/C++ bindings.
+The community has since built <code>zarrs</code>-backed bindings for <a href="#community-third-party">other languages</a>, such as MATLAB, R, and Julia.
 This book details the Rust implementation.</p>
 <h2 id="-zarrs-is-fast-"><a class="header" href="#-zarrs-is-fast-">🚀 <code>zarrs</code> is Fast 🚀</a></h2>
 <p>The <a href="https://github.com/zarrs/zarr_benchmarks"><img src="https://img.shields.io/badge/zarrs/zarr__benchmarks-GitHub-blue?logo=github" alt="zarr_benchmarks"></a> repository includes benchmarks of <code>zarrs</code> against other Zarr V3 implementations.
@@ -217,7 +218,8 @@ It is under active development and new extensions are regularly being introduced
 <li>stay up-to-date with unstable public dependencies (e.g. <code>opendal</code>, <code>object_store</code>, <code>icechunk</code>, etc) without impacting the release cycle of <code>zarrs</code>, and</li>
 <li>improve compilation times.</li>
 </ul>
-<p>Below is an overview of the crate structure:
+<p>Below is an overview of the crate structure.
+Crates highlighted in orange are <a href="#community-third-party">community (third party)</a> projects.
 <object data="./crates.svg" type="image/svg+xml"></object></p>
 <p>The core crate is:</p>
 <ul>
@@ -230,13 +232,20 @@ It is under active development and new extensions are regularly being introduced
 <li><code>zarrs_metadata_ext</code> <a href="https://crates.io/crates/zarrs_metadata_ext"><img src="https://img.shields.io/crates/v/zarrs_metadata_ext" alt="zarrs_metadata_ext_ver"></a> <a href="https://docs.rs/zarrs_metadata_ext"><img src="https://docs.rs/zarrs_metadata_ext/badge.svg" alt="zarrs_metadata_ext_doc"></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_metadata_ext"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__metadata_ext-GitHub-blue?logo=github" alt="zarrs_metadata_ext_repo"></a></li>
 <li><code>zarrs_storage</code> <a href="https://crates.io/crates/zarrs_storage"><img src="https://img.shields.io/crates/v/zarrs_storage" alt="zarrs_storage_ver"></a> <a href="https://docs.rs/zarrs_storage"><img src="https://docs.rs/zarrs_storage/badge.svg" alt="zarrs_storage_doc"></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_storage"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__storage-GitHub-blue?logo=github" alt="zarrs_storage_repo"></a></li>
 <li><code>zarrs_plugin</code> <a href="https://crates.io/crates/zarrs_plugin"><img src="https://img.shields.io/crates/v/zarrs_plugin" alt="zarrs_plugin_ver"></a> <a href="https://docs.rs/zarrs_plugin"><img src="https://docs.rs/zarrs_plugin/badge.svg" alt="zarrs_plugin_doc"></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_plugin"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__plugin-GitHub-blue?logo=github" alt="zarrs_plugin_repo"></a></li>
+</ul>
+<p>Most Zarr <a href="./extensions.html">extension points</a> also have their own API crate:</p>
+<ul>
 <li><code>zarrs_data_type</code> <a href="https://crates.io/crates/zarrs_data_type"><img src="https://img.shields.io/crates/v/zarrs_data_type" alt="zarrs_data_type_ver"></a> <a href="https://docs.rs/zarrs_data_type"><img src="https://docs.rs/zarrs_data_type/badge.svg" alt="zarrs_data_type_doc"></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_data_type"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__data_type-GitHub-blue?logo=github" alt="zarrs_data_type_repo"></a></li>
-<li><code>zarrs_registry</code> <a href="https://crates.io/crates/zarrs_registry"><img src="https://img.shields.io/crates/v/zarrs_registry" alt="zarrs_registry_ver"></a> <a href="https://docs.rs/zarrs_registry"><img src="https://docs.rs/zarrs_registry/badge.svg" alt="zarrs_registry_doc"></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_registry"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__registry-GitHub-blue?logo=github" alt="zarrs_registry_repo"></a></li>
+<li><code>zarrs_codec</code> <a href="https://crates.io/crates/zarrs_codec"><img src="https://img.shields.io/crates/v/zarrs_codec" alt="zarrs_codec_ver"></a> <a href="https://docs.rs/zarrs_codec"><img src="https://docs.rs/zarrs_codec/badge.svg" alt="zarrs_codec_doc"></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_codec"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__codec-GitHub-blue?logo=github" alt="zarrs_codec_repo"></a></li>
+<li><code>zarrs_chunk_grid</code> <a href="https://crates.io/crates/zarrs_chunk_grid"><img src="https://img.shields.io/crates/v/zarrs_chunk_grid" alt="zarrs_chunk_grid_ver"></a> <a href="https://docs.rs/zarrs_chunk_grid"><img src="https://docs.rs/zarrs_chunk_grid/badge.svg" alt="zarrs_chunk_grid_doc"></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_chunk_grid"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__chunk__grid-GitHub-blue?logo=github" alt="zarrs_chunk_grid_repo"></a></li>
+<li><code>zarrs_chunk_key_encoding</code> <a href="https://crates.io/crates/zarrs_chunk_key_encoding"><img src="https://img.shields.io/crates/v/zarrs_chunk_key_encoding" alt="zarrs_chunk_key_encoding_ver"></a> <a href="https://docs.rs/zarrs_chunk_key_encoding"><img src="https://docs.rs/zarrs_chunk_key_encoding/badge.svg" alt="zarrs_chunk_key_encoding_doc"></a> <a href="https://github.com/zarrs/zarrs/tree/main/zarrs_chunk_key_encoding"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__chunk__key__encoding-GitHub-blue?logo=github" alt="zarrs_chunk_key_encoding_repo"></a></li>
 </ul>
 <blockquote class="blockquote-tag blockquote-tag-tip">
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
-<p>The supplementary crates are transitive dependencies of <code>zarrs</code>, and are re-exported in the crate root.
-You do not need to add them as direct dependencies.</p>
+<p>The supplementary crates are transitive dependencies of <code>zarrs</code>, and are re-exported by it.
+You do not need to add them as direct dependencies.
+The extension point API crates are re-exported as <code>zarrs::array::{data_type,codec,chunk_grid,chunk_key_encoding}::api</code>, and their key types are re-exported directly in <code>zarrs::array</code>.
+The storage transformer API is the exception: it lives in <code>zarrs</code> itself as <code>zarrs::array::storage_transformer</code>.</p>
 </blockquote>
 <blockquote class="blockquote-tag blockquote-tag-note">
 <p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
@@ -261,6 +270,82 @@ This crate is detailed in the <a href="./zarrs_tools.html">zarrs_tools</a> chapt
 <p>A Rust library for <a href="https://ngff.openmicroscopy.org/latest/">OME-Zarr</a> (previously OME-NGFF) metadata.</p>
 <p>OME-Zarr, formerly known as OME-NGFF (Open Microscopy Environment Next Generation File Format), is a specification designed to support modern scientific imaging needs.
 It is widely used in microscopy, bioimaging, and other scientific fields requiring high-dimensional data management, visualisation, and analysis.</p>
+<h2 id="community-third-party"><a class="header" href="#community-third-party">Community (Third Party)</a></h2>
+<p>A growing ecosystem of projects builds on <code>zarrs</code>: bindings that expose it to other languages, and crates that extend it with additional stores, codecs, conventions, and format support.</p>
+<blockquote class="blockquote-tag blockquote-tag-note">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>The projects in this section are developed and maintained by the community, independently of <code>zarrs</code>.
+Zarr feature coverage, maturity, and support vary considerably, so consult each project’s own documentation.
+Please <a href="https://github.com/zarrs/zarrs_book/issues">open an issue</a> to add a project to this list.</p>
+</blockquote>
+<h3 id="language-bindings"><a class="header" href="#language-bindings">Language Bindings</a></h3>
+<ul>
+<li><code>zarrista</code> (Python) <a href="https://pypi.org/project/zarrista/"><img src="https://img.shields.io/pypi/v/zarrista" alt="zarrista_ver"></a> <a href="https://developmentseed.org/zarrista"><img src="https://img.shields.io/badge/docs-developmentseed.org-blue" alt="zarrista_doc"></a> <a href="https://github.com/developmentseed/zarrista"><img src="https://img.shields.io/badge/developmentseed/zarrista-GitHub-blue?logo=github" alt="zarrista_repo"></a></li>
+<li><code>zarr-matlab</code> (MATLAB) <a href="https://github.com/scalableminds/zarr-matlab"><img src="https://img.shields.io/badge/scalableminds/zarr--matlab-GitHub-blue?logo=github" alt="zarr_matlab_repo"></a></li>
+<li><code>pizzarr</code> (R) <a href="https://cran.r-project.org/package=pizzarr"><img src="https://www.r-pkg.org/badges/version/pizzarr" alt="pizzarr_ver"></a> <a href="https://zarr.dev/pizzarr/"><img src="https://img.shields.io/badge/docs-zarr.dev/pizzarr-blue" alt="pizzarr_doc"></a> <a href="https://github.com/zarr-developers/pizzarr"><img src="https://img.shields.io/badge/zarr--developers/pizzarr-GitHub-blue?logo=github" alt="pizzarr_repo"></a></li>
+<li><code>Rzarrs</code> (R) <a href="https://github.com/RGenomicsETL/Rzarrs"><img src="https://img.shields.io/badge/RGenomicsETL/Rzarrs-GitHub-blue?logo=github" alt="Rzarrs_repo"></a></li>
+<li><code>Zarrs.jl</code> (Julia) <a href="https://github.com/earth-mover/Zarrs.jl"><img src="https://img.shields.io/badge/earth--mover/Zarrs.jl-GitHub-blue?logo=github" alt="Zarrs_jl_repo"></a></li>
+</ul>
+<h4 id="zarrista-python"><a class="header" href="#zarrista-python"><code>zarrista</code> (Python)</a></h4>
+<p>A low-level Zarr API for Python built directly on <code>zarrs</code>, in the style of <code>zarrita</code>.
+Unlike <a href="#python-bindings-zarrs-python"><code>zarrs-python</code></a>, which slots a <code>zarrs</code>-backed codec pipeline underneath <code>zarr-python</code>, <code>zarrista</code> exposes <code>zarrs</code> itself: it has its own API with synchronous and asynchronous variants, zero-copy <code>numpy</code> interoperability, and support for <code>icechunk</code> and <code>object_store</code> stores.
+The Python API is not yet stable.</p>
+<h4 id="zarr-matlab-matlab"><a class="header" href="#zarr-matlab-matlab"><code>zarr-matlab</code> (MATLAB)</a></h4>
+<p>A Zarr V2 and V3 implementation for MATLAB based on <code>zarrs</code>, which is called through a Rust MEX layer.
+It supports reading and writing arrays and groups, chunking and sharding, a range of codecs, and filesystem and read-only HTTP stores.</p>
+<h4 id="pizzarr-r"><a class="header" href="#pizzarr-r"><code>pizzarr</code> (R)</a></h4>
+<p>A Zarr implementation for R that ships in two builds of the same version.
+The CRAN build is pure R with no compiled dependencies, whereas the <a href="https://zarr-developers.r-universe.dev/pizzarr">r-universe</a> build links <code>zarrs</code> through <a href="https://extendr.github.io/"><code>extendr</code></a> as a backend, adding parallel decompression, additional codec support, and cloud stores.</p>
+<h4 id="rzarrs-r"><a class="header" href="#rzarrs-r"><code>Rzarrs</code> (R)</a></h4>
+<p>R bindings to <code>zarrs</code> through the <a href="https://github.com/yutannihilation/savvy"><code>savvy</code></a> crate, distributed via <a href="https://sounkou-bioinfo.r-universe.dev/Rzarrs">r-universe</a>.
+It is reader-first, supporting filesystem, HTTP/HTTPS, S3, and <code>.zarr.zip</code> stores.</p>
+<h4 id="zarrsjl-julia"><a class="header" href="#zarrsjl-julia"><code>Zarrs.jl</code> (Julia)</a></h4>
+<p>Zarr V2 and V3 arrays for Julia backed by <code>zarrs</code> through a C FFI shim, including <code>icechunk</code> support.</p>
+<blockquote class="blockquote-tag blockquote-tag-note">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p><code>Zarrs.jl</code> is experimental.
+Its README recommends <a href="https://github.com/JuliaIO/Zarr.jl"><code>Zarr.jl</code></a> if a mature pure-Julia implementation is needed.</p>
+</blockquote>
+<h3 id="extension-crates"><a class="header" href="#extension-crates">Extension Crates</a></h3>
+<p>These crates extend <code>zarrs</code> through its <a href="./extensions.html">extension points</a> and <a href="./stores.html">storage API</a>.</p>
+<ul>
+<li><code>zarrs_n5</code> <a href="https://crates.io/crates/zarrs_n5"><img src="https://img.shields.io/crates/v/zarrs_n5" alt="zarrs_n5_ver"></a> <a href="https://docs.rs/zarrs_n5"><img src="https://docs.rs/zarrs_n5/badge.svg" alt="zarrs_n5_doc"></a> <a href="https://github.com/clbarnes/zarrs_n5"><img src="https://img.shields.io/badge/clbarnes/zarrs__n5-GitHub-blue?logo=github" alt="zarrs_n5_repo"></a>
+<ul>
+<li>Read-only <a href="https://github.com/saalfeldlab/n5">N5</a> support, including the <code>gzip</code>, <code>bzip2</code>, <code>zstd</code>, and <code>blosc</code> N5 compressors.</li>
+</ul>
+</li>
+<li><code>zarrs_conventions</code> <a href="https://crates.io/crates/zarrs_conventions"><img src="https://img.shields.io/crates/v/zarrs_conventions" alt="zarrs_conventions_ver"></a> <a href="https://docs.rs/zarrs_conventions"><img src="https://docs.rs/zarrs_conventions/badge.svg" alt="zarrs_conventions_doc"></a> <a href="https://github.com/clbarnes/zarrs_conventions"><img src="https://img.shields.io/badge/clbarnes/zarrs__conventions-GitHub-blue?logo=github" alt="zarrs_conventions_repo"></a>
+<ul>
+<li>An implementation of the <a href="https://github.com/zarr-conventions/zarr-conventions-spec">zarr-conventions</a> specification, which standardises how conventions are declared in Zarr attributes.</li>
+<li>Companion crates implement individual conventions:
+<ul>
+<li><code>zarrs_conventions_license</code> <a href="https://crates.io/crates/zarrs_conventions_license"><img src="https://img.shields.io/crates/v/zarrs_conventions_license" alt="zarrs_conventions_license_ver"></a> <a href="https://docs.rs/zarrs_conventions_license"><img src="https://docs.rs/zarrs_conventions_license/badge.svg" alt="zarrs_conventions_license_doc"></a> implements the <a href="https://github.com/clbarnes/zarr-convention-license">license</a> convention, which communicates the licence(s) of the data in a group or array.</li>
+<li><code>zarrs_conventions_thumbnails</code> <a href="https://crates.io/crates/zarrs_conventions_thumbnails"><img src="https://img.shields.io/crates/v/zarrs_conventions_thumbnails" alt="zarrs_conventions_thumbnails_ver"></a> <a href="https://docs.rs/zarrs_conventions_thumbnails"><img src="https://docs.rs/zarrs_conventions_thumbnails/badge.svg" alt="zarrs_conventions_thumbnails_doc"></a> implements the <a href="https://github.com/clbarnes/zarr-convention-thumbnails">thumbnails</a> convention, which references images representing a node for use in galleries and previews.</li>
+<li><code>zarrs_conventions_uom</code> <a href="https://crates.io/crates/zarrs_conventions_uom"><img src="https://img.shields.io/crates/v/zarrs_conventions_uom" alt="zarrs_conventions_uom_ver"></a> <a href="https://docs.rs/zarrs_conventions_uom"><img src="https://docs.rs/zarrs_conventions_uom/badge.svg" alt="zarrs_conventions_uom_doc"></a> implements the <a href="https://github.com/clbarnes/zarr-convention-uom">units of measure</a> convention, which communicates the units of a numeric array.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>ndic-zarr</code> <a href="https://crates.io/crates/ndic-zarr"><img src="https://img.shields.io/crates/v/ndic-zarr" alt="ndic_zarr_ver"></a> <a href="https://docs.rs/ndic-zarr"><img src="https://docs.rs/ndic-zarr/badge.svg" alt="ndic_zarr_doc"></a> <a href="https://github.com/fideus-labs/nd-image-codecs"><img src="https://img.shields.io/badge/fideus--labs/nd--image--codecs-GitHub-blue?logo=github" alt="ndic_zarr_repo"></a>
+<ul>
+<li>Zarr V3 codecs for multidimensional scientific images: <code>nd_lift</code>, <code>htj2k</code>, and <code>nd_zfp</code>.</li>
+</ul>
+</li>
+<li><code>zarrs_sqlite</code> <a href="https://github.com/clbarnes/zarrs_sqlite"><img src="https://img.shields.io/badge/clbarnes/zarrs__sqlite-GitHub-blue?logo=github" alt="zarrs_sqlite_repo"></a>
+<ul>
+<li>An SQLite-based Zarr store with <code>rusqlite</code> and <code>turso</code> backends, tracking a <a href="https://github.com/auxym/zarr-sqlite-python/pull/4">store specification proposal</a>.</li>
+</ul>
+</li>
+<li><code>zarrs_jpeg</code> <a href="https://github.com/clbarnes/zarrs_jpeg"><img src="https://img.shields.io/badge/clbarnes/zarrs__jpeg-GitHub-blue?logo=github" alt="zarrs_jpeg_repo"></a>
+<ul>
+<li>An implementation of the proposed <a href="https://github.com/zarr-developers/zarr-extensions/pull/66"><code>jpeg</code> codec</a> backed by <code>libjpeg-turbo</code>.</li>
+</ul>
+</li>
+</ul>
+<blockquote class="blockquote-tag blockquote-tag-warning">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p>
+<p>Some of these crates are works in progress that have not been published to <a href="https://crates.io">crates.io</a>.</p>
+</blockquote>
 
                     </main>
 

@@ -38,7 +38,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f325f904.js";
+            window.path_to_searchindex_js = "searchindex-dab2c26c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5a1e85ad.js"></script>
@@ -229,7 +229,7 @@ Node paths are relative to the base path.</p>
 <p>The filesystem store also has a <a href="https://docs.rs/zarrs_filesystem/latest/zarrs_filesystem/struct.FilesystemStore.html#method.new_with_options"><code>new_with_options</code></a> constructor.
 Currently the only option available for filesystem stores is whether or not to enable direct I/O on Linux.</p>
 <h3 id="http"><a class="header" href="#http">HTTP</a></h3>
-<p><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_http"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__http-GitHub-blue?logo=github" alt="zarrs_http_repo"></a> <a href="https://crates.io/crates/zarrs_http"><img src="https://img.shields.io/crates/v/zarrs_http" alt="zarrs_http_ver"></a> <a href="https://docs.rs/zarrs_http"><img src="https://docs.rs/zarrs_http/badge.svg" alt="zarrs_http_doc"></a></p>
+<p><a href="https://github.com/zarrs/zarrs_http"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__http-GitHub-blue?logo=github" alt="zarrs_http_repo"></a> <a href="https://crates.io/crates/zarrs_http"><img src="https://img.shields.io/crates/v/zarrs_http" alt="zarrs_http_ver"></a> <a href="https://docs.rs/zarrs_http"><img src="https://docs.rs/zarrs_http/badge.svg" alt="zarrs_http_doc"></a></p>
 <p><a href="https://docs.rs/zarrs_http/latest/zarrs_http/struct.HTTPStore.html"><code>HTTPStore</code></a> is a read-only synchronous HTTP store available in the <a href="https://docs.rs/zarrs_http/latest/zarrs_http/"><code>zarrs_http</code></a> crate.</p>
 <pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -248,7 +248,7 @@ let http_store: ReadableStorage = Arc::new(HTTPStore::new("http://...")?);
 </blockquote>
 <h2 id="asynchronous-stores"><a class="header" href="#asynchronous-stores">Asynchronous Stores</a></h2>
 <h3 id="object_store"><a class="header" href="#object_store"><code>object_store</code></a></h3>
-<p><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_object_store"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__object__store-GitHub-blue?logo=github" alt="zarrs_object_store_repo"></a> <a href="https://crates.io/crates/zarrs_object_store"><img src="https://img.shields.io/crates/v/zarrs_object_store" alt="zarrs_object_store_ver"></a> <a href="https://docs.rs/zarrs_object_store"><img src="https://docs.rs/zarrs_object_store/badge.svg" alt="zarrs_object_store_doc"></a></p>
+<p><a href="https://github.com/zarrs/zarrs_object_store"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__object__store-GitHub-blue?logo=github" alt="zarrs_object_store_repo"></a> <a href="https://crates.io/crates/zarrs_object_store"><img src="https://img.shields.io/crates/v/zarrs_object_store" alt="zarrs_object_store_ver"></a> <a href="https://docs.rs/zarrs_object_store"><img src="https://docs.rs/zarrs_object_store/badge.svg" alt="zarrs_object_store_doc"></a></p>
 <p>The <a href="https://crates.io/crates/object_store"><code>object_store</code></a> crate is an <code>async</code> object store library for interacting with object stores.
 Supported object stores include:</p>
 <ul>
@@ -279,7 +279,7 @@ let store: AsyncReadableStorage = Arc::new(AsyncObjectStore::new(store));
 <span class="boring">Ok::&lt;(), Box&lt;dyn std::error::Error&gt;&gt;(())
 </span><span class="boring">}</span></code></pre>
 <h3 id="opendal"><a class="header" href="#opendal">OpenDAL</a></h3>
-<p><a href="https://github.com/zarrs/zarrs/tree/main/zarrs_opendal"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__opendal-GitHub-blue?logo=github" alt="zarrs_opendal_repo"></a> <a href="https://crates.io/crates/zarrs_opendal"><img src="https://img.shields.io/crates/v/zarrs_opendal" alt="zarrs_opendal_ver"></a> <a href="https://docs.rs/zarrs_opendal"><img src="https://docs.rs/zarrs_opendal/badge.svg" alt="zarrs_opendal_doc"></a></p>
+<p><a href="https://github.com/zarrs/zarrs_opendal"><img src="https://img.shields.io/badge/zarrs/zarrs/zarrs__opendal-GitHub-blue?logo=github" alt="zarrs_opendal_repo"></a> <a href="https://crates.io/crates/zarrs_opendal"><img src="https://img.shields.io/crates/v/zarrs_opendal" alt="zarrs_opendal_ver"></a> <a href="https://docs.rs/zarrs_opendal"><img src="https://docs.rs/zarrs_opendal/badge.svg" alt="zarrs_opendal_doc"></a></p>
 <p>The <a href="https://crates.io/crates/opendal"><code>opendal</code></a> crate offers a unified data access layer, empowering users to seamlessly and efficiently retrieve data from diverse storage services.
 It supports a huge range of <a href="https://docs.rs/opendal/latest/opendal/services/index.html">services</a> and <a href="https://docs.rs/opendal/latest/opendal/layers/index.html">layers</a> to extend their behaviour.</p>
 <p><a href="https://docs.rs/zarrs_opendal/latest/zarrs_opendal/struct.AsyncOpendalStore.html"><code>zarrs_object_store::AsyncOpendalStore</code></a> wraps <a href="https://docs.rs/opendal/0.50.2/opendal/struct.Operator.html"><code>opendal::Operator</code></a>.</p>
