@@ -71,7 +71,7 @@ Currently the only option available for filesystem stores is whether or not to e
 
 ### HTTP
 
-[![zarrs_http_repo]](https://github.com/zarrs/zarrs/tree/main/zarrs_http) [![zarrs_http_ver]](https://crates.io/crates/zarrs_http) [![zarrs_http_doc]](https://docs.rs/zarrs_http)
+[![zarrs_http_repo]](https://github.com/zarrs/zarrs_http) [![zarrs_http_ver]](https://crates.io/crates/zarrs_http) [![zarrs_http_doc]](https://docs.rs/zarrs_http)
 
 [zarrs_http_repo]: https://img.shields.io/badge/zarrs/zarrs/zarrs__http-GitHub-blue?logo=github
 [zarrs_http_ver]: https://img.shields.io/crates/v/zarrs_http
@@ -97,7 +97,7 @@ let http_store: ReadableStorage = Arc::new(HTTPStore::new("http://...")?);
 
 ### `object_store`
 
-[![zarrs_object_store_repo]](https://github.com/zarrs/zarrs/tree/main/zarrs_object_store) [![zarrs_object_store_ver]](https://crates.io/crates/zarrs_object_store) [![zarrs_object_store_doc]](https://docs.rs/zarrs_object_store)
+[![zarrs_object_store_repo]](https://github.com/zarrs/zarrs_object_store) [![zarrs_object_store_ver]](https://crates.io/crates/zarrs_object_store) [![zarrs_object_store_doc]](https://docs.rs/zarrs_object_store)
 
 [zarrs_object_store_repo]: https://img.shields.io/badge/zarrs/zarrs/zarrs__object__store-GitHub-blue?logo=github
 [zarrs_object_store_ver]: https://img.shields.io/crates/v/zarrs_object_store
@@ -134,7 +134,7 @@ let store: AsyncReadableStorage = Arc::new(AsyncObjectStore::new(store));
 
 ### OpenDAL
 
-[![zarrs_opendal_repo]](https://github.com/zarrs/zarrs/tree/main/zarrs_opendal) [![zarrs_opendal_ver]](https://crates.io/crates/zarrs_opendal) [![zarrs_opendal_doc]](https://docs.rs/zarrs_opendal)
+[![zarrs_opendal_repo]](https://github.com/zarrs/zarrs_opendal) [![zarrs_opendal_ver]](https://crates.io/crates/zarrs_opendal) [![zarrs_opendal_doc]](https://docs.rs/zarrs_opendal)
 
 [zarrs_opendal_repo]: https://img.shields.io/badge/zarrs/zarrs/zarrs__opendal-GitHub-blue?logo=github
 [zarrs_opendal_ver]: https://img.shields.io/crates/v/zarrs_opendal

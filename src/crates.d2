@@ -16,6 +16,13 @@ classes: {
       stroke-dash: 5
     }
   }
+  community {
+    style: {
+      fill: "#c2410c"
+      stroke: "#7c2d12"
+      font-color: "#ffffff"
+    }
+  }
 }
 
 direction: up
@@ -33,9 +40,30 @@ tools: CLI Tools {
 }
 
 metadata_conventions: Metadata Conventions {
+  grid-columns: 1
   ome_zarr_metadata {
     link: https://github.com/zarrs/ome_zarr_metadata
     tooltip: A library for OME-Zarr (previously OME-NGFF) metadata.
+  }
+  zarrs_conventions: zarrs_conventions\n_license / _thumbnails / _uom {
+    class: community
+    link: https://github.com/clbarnes/zarrs_conventions
+    tooltip: An implementation of the `zarr-conventions` specification, with crates for the license, thumbnails, and units of measure conventions (community).
+  }
+}
+
+extension_impls: Extension Implementations {
+  grid-columns: 1
+  direction: right
+  zarrs_jpeg {
+    class: community
+    link: https://github.com/clbarnes/zarrs_jpeg
+    tooltip: The proposed `jpeg` codec, backed by libjpeg-turbo (community, unpublished).
+  }
+  ndic_zarr: ndic-zarr {
+    class: community
+    link: https://github.com/fideus-labs/nd-image-codecs
+    tooltip: The `nd_lift`, `htj2k`, and `nd_zfp` codecs for multidimensional scientific images (community).
   }
 }
 
@@ -47,7 +75,7 @@ stores: Stores and Storage Adapters {
     tooltip: A filesystem store (re-exported as `zarrs::filesystem`).
   }
   zarrs_object_store {
-    link: https://github.com/zarrs/zarrs/tree/main/zarrs_object_store
+    link: https://github.com/zarrs/zarrs_object_store
     tooltip: `object_store` store support.
   }
   zarrs_opendal {
@@ -55,7 +83,7 @@ stores: Stores and Storage Adapters {
     tooltip: `opendal` store support.
   }
   zarrs_http {
-    link: https://github.com/zarrs/zarrs/tree/main/zarrs_http
+    link: https://github.com/zarrs/zarrs_http
     tooltip: A synchronous http store.
   }
   zarrs_icechunk {
@@ -69,6 +97,16 @@ stores: Stores and Storage Adapters {
   zarrs_zip {
     link: https://github.com/zarrs/zarrs_zip
     tooltip: A storage adapter for zip files.
+  }
+  zarrs_sqlite {
+    class: community
+    link: https://github.com/clbarnes/zarrs_sqlite
+    tooltip: An SQLite-based Zarr store (community, unpublished).
+  }
+  zarrs_n5 {
+    class: community
+    link: https://github.com/clbarnes/zarrs_n5
+    tooltip: Read-only N5 support (community).
   }
 }
 
@@ -85,27 +123,29 @@ core: Core / Extension APIs {
     link: https://github.com/zarrs/zarrs/tree/main/zarrs_metadata
     tooltip: Zarr metadata support (re-exported as `zarrs::metadata`).
   }
-  zarrs_registry: zarrs_registry\nzarrs::registry {
-    link: https://github.com/zarrs/zarrs/tree/main/zarrs_registry
-    tooltip: The Zarr extension point registry for `zarrs` (re-exported as `zarrs::registry`).
-  }
   zarrs_plugin: zarrs_plugin\nzarrs::plugin {
     link: https://github.com/zarrs/zarrs/tree/main/zarrs_plugin
     tooltip: The plugin API for `zarrs` (re-exported as `zarrs::plugin`).
   }
 
-  extensions: Zarr Extension Points {
+  extensions: Zarr Extension Points\n(zarrs::array::*::api) {
     direction: right
     grid-columns: 1
-    zarrs_data_type: zarrs_data_type\nzarrs::array:data_type {
+    zarrs_data_type: {
         link: https://github.com/zarrs/zarrs/tree/main/zarrs_data_type
-        tooltip: The data type extension API for `zarrs` (re-exported in `zarrs::array::data_type`).
+        tooltip: The data type extension API for `zarrs` (re-exported as `zarrs::array::data_type::api`).
     }
-    zarrs_chunk_grid: zarrs_chunk_grid\nzarrs::array:chunk_grid {
-        class: grayDashed
+    zarrs_codec: {
+        link: https://github.com/zarrs/zarrs/tree/main/zarrs_codec
+        tooltip: The codec extension API for `zarrs` (re-exported as `zarrs::array::codec::api`).
     }
-    zarrs_codec: zarrs_codec\nzarrs::array:codec {
-        class: grayDashed
+    zarrs_chunk_grid: {
+        link: https://github.com/zarrs/zarrs/tree/main/zarrs_chunk_grid
+        tooltip: The chunk grid extension API for `zarrs` (re-exported as `zarrs::array::chunk_grid::api`).
+    }
+    zarrs_chunk_key_encoding: {
+        link: https://github.com/zarrs/zarrs/tree/main/zarrs_chunk_key_encoding
+        tooltip: The chunk key encoding extension API for `zarrs` (re-exported as `zarrs::array::chunk_key_encoding::api`).
     }
   }
   zarrs {
@@ -115,24 +155,78 @@ core: Core / Extension APIs {
 }
 
 Bindings: {
-  zarrs_ffi: zarrs_ffi\nC/C++ {
+  grid-columns: 3
+  zarrs_ffi: zarrs_ffi (C/C++) {
     link: https://github.com/zarrs/zarrs_ffi
     tooltip: A subset of `zarrs` exposed as a C/C++ API.
   }
-  zarrs_python: zarrs-python\nPython {
+  zarrs_python: zarrs-python (Python)\nzarr-python codec pipeline {
     link: https://github.com/zarrs/zarrs-python
     tooltip: A high-performance codec pipeline for `zarr-developers/zarr-python`.
+  }
+  zarrista: zarrista (Python) {
+    class: community
+    link: https://github.com/developmentseed/zarrista
+    tooltip: A low-level Zarr API for Python built directly on `zarrs` (community).
+  }
+  zarr_matlab: zarr-matlab (MATLAB) {
+    class: community
+    link: https://github.com/scalableminds/zarr-matlab
+    tooltip: A Zarr V2/V3 implementation for MATLAB based on `zarrs` (community).
+  }
+  pizzarr: pizzarr (R) {
+    class: community
+    link: https://github.com/zarr-developers/pizzarr
+    tooltip: A Zarr implementation for R with an optional `zarrs` backend (community).
+  }
+  Rzarrs: Rzarrs (R) {
+    class: community
+    link: https://github.com/RGenomicsETL/Rzarrs
+    tooltip: Read-only R bindings to `zarrs` (community).
+  }
+  Zarrs_jl: Zarrs.jl (Julia) {
+    class: community
+    link: https://github.com/earth-mover/Zarrs.jl
+    tooltip: Zarr V2/V3 arrays for Julia backed by `zarrs` (community).
   }
 }
 
 core.zarrs_storage -> core.zarrs
 core.zarrs_metadata_ext -> core.zarrs
 core.zarrs_metadata -> core.zarrs_metadata_ext
-core.zarrs_registry -> core.zarrs_metadata_ext
 core.zarrs_metadata_ext -> core.extensions
 core.zarrs_plugin -> core.extensions
 core.extensions -> core.zarrs
 metadata_conventions -> tools
-stores -> core.zarrs_storage
 core -> tools
 core -> Bindings
+
+# Implementations are ranked below the core APIs, but the arrowheads point from
+# the API to its implementations. `<->` with the target arrowhead removed gives
+# the desired arrow direction without flipping the layout rank.
+stores <-> core.zarrs_storage: { target-arrowhead.shape: none }
+extension_impls <-> core.extensions: { target-arrowhead.shape: none }
+
+legend: Legend {
+  near: top-center
+  grid-columns: 2
+  grid-gap: 10
+  style.stroke-dash: 4
+  # d2 grids fill column-major, so both swatches are declared before both labels
+  # in order to pair them up by row.
+  sw_first: "" {
+    width: 44
+    height: 22
+  }
+  sw_community: "" {
+    class: community
+    width: 44
+    height: 22
+  }
+  txt_first: zarrs (first party) {
+    shape: text
+  }
+  txt_community: community (third party) {
+    shape: text
+  }
+}
